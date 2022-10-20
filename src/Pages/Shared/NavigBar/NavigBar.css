@@ -1,0 +1,27 @@
+.link,.link >a {
+    border-radius: 5px;
+    color: #2574a9 !important;
+}
+
+.link:hover,.link >a:hover{
+    background-color: #f9690e ;
+    color: #13E1FE !important;
+}
+.dropdown-menu{
+    margin-bottom: 10px;
+}
+.dropdown-menu>a{
+    color: #2574a9 !important;
+}
+.dropdown-menu>a:hover{
+    color: #f9690e !important;
+}
+
+@media (max-width:990px){
+    .link:hover,.link >a:hover{
+        background-color: initial ;
+    }
+    .dropdown-menu{
+        background-color: #b7d1f1;
+    }
+}

@@ -1,0 +1,94 @@
+.input-design {
+    border-right: 0px !important;
+}
+
+input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.img-width {
+    width: 40%;
+}
+
+.form-width {
+    width: 40%;
+}
+
+/* .logo-width {
+    width: 18%;
+} */
+
+.logo-width:hover {
+    background-color: aliceblue;
+}
+
+
+.rotate {
+    -webkit-animation: rotate 2s normal linear infinite;
+    animation: rotate 2s normal linear infinite;
+}
+
+@keyframes rotate {
+    0% {
+        -webkit-transform: rotate3d(0, 0, 1, 0deg);
+        transform: rotate3d(0, 0, 1, 0deg);
+    }
+
+    25% {
+        -webkit-transform: rotate3d(0, 0, 1, 90deg);
+        transform: rotate3d(0, 0, 1, 90deg);
+    }
+
+    50% {
+        -webkit-transform: rotate3d(0, 0, 1, 180deg);
+        transform: rotate3d(0, 0, 1, 180deg);
+    }
+
+    75% {
+        -webkit-transform: rotate3d(0, 0, 1, 270deg);
+        transform: rotate3d(0, 0, 1, 270deg);
+    }
+
+    100% {
+        -webkit-transform: rotate3d(0, 0, 1, 360deg);
+        transform: rotate3d(0, 0, 1, 360deg);
+    }
+}
+
+
+.input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3),
+.input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+@media screen and (max-width:992px) {
+    /* .img-width {
+        width: 50%;
+    } */
+
+    .form-width {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width:767px) {
+    /* .img-width {
+        width: 40%;
+    } */
+
+    .form-width {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width:350px) {
+    .input-group-text {
+        padding: .375rem .4rem !important;
+    }
+
+    .form-control-lg {
+        padding: .5rem 0.6rem !important;
+    }
+}

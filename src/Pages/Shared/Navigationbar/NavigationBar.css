@@ -1,0 +1,27 @@
+.navbar-bg {
+    background-color: #003580;
+}
+
+.my:hover {
+    color: #00ee5b;
+}
+
+.logo-show {
+    display: none;
+}
+
+.log-reg {
+    display: none;
+}
+
+@media screen and (max-width:768px) {
+    .log-reg {
+        display: block;
+    }
+}
+
+@media screen and (max-width:991px) {
+    .logo-show {
+        display: block;
+    }
+}

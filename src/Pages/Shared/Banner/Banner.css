@@ -1,0 +1,33 @@
+.banner-position {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.banner-bg {
+    background-color: white;
+    /* background-image: url("https://i.ibb.co/QMbh6wz/mbstu-logo.png"); */
+}
+
+/* .img-pos {
+    justify-content: start;
+} */
+
+@media screen and (max-width:991px) {
+    .banner-position {
+        display: none;
+        /* background-color: ; */
+
+    }
+
+    .img-pos {
+        /* justify-content: center;
+        align-items: center; */
+        text-align: center;
+        padding: 10px 0 10px 0;
+    }
+
+    .banner-bg {
+        background-color: bisque;
+    }
+}

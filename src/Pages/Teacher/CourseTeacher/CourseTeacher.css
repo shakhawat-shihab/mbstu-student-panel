@@ -1,0 +1,34 @@
+.notDesign {
+    background-color: inherit;
+    border-width: 0px
+}
+
+.design {
+    background-color: white;
+    border-width: 1px
+}
+
+.table-cell {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.edit {
+    cursor: pointer;
+    color: indigo;
+    text-decoration: underline;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

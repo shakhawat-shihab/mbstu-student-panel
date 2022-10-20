@@ -1,24 +1,48 @@
-import logo from './logo.svg';
 import './App.css';
-
+import React from 'react';
+import NavigationBar from './Pages/Shared/Navigationbar/NavigationBar';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Home from './Pages/Home/Home/Home';
+import Footer from './Pages/Shared/Footer/Footer';
+import LogIn from './Pages/LogIn/LogIn/LogIn';
+import NotFound from './Pages/Shared/NotFound/NotFound';
+import AuthProvider from './Contexts/AuthProvider/AuthProvider';
+import PrivateRoute from './Pages/LogIn/PrivateRoute/PrivateRoute';
+import SpecialPage from './Pages/SpecialPage/SpecialPage';
+import Register from './Pages/LogIn/Register/Register';
+import Dashboard from './Pages/Dashboard/Dashboard/Dashboard';
+import Header from './Pages/Shared/Header/Header';
+// import NavigationBar from './Pages/Shared/Navigationbar/NavigationBar';
 function App() {
+  // const a = React.version;
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Header></Header>
+        <NavigationBar></NavigationBar>
+        <Switch>
+          {/* <Route exact path='/'>
+            <Home></Home>
+          </Route>
+          <Route path='/home'>
+            <Home></Home>
+          </Route> */}
+          <Route path='/login'>
+            <LogIn></LogIn>
+          </Route>
+          <Route path='/register'>
+            <Register></Register>
+          </Route>
+          {/* <PrivateRoute path='/dashboard'>
+            <Dashboard></Dashboard>
+          </PrivateRoute>
+          <Route path='*'>
+            <NotFound></NotFound>
+          </Route> */}
+        </Switch>
+        <Footer></Footer>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

@@ -1,0 +1,53 @@
+.input-design {
+    border-right: 0px !important;
+}
+
+input:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.img-width {
+    width: 40%;
+}
+
+.form-width {
+    width: 25%;
+}
+
+.logo-width {
+    width: 18%;
+}
+
+.logo-width:hover {
+    background-color: aliceblue;
+}
+
+.border-rounded {
+    border-radius: 10%;
+}
+
+.link {
+    text-decoration: none;
+}
+
+
+@media screen and (max-width:992px) {
+    .img-width {
+        width: 50%;
+    }
+
+    .form-width {
+        width: 40%;
+    }
+}
+
+@media screen and (max-width:767px) {
+    .img-width {
+        width: 80%;
+    }
+
+    .form-width {
+        width: 80%;
+    }
+}

@@ -1,0 +1,34 @@
+.header-bg {
+    height: 32px;
+    background-color: #EFEFEF;
+    /* display: block; */
+}
+
+.logo {
+    color: #606060;
+}
+
+.header-show {
+    display: none;
+}
+
+.login,
+.register,
+.home,
+.fb {
+
+    text-decoration: none;
+}
+
+.login:hover,
+.register:hover,
+.home:hover,
+.fb:hover {
+    color: #003580;
+}
+
+@media screen and (min-width:769px) {
+    .header-show {
+        display: block;
+    }
+}

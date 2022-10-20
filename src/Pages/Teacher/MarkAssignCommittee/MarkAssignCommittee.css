@@ -1,0 +1,29 @@
+.edit {
+    cursor: pointer;
+    color: indigo;
+    text-decoration: underline;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+th,
+tr,
+td {
+    border: 2px solid black;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* .table-border {
+    border: 2px solid black;
+} */

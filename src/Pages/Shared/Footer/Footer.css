@@ -1,0 +1,37 @@
+.footer-bg {
+    background-color: #003580;
+
+}
+
+li>a {
+    text-decoration: none;
+    color: white;
+}
+
+li>a:hover {
+    color: #00ee5b !important;
+}
+
+.footer-copyright {
+    color: red;
+}
+
+/* .follow-icon-twt {
+    color: white
+} */
+
+.follow-icon-twt:hover {
+    color: #00ee5b !important
+}
+
+.follow-icon-fb:hover {
+    color: #00ee5b !important
+}
+
+.follow-icon-yt:hover {
+    color: #00ee5b !important
+}
+
+.follow-icon-insta:hover {
+    color: #00ee5b !important
+}
