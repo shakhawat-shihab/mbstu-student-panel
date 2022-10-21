@@ -13,9 +13,10 @@ import Swal from 'sweetalert2';
 import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
 // import useM from '../../../api/apiAuth';
 import apiAuth from '../../../api/apiAuth';
+import useMongoose from '../../../Hooks/useMongoose';
 // import { register } from '../../../api/apiAuth';
 const Register = () => {
-    const { register } = apiAuth();
+    // const { register } = apiAuth();
     // const auth = getAuth();
     // const { user, saveUser, registerUser, authError, isLoadingRegister, setIsLoadingRegister, setUser } = useAuth();
     const [name, setName] = useState('');
@@ -30,11 +31,13 @@ const Register = () => {
     const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false);
     const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
     const logoSrc = "https://i.ibb.co/fFWMnnd/login-logo.png";
+    const { user } = useAuth();
     const history = useHistory();
-    // if (user.displayName || user.email) {
-    //     history.push('/home');
-    // }
+    if (user.email) {
+        history.push('/home');
+    }
 
+    const { register } = useMongoose();
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -95,49 +98,25 @@ const Register = () => {
         e.preventDefault();
         //console.log("Clicked");
         console.log(email, password, confirmPassword);
-        register({ email, password, confirmPassword });
-        // setIsLoadingRegister(true);
-        // if (nameErrorMessage === '' && emailErrorMessage === '' && passwordErrorMessage === '' && confirmPasswordErrorMessage === '') {
-        //     if (name !== '' && email !== '' && password !== '' && confirmPassword !== '') {
-        //         console.log(name, email, password);
-        // console.log('isLoadingRegister  =', isLoadingRegister);
-        // registerUser(email, password, name, history)
-        //     .then((userCredential) => {
-        //         //setAuthError('');
-        //         const newUser = { email, displayName: name };
-        //         setUser(newUser);
-        //         // save user to the database
-        //         saveUser(email, name, 'put');
-        //         // send name to firebase after creation
-        //         Toast.fire({
-        //             icon: 'success',
-        //             title: 'Registerd successfully'
-        //         })
-        //         updateProfile(auth.currentUser, {
-        //             displayName: name
-        //         }).then(() => {
-        //             //console.log("use firebase er modde isLoadingRegister ", isLoadingRegister)
-        //             setIsLoadingRegister(false);
-        //             //console.log("use firebase er modde isLoadingRegister 1 ", isLoadingRegister)
-        //         }).catch((error) => {
+        // register({ email, password, confirmPassword });
 
-        //         });
-        //         history.replace('/');
-        //     })
-        //     .catch((error) => {
-        //         Toast.fire({
-        //             icon: 'error',
-        //             title: error.message
-        //         })
-        //     })
-        //     .finally(() => setIsLoadingRegister(false));
-        // }
-        // else {
-        //     email === '' && setEmailErrorMessage('This field is required');
-        //     password === '' && setPasswordErrorMessage('This field is required');
-        //     confirmPassword === '' && setConfirmPasswordErrorMessage('Retype the password');
-        // }
-        // }
+        register({ email, password, confirmPassword })
+            .then(response => {
+                // console.log(response.data.data.token)
+                console.log(response);
+
+                history.push('/login')
+            })
+            .catch(err => {
+                let errMsg = 'Something went wrong!';
+                if (err.response) {
+                    errMsg = err.response.data;
+                } else {
+                    errMsg = 'Something went wrong!';
+                }
+
+            })
+
     }
     const popoverName = (
         <Popover id="popover-basic">

@@ -56,7 +56,8 @@ const Dashboard = () => {
                         {
                             !isLoadingRole && !isLoading &&
                             <>
-                                {student &&
+                                {
+                                    user?.isStudent &&
                                     <>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/course-registration`}> Course Registration (S)</Link>
@@ -67,7 +68,7 @@ const Dashboard = () => {
                                     </>
                                 }
                                 {
-                                    teacher &&
+                                    user?.isTeacher &&
                                     <>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/courses-taken`}>Taken Courses (T) </Link>
@@ -78,7 +79,7 @@ const Dashboard = () => {
                                     </>
                                 }
                                 {
-                                    deptChairman &&
+                                    user?.isDeptChairman &&
                                     <>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/running-semesters`}> Current Semester (C) </Link>

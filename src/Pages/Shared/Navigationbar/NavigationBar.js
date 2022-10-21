@@ -8,7 +8,7 @@ import './NavigationBar.css';
 
 const NavigationBar = () => {
     // const logoSrc = "https://i.ibb.co/QMbh6wz/mbstu-logo.png";
-    // const { user, logout } = useAuth();
+    const { user } = useAuth();
     const [visible, setVisible] = useState(false);
     // const [some, setSome] = useState(true);
     // const signOutFromAccount = () => {
@@ -87,7 +87,7 @@ const NavigationBar = () => {
                                             Contact
                                         </a>
                                     </li>
-                                    {/* {
+                                    {
                                         user?.email
                                         &&
 
@@ -96,7 +96,7 @@ const NavigationBar = () => {
                                                 Dashboard
                                             </NavLink>
                                         </li>
-                                    } */}
+                                    }
                                     {/* {
                                         user?.email
                                             ?

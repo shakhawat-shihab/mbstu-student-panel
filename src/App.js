@@ -19,26 +19,26 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Header></Header>
-        <NavigationBar></NavigationBar>
+        {/* <NavigationBar></NavigationBar> */}
         <Switch>
-          {/* <Route exact path='/'>
+          <Route exact path='/'>
             <Home></Home>
           </Route>
           <Route path='/home'>
             <Home></Home>
-          </Route> */}
+          </Route>
           <Route path='/login'>
             <LogIn></LogIn>
           </Route>
           <Route path='/register'>
             <Register></Register>
           </Route>
-          {/* <PrivateRoute path='/dashboard'>
+          <PrivateRoute path='/dashboard'>
             <Dashboard></Dashboard>
           </PrivateRoute>
           <Route path='*'>
             <NotFound></NotFound>
-          </Route> */}
+          </Route>
         </Switch>
         <Footer></Footer>
       </BrowserRouter>

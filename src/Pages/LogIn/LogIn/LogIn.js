@@ -1,53 +1,54 @@
 import { useState } from 'react';
-import { Redirect } from 'react-router-dom';
-import apiAuth from '../../../api/apiAuth';
-// import useM from '../../../api/apiAuth';
-// import { login } from '../../../api/apiAuth';
-import { authenticate, isAuthenticated, userInfo } from '../../../utils/auth';
-// import Layout from './Layout';
-// import Layout from '../Layout';
-// import { showError, showLoading } from '../../utils/messages';
-// import { login } from '../../api/apiAuth';
-// import { authenticate, isAuthenticated, userInfo } from '../../utils/auth';
+import { Form, InputGroup } from 'react-bootstrap';
+import { NavLink, Redirect, useHistory, useLocation } from 'react-router-dom';
+
+import { BiShow, BiHide } from "react-icons/bi";
+
+import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
+import useAuth from '../../../Hooks/useAuth';
+import Swal from 'sweetalert2';
+
 
 const Login = () => {
-    const { login } = apiAuth();
-    const [values, setValues] = useState({
-        email: '',
-        password: '',
-        error: false,
-        loading: false,
-        disabled: false,
-        redirect: false
-    });
 
-    const { email, password, loading, error, redirect, disabled } = values;
+    const { login, authenticate, isAuthenticated } = useAuth();
+    const [email, setEmail] = useState('');
+    const [emailErrorMessage, setEmailErrorMessage] = useState('');
+    const [password, setPassword] = useState('');
+    const [visiblePassword, setVisiblePassword] = useState(false);
+    const history = useHistory();
+    const location = useLocation();
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
 
-
-    const handleChange = e => {
-        setValues({
-            ...values,
-            error: false,
-            [e.target.name]: e.target.value
-        })
+    if (isAuthenticated()) {
+        // console.log('redirect called')
+        return <Redirect to="/" />
     }
 
-    const handleSubmit = e => {
+    const handleLogIn = e => {
         e.preventDefault();
-        setValues({ ...values, error: false, loading: true, disabled: true });
-
+        // setValues({ ...values, error: false, loading: true, disabled: true });
+        console.log(email, password);
         login({ email, password })
             .then(response => {
-                console.log(response.data.data.token)
+                // console.log(response.data.data.token)
                 console.log(response)
                 authenticate(response.data.data.token, () => {
-                    setValues({
-                        // email: '',
-                        // password: '',
-                        success: true,
-                        disabled: false,
-                        loading: false,
-                        redirect: true
+                    const destination = location?.state?.from || '/';
+                    history.replace(destination);
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Log in successfully'
                     })
                 })
             })
@@ -58,50 +59,81 @@ const Login = () => {
                 } else {
                     errMsg = 'Something went wrong!';
                 }
-                setValues({ ...values, error: errMsg, disabled: false, loading: false })
+
             })
     }
-
-
-    const signInForm = () => (
-        <form onSubmit={handleSubmit}>
-            <div className="form-group">
-                <label className="text-muted">Email:</label>
-                <input name='email' type="email" className="form-control"
-                    value={email} required onChange={handleChange} />
-            </div>
-            <div className="form-group">
-                <label className="text-muted">Password:</label>
-                <input name="password" type="password" onChange={handleChange} className="form-control"
-                    value={password} required />
-            </div>
-            <button type="submit" className="btn btn-outline-primary" disabled={disabled}>Login</button>
-        </form>
-    );
-
-    const redirectUser = () => {
-        if (redirect) {
-            console.log(redirect)
-            return <Redirect to={`${userInfo().role}/dashboard`} />
+    const checkEmail = (value) => {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+            setEmailErrorMessage('');
+            return;
         }
-        if (isAuthenticated()) return <Redirect to="/" />
+        setEmailErrorMessage("You have entered an invalid email address!")
     }
-    return (
-        <div title="Login" className="container col-md-8 offset-md-2">
 
-            {signInForm()}
-            {/* {redirectUser()} */}
-            <hr />
+    const logoSrc = "https://i.ibb.co/fFWMnnd/login-logo.png";
+    return (
+
+        <div>
+            {/* <Header></Header> */}
+            <NavigationBar></NavigationBar>
+            <h2 className='text-center my-3'>Sign in </h2>
+            <div className='form-width mx-auto my-4 p-3 shadow-lg'>
+                <div className='pb-4 text-center'>
+                    <img src={logoSrc} className="img-fluid rounded mx-auto img-width" alt="" />
+                </div>
+                {/* enter email */}
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <InputGroup className="">
+                        <Form.Control size="lg" type='email' placeholder="Email" required
+                            onChange={(e) => {
+                                setEmail(e.target.value.trim().toLowerCase());
+                                checkEmail(e.target.value.trim());
+                            }}
+                        />
+
+                        {/* <div className=' d-flex  align-items-center'>
+
+                        </div> */}
+
+                    </InputGroup>
+                    <Form.Text className=" ps-2 text-danger">
+                        {emailErrorMessage}
+                    </Form.Text>
+                </Form.Group>
+
+                {/* enter password */}
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <InputGroup className="">
+                        <Form.Control size="lg" className='input-design' type={visiblePassword ? 'text' : 'password'} placeholder="Password" required
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
+                        />
+                        <InputGroup.Text className='bg-white'
+                            onClick={() => setVisiblePassword(!visiblePassword)}
+                        > {visiblePassword ? <BiShow className='fs-4' /> : <BiHide className='fs-4' />}
+                        </InputGroup.Text>
+                        <div className=' d-flex  align-items-center'>
+
+                        </div>
+                    </InputGroup>
+                    <Form.Text className="text-danger ps-2">
+                        {/* {passwordErrorMessage} */}
+                    </Form.Text>
+                </Form.Group>
+                <small className='ms-1'><NavLink to="/register" className="link">Not a member yet?</NavLink></small>
+                {/* enter login */}
+                {/* <Form.Group className="my-3 " controlId="formBasicCheckbox">
+                    <Form.Check type="checkbox" label="Keep Me logged in" />
+                </Form.Group> */}
+                <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={handleLogIn}>
+                    Log In
+                </button>
+
+
+            </div>
+
         </div>
-        // <div title="Login" className="container col-md-8 offset-md-2">
-        //     {redirectUser()}
-        //     {/* {showLoading(loading)} */}
-        //     {/* {showError(error, error)} */}
-        //     <h3>Login Here,</h3>
-        //     <hr />
-        //     {signInForm()}
-        //     <hr />
-        // </div>
 
     );
 }
