@@ -90,39 +90,38 @@ const CreateCourse = () => {
             deptRelatedArray.push(x.value);
         })
         course.realted_to = deptRelatedArray
-        //console.log('course to push ', course);
-        //console.log('departmentList   ', departmentList)
-        fetch('http://localhost:5000/create-course', {
-            method: 'put',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(course)
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log("data ", data);
-                if (data.modifiedCount) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Successfully updated Course'
-                    })
-                    reset()
-                }
-                else if (data.upsertedCount) {
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Successfully added Course'
-                    })
-                    reset()
-                }
-                else if (data.matchedCount) {
-                    Toast.fire({
-                        icon: 'warning',
-                        title: 'This course already exists!'
-                    })
-                }
-            });
+        console.log('course to save ', course);
+        // fetch('http://localhost:5000/create-course', {
+        //     method: 'put',
+        //     headers: {
+        //         'content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(course)
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log("data ", data);
+        //         if (data.modifiedCount) {
+        //             Toast.fire({
+        //                 icon: 'success',
+        //                 title: 'Successfully updated Course'
+        //             })
+        //             reset()
+        //         }
+        //         else if (data.upsertedCount) {
+        //             Toast.fire({
+        //                 icon: 'success',
+        //                 title: 'Successfully added Course'
+        //             })
+        //             reset()
+        //         }
+        //         else if (data.matchedCount) {
+        //             Toast.fire({
+        //                 icon: 'warning',
+        //                 title: 'This course already exists!'
+        //             })
+        //         }
+        //     });
     };
 
     //console.log('category ', category)

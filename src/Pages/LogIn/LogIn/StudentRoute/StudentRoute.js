@@ -17,7 +17,7 @@ const StudentRoute = ({ children, ...rest }) => {
         <Route
             {...rest}
             render={({ location }) =>
-                user.email && student ? (
+                user.email && user?.isStudent ? (
                     children
                 ) : (
                     <Redirect
