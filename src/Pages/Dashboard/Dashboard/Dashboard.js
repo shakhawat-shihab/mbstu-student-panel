@@ -140,13 +140,13 @@ const Dashboard = () => {
 
 
                 {/* teacher Routes */}
-                <TeacherRoute path={`${path}/courses-taken/second-examiner/:semesterId/:courseCode`}>
+                <TeacherRoute path={`${path}/courses-taken/second-examiner/:courseId`}>
                     <SecondExaminer></SecondExaminer>
                 </TeacherRoute>
-                <TeacherRoute path={`${path}/courses-taken/third-examiner/:semesterId/:courseCode`}>
+                <TeacherRoute path={`${path}/courses-taken/third-examiner/:courseId`}>
                     <ThirdExaminer></ThirdExaminer>
                 </TeacherRoute>
-                <TeacherRoute path={`${path}/courses-taken/:semesterId/:courseCode`}>
+                <TeacherRoute path={`${path}/courses-taken/:courseId`}>
                     <CourseTeacher></CourseTeacher>
                 </TeacherRoute>
                 <TeacherRoute path={`${path}/courses-taken`}>

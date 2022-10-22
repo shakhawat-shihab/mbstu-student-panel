@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import useAuth from '../../../../Hooks/useAuth';
 
 const TeacherRoute = ({ children, ...rest }) => {
-    const { user, teacher, isLoading, isLoadingRole } = useAuth();
+    const { user, isLoading, isLoadingRole } = useAuth();
     // console.log(teacher, user, isLoadingRole);
     if (isLoading || isLoadingRole) {
         return <div className='text-center my-5 py-5 '>
@@ -17,7 +17,7 @@ const TeacherRoute = ({ children, ...rest }) => {
         <Route
             {...rest}
             render={({ location }) =>
-                user.email && teacher ? (
+                user.email && user.isTeacher ? (
                     children
                 ) : (
                     <Redirect

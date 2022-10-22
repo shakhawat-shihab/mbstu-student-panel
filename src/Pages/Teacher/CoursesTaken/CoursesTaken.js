@@ -5,36 +5,35 @@ import useAuth from '../../../Hooks/useAuth';
 
 const TakenCourses = () => {
     const { user } = useAuth();
-    const [semesters, setSemesters] = useState([]);
-    const email = user?.email;
-    //const email = 'lubnaju@yahoo.com';
+    const [courses, setCourses] = useState([]);
+    const profileId = user?.profileId;
     const [state, setState] = useState(1);
     let { path, url } = useRouteMatch();
     //console.log('path = ', path, ' and url = ', url)
     useEffect(() => {
         //console.log('email ', email);
-        fetch(`http://localhost:5000/courses-taken/${email}/${state}`)
+        fetch(`http://localhost:5000/api/v1/marks/taken-courses/${profileId}/${state}`)
             .then(res => res.json())
-            .then(data => {
-                console.log('state ', state, " data ", data);
+            .then(info => {
+                // console.log('state ', state, " info ", info);
                 // const arr = [];
                 // data?.map(x => {
                 //     x?.courses?.map(i => {
                 //         if (i?.email === email) {
-                //             //console.log('course ', i?.course_code)
+                //             //console.log('course ', i?.courseCode)
                 //             const obj = {};
                 //             obj._id = x?._id;
                 //             obj.session = x?.session;
-                //             obj.course_code = i?.course_code;
-                //             obj.course_title = i?.course_title;
+                //             obj.courseCode = i?.courseCode;
+                //             obj.courseTitle = i?.courseTitle;
                 //             arr.push(obj);
                 //         }
                 //     })
                 // })
                 // console.log(arr);
-                setSemesters(data);
+                setCourses(info.data);
             })
-    }, [email, state])
+    }, [state, profileId])
 
     return (
         <div className='text-center'>
@@ -57,62 +56,57 @@ const TakenCourses = () => {
                 state === 1 && */}
             <div className='row container mx-auto my-5'>
                 {
-                    semesters?.map(x =>
-                        x?.courses?.map(c => {
-                            return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?.semester_id}_${c.course_code}`}>
-                                <Card style={{ border: "1px solid black" }} className="mb-3">
-                                    <Card.Body>
-                                        <Card.Title> {c?.course_title}</Card.Title>
-                                        <Card.Text>
-                                            {c?.course_code}
-                                        </Card.Text>
-                                        <Card.Text>
-                                            Session: {x?.session}
-                                        </Card.Text>
-                                        {
-                                            state === 1 &&
-                                            <Link to={`${url}/${x?.semester_id}/${c?.course_code}`}>
-                                                <Button variant="primary"
-                                                // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
-                                                >
-                                                    View Details
-                                                </Button>
-                                            </Link>
-                                        }
-                                        {
-                                            state === 2 &&
-                                            <Link to={`${url}/second-examiner/${x?.semester_id}/${c?.course_code}`}>
-                                                <Button variant="primary"
-                                                // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
-                                                >
-                                                    View Details
-                                                </Button>
-                                            </Link>
-                                        }
-                                        {
-                                            state === 3 &&
-                                            <Link to={`${url}/third-examiner/${x?.semester_id}/${c?.course_code}`}>
-                                                <Button variant="primary"
-                                                // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
-                                                >
-                                                    View Details
-                                                </Button>
-                                            </Link>
-                                        }
-
-                                    </Card.Body>
-
-                                </Card>
-                            </div >)
-                        })
-
-                    )
-                }
+                    courses?.map(x => {
+                        return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?._id}`}>
+                            <Card style={{ border: "1px solid black" }} className="mb-3">
+                                <Card.Body>
+                                    <Card.Title> {x?.courseTitle}</Card.Title>
+                                    <Card.Text>
+                                        {x?.courseCode}
+                                    </Card.Text>
+                                    <Card.Text>
+                                        Session: {x?.semesterId?.session}
+                                    </Card.Text>
+                                    <Card.Text>
+                                        Semester: {x?.semesterId?.name}
+                                    </Card.Text>
+                                    {
+                                        state === 1 &&
+                                        <Link to={`${url}/${x?._id}`}>
+                                            <Button variant="primary"
+                                            // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
+                                            >
+                                                View Details
+                                            </Button>
+                                        </Link>
+                                    }
+                                    {
+                                        state === 2 &&
+                                        <Link to={`${url}/second-examiner/${x?._id}`}>
+                                            <Button variant="primary"
+                                            // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
+                                            >
+                                                View Details
+                                            </Button>
+                                        </Link>
+                                    }
+                                    {
+                                        state === 3 &&
+                                        <Link to={`${url}/third-examiner/${x?._id}`}>
+                                            <Button variant="primary"
+                                            // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
+                                            >
+                                                View Details
+                                            </Button>
+                                        </Link>
+                                    }
+                                </Card.Body>
+                            </Card>
+                        </div >)
+                        // })
+                    }
+                    )}
             </div>
-            {/* } */}
-
-
-
         </div>
     );
 };
