@@ -7,9 +7,6 @@ import './Header.css';
 const Header = () => {
     const { user, logOut } = useAuth();
     console.log(user)
-
-    // console.log("user photo = ", user?.photoURL);
-    // console.log("user = ", user?.displayName);
     const signOutFromAccount = () => {
         logOut()
     }

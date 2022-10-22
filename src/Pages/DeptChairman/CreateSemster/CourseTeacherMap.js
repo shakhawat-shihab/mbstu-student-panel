@@ -21,7 +21,7 @@ const Option = (props) => {
 const CourseTeacherMap = (props) => {
     //console.log("props ", props.register);
     //type ante hobe, 
-    const { course_title, credit, course_code, department, semester_code, category, type } = props.course;
+    const { courseTitle, credit, courseCode, department, semesterCode, category, type } = props.course;
     const { register } = props;
     const { setOptionSelected, optionSelected, setTeacherList, teachersOption } = props;
     // const [teachersOption, setTeachersOption] = useState([]);
@@ -43,38 +43,51 @@ const CourseTeacherMap = (props) => {
         visibility: 'hidden'
     }
 
-    //console.log('fun ', props?.course?.course_title, ' category ', category);
+    //console.log('fun ', props?.course?.courseTitle, ' category ', category);
 
     return (
         <tr style={{ border: '1px solid black' }}>
-            <td className='text-center' style={{ border: '1px solid black' }}>{course_code}</td>
+            <td className='text-center' style={{ border: '1px solid black' }}>{courseCode}</td>
             <td style={{ border: '1px solid black' }}>
                 {
                     category === 'optional' ?
-                        <Form.Select {...register(`${department}${semester_code}_course_title.${course_code}`, { required: true })}>
+                        <Form.Select {...register(`${department}${semesterCode}_courseTitle.${courseCode}`, { required: true })}>
                             <option value="">Select a Course</option>
                             {
-                                props?.course?.course_title?.map(x => <option key={x} value={x}>{x}</option>)
+                                props?.course?.courseTitle?.map(x => <option key={x} value={x}>{x}</option>)
                             }
                         </Form.Select>
                         :
-                        <input className='border-0  w-100' style={{ backgroundColor: 'inherit' }} type="text" readOnly value={course_title} {...register(`${department}${semester_code}_course_title.${course_code}`, { required: true })} />
+                        <input className='border-0  w-100' style={{ backgroundColor: 'inherit' }} type="text" readOnly value={courseTitle[0]} {...register(`${department}${semesterCode}_courseTitle.${courseCode}`, { required: true })} />
                 }
             </td>
             <td style={{ border: '1px solid black' }}>
-                <input className='border-0  w-100' style={{ backgroundColor: 'inherit' }} type="text" readOnly value={type} {...register(`${department}${semester_code}_course_type.${course_code}`, { required: true })} />
+                <input className='border-0  w-100' style={{ backgroundColor: 'inherit' }} type="text" readOnly value={type} {...register(`${department}${semesterCode}_course_type.${courseCode}`, { required: true })} />
             </td>
             <td className='text-center' style={{ border: '1px solid black' }}>
-                <input className='border-0  w-25' style={{ backgroundColor: 'inherit' }} type="text" readOnly value={credit} {...register(`${department}${semester_code}_course_credit.${course_code}`, { required: true })} />
+                <input className='border-0  w-25' style={{ backgroundColor: 'inherit' }} type="text" readOnly value={credit} {...register(`${department}${semesterCode}_course_credit.${courseCode}`, { required: true })} />
             </td>
 
             {
                 type === 'theory' &&
                 <td style={{ border: '1px solid black' }}>
-                    <Form.Select {...register(`${department}${semester_code}_course_teacher.${course_code}`, { required: true })}>
+                    <Form.Select {...register(`${department}${semesterCode}_course_teacher.${courseCode}`, { required: true })}>
                         <option value="" className='text-center'>Select a teacher</option>
                         {
-                            props?.teachers.map(x => <option key={x?.displayName} value={x.email}>{x?.displayName}</option>)
+                            props?.teachers.map(x => {
+                                // console.log(x);
+                                return (
+                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                        {
+                                            x?.profile?.['firstName']
+                                                ?
+                                                x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                                :
+                                                x?.email + '    (' + x.department + ')'
+                                        }
+                                    </option>
+                                )
+                            })
                         }
                     </Form.Select>
                 </td>
@@ -83,10 +96,23 @@ const CourseTeacherMap = (props) => {
             {
                 type === 'lab' &&
                 <td colspan='3' style={{ border: '1px solid black' }}>
-                    <Form.Select {...register(`${department}${semester_code}_course_teacher.${course_code}`, { required: true })}>
+                    <Form.Select {...register(`${department}${semesterCode}_course_teacher.${courseCode}`, { required: true })}>
                         <option value="" className='text-center'>Select a teacher</option>
                         {
-                            props?.teachers.map(x => <option key={x?.displayName} value={x.email}>{x?.displayName}</option>)
+                            props?.teachers.map(x => {
+                                console.log(x);
+                                return (
+                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                        {
+                                            x?.profile?.['firstName']
+                                                ?
+                                                x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                                :
+                                                x?.email + '    (' + x.department + ')'
+                                        }
+                                    </option>
+                                )
+                            })
                         }
                     </Form.Select>
                 </td>
@@ -116,12 +142,25 @@ const CourseTeacherMap = (props) => {
             {
                 type === 'theory' &&
                 <td style={{ border: '1px solid black' }}>
-                    <Form.Select {...register(`${department}${semester_code}_second_examiner.${course_code}`, { required: true })}>
-                        {/* <option value="">Select a second Examiner</option> */}
+                    <Form.Select {...register(`${department}${semesterCode}_second_examiner.${courseCode}`, { required: true })}>
+                        <option value="" className='text-center'>Select a teacher</option>
                         {
-                            props?.teachers.map(x => <option key={x?.displayName} value={x.email}>{x?.displayName}</option>)
+                            props?.teachers.map(x => {
+                                // console.log(x);
+                                return (
+                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                        {
+                                            x?.profile?.['firstName']
+                                                ?
+                                                x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                                :
+                                                x?.email + '    (' + x.department + ')'
+                                        }
+                                    </option>
+                                )
+                            })
                         }
-                        {/* <span style={errors.course_code ? visibile : invisibile} className='text-danger ps-2' >* Chose Teacher Name</span> */}
+                        {/* <span style={errors.courseCode ? visibile : invisibile} className='text-danger ps-2' >* Chose Teacher Name</span> */}
                     </Form.Select>
                 </td>
 
@@ -129,17 +168,31 @@ const CourseTeacherMap = (props) => {
             {
                 type === 'theory' &&
                 <td style={{ border: '1px solid black' }}>
-                    <Form.Select {...register(`${department}${semester_code}_third_examiner.${course_code}`, { required: true })}>
-                        {/* <option value="">Select a Third Examiner</option> */}
+                    <Form.Select {...register(`${department}${semesterCode}_third_examiner.${courseCode}`, { required: true })}>
+                        <option value="" className='text-center'>Select a teacher</option>
                         {
-                            props?.teachers.map(x => <option key={x?.displayName} value={x.email}>{x?.displayName}</option>)
+                            props?.teachers.map(x => {
+                                // console.log(x);
+                                return (
+                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                        {
+                                            x?.profile?.['firstName']
+                                                ?
+                                                x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                                :
+                                                x?.email + '    (' + x.department + ')'
+                                        }
+                                    </option>
+                                )
+                            })
                         }
-                        {/* <span style={errors.course_code ? visibile : invisibile} className='text-danger ps-2' >* Chose Teacher Name</span> */}
+
+                        {/* <span style={errors.courseCode ? visibile : invisibile} className='text-danger ps-2' >* Chose Teacher Name</span> */}
                     </Form.Select>
                 </td>
             }
 
-        </tr>
+        </tr >
     );
 };
 

@@ -1,6 +1,7 @@
 const checkSemesterName = (semester) => {
     // console.log(semester);
     let semesterName = "";
+    semester = parseInt(semester)
     if (semester === 1)
         semesterName = "1st Year 1st Semester";
     else if (semester === 2)

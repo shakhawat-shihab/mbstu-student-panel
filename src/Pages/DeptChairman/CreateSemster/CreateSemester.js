@@ -3,18 +3,20 @@ import { Table } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
 import CourseTeacherMap from './CourseTeacherMap';
 
 
 const CreateSemester = () => {
-    const [semester, setSemester] = useState("");
+    const [semester, setSemester] = useState(0);
     const [teachers, setTeachers] = useState([]);
     const [currentCourses, setCurrentCourses] = useState([]);
     const [optionSelected, setOptionSelected] = useState(null);
     const [teacherList, setTeacherList] = useState([]);
     const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
-    const { dept, user } = useAuth();
+    const { user } = useAuth();
+    const department = user?.department;
     const email = user?.email;
     const Toast = Swal.mixin({
         toast: true,
@@ -40,53 +42,58 @@ const CreateSemester = () => {
         console.log('arrOfTeachers ==', arrOfTeachers)
     }, [teachers])
     //console.log("register ", register);
-    //const dept = 'cse';
+    //const department = 'cse';
     //console.log(" semester ", semester)
     useEffect(() => {
-        fetch(`http://localhost:5000/teachers/${dept}`)
+        fetch(`http://localhost:5000/api/v1/user/teacher?fields=${department}`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data);
-                setTeachers(data);
+            .then(info => {
+                console.log("teachers of current user's department ", info.data);
+                setTeachers(info.data);
             })
     }, [])
     useEffect(() => {
-        if (semester !== '') {
-            fetch(`http://localhost:5000/courses/${dept}_${semester}`)
+        if (semester != '') {
+            fetch(`http://localhost:5000/api/v1/course/${semester}`)
                 .then(res => res.json())
-                .then(data => {
-                    console.log(data);
-                    setCurrentCourses(data);
+                .then(info => {
+                    console.log("courses of selected semester ", info.data);
+                    setCurrentCourses(info.data);
                 })
         }
-
     }, [semester])
+
     const onSubmit = data => {
         // if (data)
+
+        data.name = checkSemesterName(data?.semesterCode);
         console.log("on Submit Data ", data);
+        const l = "CSE2107"
+        console.log("on Submit Data ", data[`${department}${data.semesterCode}_courseTitle`][l]);
         let semester = {
             session: data.session,
-            semester_code: parseInt(data.semester),
+            semesterCode: parseInt(data.semester),
             isRunning: true
         }
         // const courses = {};
-        // for (const key in data[`${dept}${data.semester}`]) {
-        //     courses[key] = { teacher: data[`${dept}${data.semester}`][key] };
+        // for (const key in data[`${department}${data.semester}`]) {
+        //     courses[key] = { teacher: data[`${department}${data.semester}`][key] };
         // }
         const courses = []
-        //for (const key in data[`${dept}${data.semester}_course_teacher`]) {
+        //for (const key in data[`${department}${data.semester}_course_teacher`]) {
         // for (const key in currentCourses?.course_code) {
         currentCourses?.map(x => {
-            const key = x?.course_code;
+            const key = x?.courseCode;
+            console.log(key);
             const obj = {};
-            obj.course_code = key;
-            obj.course_title = data[`${dept}${data.semester}_course_title`][key];
-            obj.credit = parseFloat(data[`${dept}${data.semester}_course_credit`][key]);
-            obj.type = data[`${dept}${data.semester}_course_type`][key];
-            obj.course_teacher = data[`${dept}${data.semester}_course_teacher`][key];
-            obj.second_examiner = data[`${dept}${data.semester}_second_examiner`][key];
-            obj.third_examiner = data[`${dept}${data.semester}_third_examiner`][key];
-            if (data[`${dept}${data.semester}_course_type`][key] == 'project') {
+            obj.courseCode = key;
+            obj.courseTitle = data[`${department}${data.semesterCode}_courseTitle`][key];
+            obj.credit = parseFloat(data[`${department}${data.semesterCode}_course_credit`][key]);
+            obj.type = data[`${department}${data.semesterCode}_course_type`][key];
+            obj.teacher = data[`${department}${data.semesterCode}_course_teacher`][key];
+            obj.secondExaminer = data[`${department}${data.semesterCode}_second_examiner`][key];
+            obj.thirdExaminer = data[`${department}${data.semesterCode}_third_examiner`][key];
+            if (data[`${department}${data.semesterCode}_course_type`][key] == 'project') {
                 obj.teacher_student = [];
                 obj.course_teacher = [];
                 teacherList.map(x => {
@@ -99,8 +106,9 @@ const CreateSemester = () => {
             //console.log('obj ', obj);
             courses.push(obj)
         })
+        console.log('courses ', courses)
         semester = { ...semester, courses: courses }
-        semester.department = dept;
+        semester.department = department;
         semester.degree = data.degree;
         semester.chairman = data.chairman;
         semester.member1 = data.member1;
@@ -108,47 +116,47 @@ const CreateSemester = () => {
 
         console.log("semesters to push ", semester);
         console.log(" teacher List ", teacherList)
-        fetch('http://localhost:5000/create-semester', {
-            method: 'put',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(semester)
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log("data ", data);
-                if (data?.code === "200") {
-                    Toast.fire({
-                        icon: 'error',
-                        title: data?.message
-                    })
-                }
-                else {
-                    if (data.modifiedCount) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Successfully updated Semester'
-                        })
-                        // reset();
-                    }
-                    else if (data.upsertedCount) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: 'Successfully added Semester'
-                        })
-                        // reset();
-                    }
-                    else if (data.matchedCount) {
-                        Toast.fire({
-                            icon: 'warning',
-                            title: 'This semester already exists!'
-                        })
-                    }
-                }
+        // fetch('http://localhost:5000/create-semester', {
+        //     method: 'put',
+        //     headers: {
+        //         'content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(semester)
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log("data ", data);
+        //         if (data?.code === "200") {
+        //             Toast.fire({
+        //                 icon: 'error',
+        //                 title: data?.message
+        //             })
+        //         }
+        //         else {
+        //             if (data.modifiedCount) {
+        //                 Toast.fire({
+        //                     icon: 'success',
+        //                     title: 'Successfully updated Semester'
+        //                 })
+        //                 // reset();
+        //             }
+        //             else if (data.upsertedCount) {
+        //                 Toast.fire({
+        //                     icon: 'success',
+        //                     title: 'Successfully added Semester'
+        //                 })
+        //                 // reset();
+        //             }
+        //             else if (data.matchedCount) {
+        //                 Toast.fire({
+        //                     icon: 'warning',
+        //                     title: 'This semester already exists!'
+        //                 })
+        //             }
+        //         }
 
 
-            });
+        //     });
     }
 
     const visibile = {
@@ -166,9 +174,8 @@ const CreateSemester = () => {
                 <Form.Group className="mb-1 w-100 mx-auto">
                     <Form.Label className='text-primary'>Semester Name:</Form.Label>
                     <br></br>
-                    <Form.Select {...register("semester", { required: true })} onChange={(e) => {
+                    <Form.Select {...register("semesterCode", { required: true })} onChange={(e) => {
                         setSemester(e.target.value)
-                        //reset({ selectedcurrentCourses: {} });
                         console.log("semester changing");
                     }}>
                         <option value="">Select the semester</option>
@@ -216,13 +223,22 @@ const CreateSemester = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-1 w-100 mx-auto">
-                    <Form.Label className='text-primary'>Chairman:</Form.Label>
+                    <Form.Label className='text-primary'>Chairman of exam comittee :</Form.Label>
                     <br></br>
                     <Form.Select {...register("chairman", { required: true })}>
+                        <option value="">Select Chairman for Exam Comitte</option>
                         {
-                            teachers.map(x =>
-                                (x?.email === email) && (<option value={x?.email} >{x?.displayName}</option>)
-                            )
+                            teachers.map(x => {
+                                return (<option value={x?.profile?.['_id']}>
+                                    {
+                                        x?.profile?.['firstName']
+                                            ?
+                                            x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                            :
+                                            x?.email + '    (' + x.department + ')'
+                                    }
+                                </option>)
+                            })
                         }
                     </Form.Select>
                     <span style={errors.chairman ? visibile : invisibile} className='text-danger ps-2' >* Chose Chairman</span>
@@ -233,8 +249,17 @@ const CreateSemester = () => {
                     <Form.Select {...register("member1", { required: true })}>
                         <option value="">Select Member for Exam Comitte</option>
                         {
-                            teachers.map(x => (<option value={x?.email}>{x?.displayName}</option>)
-                            )
+                            teachers.map(x => {
+                                return (<option value={x?.profile?.['_id']}>
+                                    {
+                                        x?.profile?.['firstName']
+                                            ?
+                                            x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                            :
+                                            x?.email + '    (' + x.department + ')'
+                                    }
+                                </option>)
+                            })
                         }
                     </Form.Select>
                     <span style={errors.member1 ? visibile : invisibile} className='text-danger ps-2' >* Chose member</span>
@@ -245,8 +270,17 @@ const CreateSemester = () => {
                     <Form.Select {...register("member2", { required: true })}>
                         <option value="">Select Member for Exam Comitte</option>
                         {
-                            teachers.map(x => (<option value={x?.email}>{x?.displayName}</option>)
-                            )
+                            teachers.map(x => {
+                                return (<option value={x?.profile?.['_id']}>
+                                    {
+                                        x?.profile?.['firstName']
+                                            ?
+                                            x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                            :
+                                            x?.email + '    (' + x.department + ')'
+                                    }
+                                </option>)
+                            })
                         }
                     </Form.Select>
                     <span style={errors.member2 ? visibile : invisibile} className='text-danger ps-2' >* Chose Memeber</span>
@@ -275,7 +309,7 @@ const CreateSemester = () => {
                     <tbody>
 
                         {
-                            currentCourses.map(x => <CourseTeacherMap key={x.course_code} course={x} teachers={teachers} register={register} errors={errors}
+                            currentCourses.map(x => <CourseTeacherMap key={x.courseCode} course={x} teachers={teachers} register={register} errors={errors}
                                 optionSelected={optionSelected}
                                 setOptionSelected={setOptionSelected}
                                 setTeacherList={setTeacherList}

@@ -19,8 +19,11 @@ const Register = () => {
     // const { register } = apiAuth();
     // const auth = getAuth();
     // const { user, saveUser, registerUser, authError, isLoadingRegister, setIsLoadingRegister, setUser } = useAuth();
-    const [name, setName] = useState('');
-    const [nameErrorMessage, setNameErrorMessage] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [firstNameErrorMessage, setFirstNameErrorMessage] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [lastNameErrorMessage, setLastNameErrorMessage] = useState('');
+
     const [email, setEmail] = useState('');
     const [emailErrorMessage, setEmailErrorMessage] = useState('');
     const [isLoadingEmailExist, setIsLoadingEmailExist] = useState(false);
@@ -49,12 +52,19 @@ const Register = () => {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     })
-    const checkName = (value) => {
+    const checkFirstName = (value) => {
         if (value.length >= 3) {
-            setNameErrorMessage('');
+            setFirstNameErrorMessage('');
             return;
         }
-        setNameErrorMessage('Name length must be 3 character long');
+        setFirstNameErrorMessage('Name length must be 3 character long');
+    }
+    const checkLastName = (value) => {
+        if (value.length >= 3) {
+            setLastNameErrorMessage('');
+            return;
+        }
+        setLastNameErrorMessage('Name length must be 3 character long');
     }
     const checkEmail = (value) => {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
@@ -96,24 +106,31 @@ const Register = () => {
 
     const handleCreateAccount = (e) => {
         e.preventDefault();
-        //console.log("Clicked");
-        console.log(email, password, confirmPassword);
-        // register({ email, password, confirmPassword });
 
-        register({ email, password, confirmPassword })
-            .then(response => {
-                // console.log(response.data.data.token)
-                console.log(response);
+        // register({ firstName, lastName, email, password, confirmPassword })
+        //     .then(response => {
+        //         // console.log(response.data.data.token)
+        //         console.log(response);
+        //         history.push('/login')
+        //     })
+        //     .catch(err => {
+        //         let errMsg = 'Something went wrong!';
+        //         if (err.response) {
+        //             errMsg = err.response.data;
+        //         } else {
+        //             errMsg = 'Something went wrong!';
+        //         }
+        //     })
 
+        register({ firstName, lastName, email, password, confirmPassword })
+            .then(res => res.json())
+            .then(info => {
+                // console.log(info);
+                Toast.fire({
+                    icon: 'success',
+                    title: info.message
+                })
                 history.push('/login')
-            })
-            .catch(err => {
-                let errMsg = 'Something went wrong!';
-                if (err.response) {
-                    errMsg = err.response.data;
-                } else {
-                    errMsg = 'Something went wrong!';
-                }
 
             })
 
@@ -157,25 +174,25 @@ const Register = () => {
                 </div>
                 <Form>
 
-                    {/* enter username */}
-                    {/* <Form.Group className="mb-3" controlId="formBasicEmail">
+                    {/* enter first name */}
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
                         <InputGroup className="">
-                            <Form.Control size="lg" type='text' placeholder="User Name" required
+                            <Form.Control size="lg" type='text' placeholder="First Name" required
                                 onChange={(e) => {
-                                    setName(e.target.value.trim());
-                                    checkName(e.target.value.trim());
+                                    setFirstName(e.target.value.trim());
+                                    checkFirstName(e.target.value.trim());
                                 }}
                             />
                             <OverlayTrigger trigger="hover" placement="bottom" overlay={popoverName}>
                                 <div className=' d-flex  align-items-center'>
                                     {
-                                        name === ""
+                                        firstName === ""
                                             ?
                                             <BiInfoCircle className='fs-4 mx-2' />
                                             :
                                             <>
                                                 {
-                                                    nameErrorMessage === ''
+                                                    firstNameErrorMessage === ''
                                                         ?
                                                         <AiOutlineCheckCircle className='fs-4 mx-2 text-success' />
                                                         :
@@ -188,9 +205,44 @@ const Register = () => {
                             </OverlayTrigger>
                         </InputGroup>
                         <Form.Text className=" ps-2 text-danger">
-                            {nameErrorMessage}
+                            {firstNameErrorMessage}
                         </Form.Text>
-                    </Form.Group> */}
+                    </Form.Group>
+
+                    {/* enter last name */}
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <InputGroup className="">
+                            <Form.Control size="lg" type='text' placeholder="Last Name" required
+                                onChange={(e) => {
+                                    setLastName(e.target.value.trim());
+                                    checkLastName(e.target.value.trim());
+                                }}
+                            />
+                            <OverlayTrigger trigger="hover" placement="bottom" overlay={popoverName}>
+                                <div className=' d-flex  align-items-center'>
+                                    {
+                                        lastName === ""
+                                            ?
+                                            <BiInfoCircle className='fs-4 mx-2' />
+                                            :
+                                            <>
+                                                {
+                                                    lastNameErrorMessage === ''
+                                                        ?
+                                                        <AiOutlineCheckCircle className='fs-4 mx-2 text-success' />
+                                                        :
+                                                        <BiError className='fs-4 mx-2 text-danger' />
+                                                }
+
+                                            </>
+                                    }
+                                </div>
+                            </OverlayTrigger>
+                        </InputGroup>
+                        <Form.Text className=" ps-2 text-danger">
+                            {lastNameErrorMessage}
+                        </Form.Text>
+                    </Form.Group>
 
 
 

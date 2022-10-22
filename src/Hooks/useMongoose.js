@@ -84,19 +84,33 @@ const useMongoose = () => {
 
     //register a user
     const register = (user) => {
-        return axios.post(`${API}/user/signup`, user, {
+        // return axios.post(`${API}/user/signup`, user, {
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // })
+        return fetch(`${API}/user/signup`, {
+            method: 'post',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
         })
     };
 
     // login a user
     const login = (user) => {
-        return axios.post(`${API}/user/login`, user, {
+        // return axios.post(`${API}/user/login`, user, {
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // })
+        return fetch(`${API}/user/login`, {
+            method: 'post',
             headers: {
-                'Content-Type': 'application/json'
-            }
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
         })
     };
 

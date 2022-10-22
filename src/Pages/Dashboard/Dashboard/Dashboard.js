@@ -71,6 +71,10 @@ const Dashboard = () => {
                                         <ListGroup.Item action >
                                             <Link to={`${url}/create-course`}>Create Course (C) </Link>
                                         </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/create-semester`}> Create Semester (C) </Link>
+                                        </ListGroup.Item>
+
 
                                     </>
                                 }
@@ -129,6 +133,9 @@ const Dashboard = () => {
                 {/* the below portion is added here just for testing purpose */}
                 <StudentRoute path={`${path}/create-course`}>
                     <CreateCourse></CreateCourse>
+                </StudentRoute>
+                <StudentRoute path={`${path}/create-semester`}>
+                    <CreateSemester></CreateSemester>
                 </StudentRoute>
 
 

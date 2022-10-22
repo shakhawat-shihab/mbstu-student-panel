@@ -37,30 +37,53 @@ const Login = () => {
 
     const handleLogIn = e => {
         e.preventDefault();
-        // setValues({ ...values, error: false, loading: true, disabled: true });
-        console.log(email, password);
-        login({ email, password })
-            .then(response => {
-                // console.log(response.data.data.token)
-                console.log(response)
-                authenticate(response.data.data.token, () => {
-                    const destination = location?.state?.from || '/';
-                    history.replace(destination);
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Log in successfully'
-                    })
-                })
-            })
-            .catch(err => {
-                let errMsg = 'Something went wrong!';
-                if (err.response) {
-                    errMsg = err.response.data;
-                } else {
-                    errMsg = 'Something went wrong!';
-                }
+        // console.log(email, password);
+        // login({ email, password })
+        //     .then(response => {
+        //         // console.log(response.data.data.token)
+        //         console.log(response)
+        //         authenticate(response.data.data.token, () => {
+        //             const destination = location?.state?.from || '/';
+        //             history.replace(destination);
+        //             Toast.fire({
+        //                 icon: 'success',
+        //                 title: 'Log in successfully'
+        //             })
+        //         })
+        //     })
+        //     .catch(err => {
+        //         // let errMsg = 'Something went wrong!';
+        //         // if (err.response) {
+        //         //     errMsg = err.response.data;
+        //         // } else {
+        //         //     errMsg = 'Something went wrong!';
+        //         // }
+        //         console.log(err);
 
+        //     })
+
+        login({ email, password })
+            .then(res => res.json())
+            .then(info => {
+                // console.log(info)
+                if (info?.data) {
+                    authenticate(info.data.token, () => {
+                        const destination = location?.state?.from || '/';
+                        history.replace(destination);
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Log in successfully'
+                        })
+                    })
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: info.message
+                    })
+                }
             })
+
     }
     const checkEmail = (value) => {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value)) {

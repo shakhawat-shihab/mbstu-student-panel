@@ -21,7 +21,9 @@ const Option = (props) => {
     );
 };
 const CreateCourse = () => {
-    const { dept } = useAuth();
+    const { user } = useAuth();
+    const { department } = user;
+    console.log(department);
     const { register, handleSubmit, reset } = useForm();
     const [category, setCategory] = useState('compulsory');
     const [isDepartmental, setIsDepartmental] = useState(true);
@@ -61,67 +63,56 @@ const CreateCourse = () => {
         { value: "eng", label: "English" },
     ];
     const onSubmit = data => {
-        console.log('to submit = ', data);
+        // console.log('to submit = ', data);
         let course = {};
-        course.course_code = data.course_code.toUpperCase().trim();
-        course.course_category = data.category;
-        course.semester_code = parseInt(data.semester_code);
+        course.courseCode = data.courseCode.trim();
+        course.category = data.category;
+        course.semesterCode = parseInt(data.semesterCode);
         course.credit = parseFloat(data?.credit);
         course.type = data.type;
         course.department = data.department;
+        course.departmental = data.departmental
+
         course.type = data.type;
+
         if (data.category === 'optional') {
             let i = 0;
             const array = [];
-            array.push(data.course_title);
+            array.push(data.courseTitle);
             while (i < counter) {
-                if (data[`course_title_${i}`].trim()) {
-                    array.push(data[`course_title_${i}`]);
+                if (data[`courseTitle_${i}`].trim()) {
+                    array.push(data[`courseTitle_${i}`]);
                 }
                 i++;
             }
-            course.course_title = array;
+            course.courseTitle = array;
         }
         else {
-            course.course_title = data.course_title;
+            const array = [];
+            array.push(data.courseTitle);
+            course.courseTitle = array;
         }
         const deptRelatedArray = []
-        departmentList.map(x => {
+        departmentList?.map(x => {
             deptRelatedArray.push(x.value);
         })
-        course.realted_to = deptRelatedArray
+        course.relatedDepartment = deptRelatedArray;
         console.log('course to save ', course);
-        // fetch('http://localhost:5000/create-course', {
-        //     method: 'put',
-        //     headers: {
-        //         'content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(course)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log("data ", data);
-        //         if (data.modifiedCount) {
-        //             Toast.fire({
-        //                 icon: 'success',
-        //                 title: 'Successfully updated Course'
-        //             })
-        //             reset()
-        //         }
-        //         else if (data.upsertedCount) {
-        //             Toast.fire({
-        //                 icon: 'success',
-        //                 title: 'Successfully added Course'
-        //             })
-        //             reset()
-        //         }
-        //         else if (data.matchedCount) {
-        //             Toast.fire({
-        //                 icon: 'warning',
-        //                 title: 'This course already exists!'
-        //             })
-        //         }
-        //     });
+        fetch('http://localhost:5000/api/v1/course/create', {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(course)
+        })
+            .then(res => res.json())
+            .then(info => {
+                Toast.fire({
+                    icon: info.status,
+                    title: info.message
+                })
+            });
+        // reset();
     };
 
     //console.log('category ', category)
@@ -133,35 +124,26 @@ const CreateCourse = () => {
                     <div className="row row-cols-lg-1 row-cols-md-1 row-cols-sm-1">
                         <Form.Group className="mb-3 ">
                             <Form.Label className='text-primary'>Course Code: </Form.Label>
-                            <Form.Control type="text" {...register("course_code", { required: true })} className="w-100 " />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label className='text-primary'>Select Category:</Form.Label>
-                            <br></br>
-                            <Form.Select className='w-100' {...register("category", { required: true })} onChange={(e) => setCategory(e.target.value)}>
-                                {/* <option value="">Select Category</option> */}
-                                <option selected value="compulsory">Compulsory</option>
-                                <option value="optional">Optional</option>
-                            </Form.Select>
+                            <Form.Control type="text" {...register("courseCode", { required: true })} className="w-100 " />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             {
                                 category === 'compulsory' ?
                                     <>
                                         <Form.Label className='text-primary'>Course Title: </Form.Label>
-                                        <Form.Control className='w-100' type="text" {...register("course_title", { required: true })} />
+                                        <Form.Control className='w-100' type="text" {...register("courseTitle", { required: true })} />
                                     </>
                                     :
                                     <>
                                         <Form.Label className='text-primary'>Course Title 1: </Form.Label>
-                                        <Form.Control className='w-100 mb-3' type="text" {...register("course_title", { required: true })}
+                                        <Form.Control className='w-100 mb-3' type="text" {...register("courseTitle", { required: true })}
                                         />
                                         {Array.from(Array(counter)).map((c, index) => {
                                             return (
                                                 <>
                                                     <Form.Label className='text-primary'>Course Title {index + 2}: </Form.Label>
                                                     <InputGroup className="mb-3 w-100">
-                                                        <Form.Control type="text" key={index} {...register(`course_title_${index}`, { required: true })} className="w-100" />
+                                                        <Form.Control type="text" key={index} {...register(`courseTitle_${index}`, { required: true })} className="w-100" />
                                                     </InputGroup>
                                                 </>
                                             );
@@ -176,26 +158,57 @@ const CreateCourse = () => {
                             }
                         </Form.Group>
 
+                        <Form.Group className="mb-3">
+                            <Form.Label className='text-primary'>Credit: </Form.Label>
+                            <Form.Control type="number" step="0.01" {...register("credit", { required: true })} className="w-100" />
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label className='text-primary'>Select Category:</Form.Label>
+                            <br></br>
+                            <Form.Select className='w-100' {...register("category", { required: true })} onChange={(e) => setCategory(e.target.value)}>
+                                {/* <option value="">Select Category</option> */}
+                                <option selected value="compoulsary">Compoulsary</option>
+                                <option value="optional">Optional</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label className='text-primary'>Semester Name:</Form.Label>
+                            <br></br>
+                            <Form.Select className='w-100' {...register("semesterCode", { required: true })}>
+                                <option value="">Select a Semester:</option>
+                                <option value="1">1st Year 1st Semester</option>
+                                <option value="2">1st Year 2nd Semester</option>
+                                <option value="3">2nd Year 1st Semester</option>
+                                <option value="4">2nd Year 2nd Semester</option>
+                                <option value="5">3rd Year 1st Semester</option>
+                                <option value="6">3rd Year 2nd Semester</option>
+                                <option value="7">4th Year 1st Semester</option>
+                                <option value="8">4th Year 2nd Semester</option>
+                            </Form.Select>
+                        </Form.Group>
+
 
                         <Form.Group className="mb-3">
                             <Form.Label className='text-primary'>Department: </Form.Label>
-                            <Form.Control type="text" value={dept} step="0.01" readOnly {...register("department", { required: true })} className="w-100" />
+                            <Form.Control type="text" readOnly value={department} {...register("department", { required: true })} className="w-100" />
                         </Form.Group>
 
                         <Form.Group className="mb-3">
                             <Form.Label className='text-primary'>Select Departmental or Non Departmental:</Form.Label>
                             <br></br>
-                            <Form.Select className='w-100' {...register("isDepartmental", { required: true })}
-                                onChange={(e) => setIsDepartmental(e.target.value)}
+                            <Form.Select className='w-100' {...register("departmental", { required: true })}
+                                onChange={(e) => setIsDepartmental(!isDepartmental)}
                             >
                                 {/* <option value="">Select a Semester:</option> */}
-                                <option value={true} selected >Departmental</option>
-                                <option value={false} >Non Departmental</option>
+                                <option value="departmental" selected >Departmental</option>
+                                <option value="non departmental" >Non Departmental</option>
                             </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3 w-100">
                             {
-                                isDepartmental === 'false' &&
+                                isDepartmental == false &&
                                 <ReactSelect
                                     className="w-100"
                                     options={courseOptions}
@@ -215,25 +228,6 @@ const CreateCourse = () => {
                             }
                         </Form.Group>
 
-                        <Form.Group className="mb-3">
-                            <Form.Label className='text-primary'>Credit: </Form.Label>
-                            <Form.Control type="number" step="0.01" {...register("credit", { required: true })} className="w-100" />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label className='text-primary'>Semester Name:</Form.Label>
-                            <br></br>
-                            <Form.Select className='w-100' {...register("semester_code", { required: true })}>
-                                <option value="">Select a Semester:</option>
-                                <option value="1">1st Year 1st Semester</option>
-                                <option value="2">1st Year 2nd Semester</option>
-                                <option value="3">2nd Year 1st Semester</option>
-                                <option value="4">2nd Year 2nd Semester</option>
-                                <option value="5">3rd Year 1st Semester</option>
-                                <option value="6">3rd Year 2nd Semester</option>
-                                <option value="7">4th Year 1st Semester</option>
-                                <option value="8">4th Year 2nd Semester</option>
-                            </Form.Select>
-                        </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label className='text-primary'>Course Type:</Form.Label>
                             <br></br>
