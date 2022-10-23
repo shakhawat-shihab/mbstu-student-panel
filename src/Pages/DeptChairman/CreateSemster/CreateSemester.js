@@ -64,35 +64,25 @@ const CreateSemester = () => {
     }, [semester])
 
     const onSubmit = data => {
-        // if (data)
-
         data.name = checkSemesterName(data?.semesterCode);
-        console.log("on Submit Data ", data);
-        const l = "CSE2107"
-        console.log("on Submit Data ", data[`${department}${data.semesterCode}_courseTitle`][l]);
+        // console.log("on Submit Data ", data);
         let semester = {
             session: data.session,
-            semesterCode: parseInt(data.semester),
+            semesterCode: parseInt(data.semesterCode),
+            name: data.name,
             isRunning: true
         }
-        // const courses = {};
-        // for (const key in data[`${department}${data.semester}`]) {
-        //     courses[key] = { teacher: data[`${department}${data.semester}`][key] };
-        // }
         const courses = []
-        //for (const key in data[`${department}${data.semester}_course_teacher`]) {
-        // for (const key in currentCourses?.course_code) {
         currentCourses?.map(x => {
             const key = x?.courseCode;
-            console.log(key);
             const obj = {};
             obj.courseCode = key;
             obj.courseTitle = data[`${department}${data.semesterCode}_courseTitle`][key];
             obj.credit = parseFloat(data[`${department}${data.semesterCode}_course_credit`][key]);
             obj.type = data[`${department}${data.semesterCode}_course_type`][key];
-            obj.teacher = data[`${department}${data.semesterCode}_course_teacher`][key];
-            obj.secondExaminer = data[`${department}${data.semesterCode}_second_examiner`][key];
-            obj.thirdExaminer = data[`${department}${data.semesterCode}_third_examiner`][key];
+            //obj.teacher = data[`${department}${data.semesterCode}_course_teacher`][key];
+            //obj.secondExaminer = data[`${department}${data.semesterCode}_second_examiner`][key];
+            //obj.thirdExaminer = data[`${department}${data.semesterCode}_third_examiner`][key];
             if (data[`${department}${data.semesterCode}_course_type`][key] == 'project') {
                 obj.teacher_student = [];
                 obj.course_teacher = [];
@@ -103,60 +93,43 @@ const CreateSemester = () => {
                     obj.course_teacher.push(x?.value);
                 })
             }
-            //console.log('obj ', obj);
+            if (data[`${department}${data.semesterCode}_course_type`][key] == 'theory') {
+                const courseTeacherValues = data[`${department}${data.semesterCode}_course_teacher`][key].split("=/=")
+                const secondExamineerValues = data[`${department}${data.semesterCode}_second_examiner`][key].split("=/=")
+                const thirdExamineerValues = data[`${department}${data.semesterCode}_third_examiner`][key].split("=/=")
+                obj.teacher = { name: courseTeacherValues[1], teacherProfileId: courseTeacherValues[0] }
+                obj.secondExaminer = { name: secondExamineerValues[1], teacherProfileId: secondExamineerValues[0] }
+                obj.thirdExaminer = { name: thirdExamineerValues[1], teacherProfileId: thirdExamineerValues[0] }
+            }
             courses.push(obj)
         })
-        console.log('courses ', courses)
+
+        // console.log('courses ', courses)
         semester = { ...semester, courses: courses }
         semester.department = department;
         semester.degree = data.degree;
-        semester.chairman = data.chairman;
-        semester.member1 = data.member1;
-        semester.member2 = data.member2;
+        semester.examCommitteeChairman = data.chairman;
+        // semester.member1 = data.member1;
+        // semester.member2 = data.member2;
+        semester.examCommittee = [data.member1, data.member2]
 
         console.log("semesters to push ", semester);
-        console.log(" teacher List ", teacherList)
-        // fetch('http://localhost:5000/create-semester', {
-        //     method: 'put',
-        //     headers: {
-        //         'content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(semester)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log("data ", data);
-        //         if (data?.code === "200") {
-        //             Toast.fire({
-        //                 icon: 'error',
-        //                 title: data?.message
-        //             })
-        //         }
-        //         else {
-        //             if (data.modifiedCount) {
-        //                 Toast.fire({
-        //                     icon: 'success',
-        //                     title: 'Successfully updated Semester'
-        //                 })
-        //                 // reset();
-        //             }
-        //             else if (data.upsertedCount) {
-        //                 Toast.fire({
-        //                     icon: 'success',
-        //                     title: 'Successfully added Semester'
-        //                 })
-        //                 // reset();
-        //             }
-        //             else if (data.matchedCount) {
-        //                 Toast.fire({
-        //                     icon: 'warning',
-        //                     title: 'This semester already exists!'
-        //                 })
-        //             }
-        //         }
-
-
-        //     });
+        // console.log(" teacher List ", teacherList)
+        fetch('http://localhost:5000/api/v1/semester', {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(semester)
+        })
+            .then(res => res.json())
+            .then(info => {
+                console.log("data ", info);
+                Toast.fire({
+                    icon: info.status,
+                    title: info.message
+                })
+            });
     }
 
     const visibile = {
@@ -287,38 +260,44 @@ const CreateSemester = () => {
                 </Form.Group>
 
 
-                <Table responsive striped bordered hover style={{ border: '1px solid black' }}>
-                    <col width="10%" />
-                    <col width="20%" />
-                    <col width="8%" />
-                    <col width="5%" />
-                    <col width="12%" />
-                    <col width="12%" />
-                    <col width="12%" />
-                    <thead>
-                        <tr style={{ border: '1px solid black' }}>
-                            <th style={{ border: '1px solid black' }}>Course Code</th>
-                            <th style={{ border: '1px solid black' }}>Course Title</th>
-                            <th style={{ border: '1px solid black' }}>Type</th>
-                            <th style={{ border: '1px solid black' }}>Credit</th>
-                            <th style={{ border: '1px solid black' }}>Course Teacher</th>
-                            <th style={{ border: '1px solid black' }}>Second Examiner</th>
-                            <th style={{ border: '1px solid black' }}>Third Examiner</th>
-                        </tr>
-                    </thead>
-                    <tbody>
 
-                        {
-                            currentCourses.map(x => <CourseTeacherMap key={x.courseCode} course={x} teachers={teachers} register={register} errors={errors}
-                                optionSelected={optionSelected}
-                                setOptionSelected={setOptionSelected}
-                                setTeacherList={setTeacherList}
-                                teachersOption={teachersOption}
-                            ></CourseTeacherMap>)
-                        }
+                {
+                    currentCourses.length != 0
+                    &&
+                    <Table responsive striped bordered hover style={{ border: '1px solid black' }}>
+                        <col width="10%" />
+                        <col width="20%" />
+                        <col width="8%" />
+                        <col width="5%" />
+                        <col width="12%" />
+                        <col width="12%" />
+                        <col width="12%" />
+                        <thead>
+                            <tr style={{ border: '1px solid black' }}>
+                                <th style={{ border: '1px solid black' }}>Course Code</th>
+                                <th style={{ border: '1px solid black' }}>Course Title</th>
+                                <th style={{ border: '1px solid black' }}>Type</th>
+                                <th style={{ border: '1px solid black' }}>Credit</th>
+                                <th style={{ border: '1px solid black' }}>Course Teacher</th>
+                                <th style={{ border: '1px solid black' }}>Second Examiner</th>
+                                <th style={{ border: '1px solid black' }}>Third Examiner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                    </tbody>
-                </Table>
+                            {
+                                currentCourses.map(x => <CourseTeacherMap key={x.courseCode} course={x} teachers={teachers} register={register} errors={errors}
+                                    optionSelected={optionSelected}
+                                    setOptionSelected={setOptionSelected}
+                                    setTeacherList={setTeacherList}
+                                    teachersOption={teachersOption}
+                                ></CourseTeacherMap>)
+                            }
+
+                        </tbody>
+                    </Table>
+                }
+
 
 
                 <div className='text-center'>

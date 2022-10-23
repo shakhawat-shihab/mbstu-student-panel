@@ -68,12 +68,12 @@ const Dashboard = () => {
 
 
                                         {/* the below portion is added here just for testing purpose */}
-                                        <ListGroup.Item action >
+                                        {/* <ListGroup.Item action >
                                             <Link to={`${url}/create-course`}>Create Course (C) </Link>
                                         </ListGroup.Item>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/create-semester`}> Create Semester (C) </Link>
-                                        </ListGroup.Item>
+                                        </ListGroup.Item> */}
 
 
                                     </>
@@ -131,12 +131,12 @@ const Dashboard = () => {
                 </StudentRoute>
 
                 {/* the below portion is added here just for testing purpose */}
-                <StudentRoute path={`${path}/create-course`}>
+                {/* <StudentRoute path={`${path}/create-course`}>
                     <CreateCourse></CreateCourse>
                 </StudentRoute>
                 <StudentRoute path={`${path}/create-semester`}>
                     <CreateSemester></CreateSemester>
-                </StudentRoute>
+                </StudentRoute> */}
 
 
                 {/* teacher Routes */}

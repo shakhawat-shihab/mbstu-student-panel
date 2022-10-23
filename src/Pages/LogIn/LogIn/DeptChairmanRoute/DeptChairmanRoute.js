@@ -17,7 +17,7 @@ const DeptChairmanRoute = ({ children, ...rest }) => {
         <Route
             {...rest}
             render={({ location }) =>
-                user.email && deptChairman ? (
+                user.email && user?.isDeptChairman ? (
                     children
                 ) : (
                     <Redirect
