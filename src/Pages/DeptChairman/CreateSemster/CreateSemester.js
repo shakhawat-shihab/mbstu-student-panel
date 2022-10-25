@@ -39,7 +39,7 @@ const CreateSemester = () => {
             arrOfTeachers.push(obj);
         })
         setTeachersOption(arrOfTeachers)
-        console.log('arrOfTeachers ==', arrOfTeachers)
+        // console.log('arrOfTeachers ==', arrOfTeachers)
     }, [teachers])
     //console.log("register ", register);
     //const department = 'cse';
@@ -48,7 +48,7 @@ const CreateSemester = () => {
         fetch(`http://localhost:5000/api/v1/user/teacher?fields=${department}`)
             .then(res => res.json())
             .then(info => {
-                console.log("teachers of current user's department ", info.data);
+                // console.log("teachers of current user's department ", info.data);
                 setTeachers(info.data);
             })
     }, [])
@@ -57,7 +57,7 @@ const CreateSemester = () => {
             fetch(`http://localhost:5000/api/v1/course/${semester}`)
                 .then(res => res.json())
                 .then(info => {
-                    console.log("courses of selected semester ", info.data);
+                    // console.log("courses of selected semester ", info.data);
                     setCurrentCourses(info.data);
                 })
         }
@@ -65,7 +65,7 @@ const CreateSemester = () => {
 
     const onSubmit = data => {
         data.name = checkSemesterName(data?.semesterCode);
-        // console.log("on Submit Data ", data);
+        console.log("on Submit Data ", data);
         let semester = {
             session: data.session,
             semesterCode: parseInt(data.semesterCode),
@@ -93,13 +93,21 @@ const CreateSemester = () => {
                     obj.course_teacher.push(x?.value);
                 })
             }
-            if (data[`${department}${data.semesterCode}_course_type`][key] == 'theory') {
+            else if (data[`${department}${data.semesterCode}_course_type`][key] == 'theory') {
                 const courseTeacherValues = data[`${department}${data.semesterCode}_course_teacher`][key].split("=/=")
-                const secondExamineerValues = data[`${department}${data.semesterCode}_second_examiner`][key].split("=/=")
-                const thirdExamineerValues = data[`${department}${data.semesterCode}_third_examiner`][key].split("=/=")
+                const secondExaminerValues = data[`${department}${data.semesterCode}_second_examiner`][key].split("=/=")
+                const thirdExaminerValues = data[`${department}${data.semesterCode}_third_examiner`][key].split("=/=")
                 obj.teacher = { name: courseTeacherValues[1], teacherProfileId: courseTeacherValues[0] }
-                obj.secondExaminer = { name: secondExamineerValues[1], teacherProfileId: secondExamineerValues[0] }
-                obj.thirdExaminer = { name: thirdExamineerValues[1], teacherProfileId: thirdExamineerValues[0] }
+                obj.secondExaminer = { name: secondExaminerValues[1], teacherProfileId: secondExaminerValues[0] }
+                obj.thirdExaminer = { name: thirdExaminerValues[1], teacherProfileId: thirdExaminerValues[0] }
+            }
+            else if (data[`${department}${data.semesterCode}_course_type`][key] == 'lab') {
+                const courseTeacherValues = data[`${department}${data.semesterCode}_course_teacher`][key].split("=/=")
+                // const secondExaminerValues = data[`${department}${data.semesterCode}_second_examiner`][key].split("=/=")
+                // const thirdExaminerValues = data[`${department}${data.semesterCode}_third_examiner`][key].split("=/=")
+                obj.teacher = { name: courseTeacherValues[1], teacherProfileId: courseTeacherValues[0] }
+                // obj.secondExaminer = { name: secondExaminerValues[1], teacherProfileId: secondExaminerValues[0] }
+                // obj.thirdExaminer = { name: thirdExaminerValues[1], teacherProfileId: thirdExaminerValues[0] }
             }
             courses.push(obj)
         })
@@ -115,21 +123,21 @@ const CreateSemester = () => {
 
         console.log("semesters to push ", semester);
         // console.log(" teacher List ", teacherList)
-        fetch('http://localhost:5000/api/v1/semester', {
-            method: 'post',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(semester)
-        })
-            .then(res => res.json())
-            .then(info => {
-                console.log("data ", info);
-                Toast.fire({
-                    icon: info.status,
-                    title: info.message
-                })
-            });
+        // fetch('http://localhost:5000/api/v1/semester', {
+        //     method: 'post',
+        //     headers: {
+        //         'content-type': 'application/json'
+        //     },
+        //     body: JSON.stringify(semester)
+        // })
+        //     .then(res => res.json())
+        //     .then(info => {
+        //         console.log("data ", info);
+        //         Toast.fire({
+        //             icon: info.status,
+        //             title: info.message
+        //         })
+        //     });
     }
 
     const visibile = {
@@ -202,7 +210,7 @@ const CreateSemester = () => {
                         <option value="">Select Chairman for Exam Comitte</option>
                         {
                             teachers.map(x => {
-                                return (<option value={x?.profile?.['_id']}>
+                                return (<option key={x?.profile?.['_id']} value={x?.profile?.['_id']}>
                                     {
                                         x?.profile?.['firstName']
                                             ?
@@ -223,7 +231,7 @@ const CreateSemester = () => {
                         <option value="">Select Member for Exam Comitte</option>
                         {
                             teachers.map(x => {
-                                return (<option value={x?.profile?.['_id']}>
+                                return (<option key={x?.profile?.['_id']} value={x?.profile?.['_id']}>
                                     {
                                         x?.profile?.['firstName']
                                             ?
@@ -244,7 +252,7 @@ const CreateSemester = () => {
                         <option value="">Select Member for Exam Comitte</option>
                         {
                             teachers.map(x => {
-                                return (<option value={x?.profile?.['_id']}>
+                                return (<option key={x?.profile?.['_id']} value={x?.profile?.['_id']}>
                                     {
                                         x?.profile?.['firstName']
                                             ?

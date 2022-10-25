@@ -77,7 +77,7 @@ const CourseTeacherMap = (props) => {
                             props?.teachers.map(x => {
                                 // console.log(x);
                                 return (
-                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                    <option key={x?.profile?.['_id']} value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
                                         {
                                             x?.profile?.['firstName']
                                                 ?
@@ -100,9 +100,9 @@ const CourseTeacherMap = (props) => {
                         <option value="" className='text-center'>Select a teacher</option>
                         {
                             props?.teachers.map(x => {
-                                console.log(x);
+                                // console.log(x);
                                 return (
-                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                    <option key={x?.profile?.['_id']} value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
                                         {
                                             x?.profile?.['firstName']
                                                 ?
@@ -148,7 +148,7 @@ const CourseTeacherMap = (props) => {
                             props?.teachers.map(x => {
                                 // console.log(x);
                                 return (
-                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                    <option key={x?.profile?.['_id']} value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
                                         {
                                             x?.profile?.['firstName']
                                                 ?
@@ -174,7 +174,7 @@ const CourseTeacherMap = (props) => {
                             props?.teachers.map(x => {
                                 // console.log(x);
                                 return (
-                                    <option value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
+                                    <option key={x?.profile?.['_id']} value={`${x?.profile?.['_id']}=/=${x?.profile?.['firstName']} ${x?.profile?.['lastName']}`}>
                                         {
                                             x?.profile?.['firstName']
                                                 ?

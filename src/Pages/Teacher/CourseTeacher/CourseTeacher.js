@@ -209,12 +209,11 @@ const CourseTeacher = () => {
                 <>
                     <div>
                         <CourseTeacherMarksModal
-                            allInfo={allInfo} showModal={showModal} setShowModal={setShowModal}
+                            marks={marks} showModal={showModal} setShowModal={setShowModal}
                             attendance={attendance} ct1={ct1} ct2={ct2} ct3={ct3} final={final}
                             labAttendance={labAttendance} labQuiz={labQuiz} labReport={labReport}
                             classPerformanceProject={classPerformanceProject}
                         />
-
                     </div>
 
                     <div>
@@ -273,7 +272,7 @@ const CourseTeacher = () => {
                                                     <tbody>
                                                         {
                                                             marks?.studentsMarks?.map(x => {
-                                                                console.log(x?.studentProfileId?.firstName);
+                                                                // console.log(x?.studentProfileId?.firstName);
                                                                 return (
                                                                     <tr key={x?.id} style={{ border: "1px solid black" }}>
                                                                         <td style={{ border: "1px solid black" }}>
@@ -282,7 +281,7 @@ const CourseTeacher = () => {
                                                                                 readOnly />
                                                                         </td>
                                                                         <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName}
+                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
                                                                                 {...register(`${x?.id}_name`, { required: true })}
                                                                                 readOnly />
                                                                         </td>
@@ -374,7 +373,7 @@ const CourseTeacher = () => {
                                             />
                                             <div className='text-center'>
                                                 <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
                                             </div>
                                         </Form>
 
@@ -426,40 +425,43 @@ const CourseTeacher = () => {
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            Object.keys(allInfo).length !== 0 &&
-                                                            allInfo?.marks.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                                <td style={{ border: "1px solid black" }}>
-                                                                    <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-                                                                        {...register(`${x?.id}_id`, { required: true })}
-                                                                        readOnly />
-                                                                </td>
-                                                                <td style={{ border: "1px solid black" }}>
-                                                                    <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} value={x?.studentProfileId?.firstName}
-                                                                        {...register(`${x?.id}_name`, { required: true })}
-                                                                        readOnly />
-                                                                </td>
-                                                                <td style={{ border: "1px solid black" }}>
-                                                                    {
+                                                            marks.studentsMarks.map(x => {
+                                                                // console.log(x)
+                                                                return (
+                                                                    <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                                {...register(`${x?.id}_id`, { required: true })}
+                                                                                readOnly />
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                {...register(`${x?.id}_name`, { required: true })}
+                                                                                readOnly />
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            {
 
-                                                                        <p>{x?.labAttendance}</p>
-                                                                    }
+                                                                                <p>{x?.labAttendance}</p>
+                                                                            }
 
-                                                                </td>
-                                                                <td style={{ border: "1px solid black" }}>
-                                                                    {
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            {
 
-                                                                        <p>{x?.labEeport}</p>
-                                                                    }
+                                                                                <p>{x?.labReport}</p>
+                                                                            }
 
-                                                                </td>
-                                                                <td style={{ border: "1px solid black" }}>
-                                                                    {
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            {
 
-                                                                        <p>{x?.labQuiz}</p>
-                                                                    }
-                                                                </td>
-
-                                                            </tr>)
+                                                                                <p>{x?.labQuiz}</p>
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                )
+                                                            })
                                                         }
                                                     </tbody>
                                                 </Table>
@@ -490,7 +492,7 @@ const CourseTeacher = () => {
                                             />
                                             <div className='text-center'>
                                                 <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
                                             </div>
 
                                         </Form>
@@ -548,15 +550,15 @@ const CourseTeacher = () => {
                                                                 </thead>
                                                                 <tbody>
                                                                     {
-                                                                        Object.keys(allInfo).length !== 0 &&
-                                                                        allInfo?.marks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                                        Object.keys(marks).length !== 0 &&
+                                                                        marks?.studentsMarks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
                                                                                     {...register(`${x?.id}_id`, { required: true })}
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
-                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} value={x?.studentProfileId?.firstName}
+                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
                                                                                     {...register(`${x?.id}_name`, { required: true })}
                                                                                     readOnly />
                                                                             </td>
