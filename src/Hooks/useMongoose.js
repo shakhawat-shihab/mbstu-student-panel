@@ -118,6 +118,7 @@ const useMongoose = () => {
     const logOut = () => {
         if (typeof window !== 'undefined') {
             localStorage.removeItem('jwt');
+            setUser({});
             setChangeState(!changeState)
         }
     }
