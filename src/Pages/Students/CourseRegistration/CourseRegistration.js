@@ -31,6 +31,7 @@ const CourseRegistration = () => {
     const [isLoadingBacklogCourses, setIsLoadingBacklogCourse] = useState(true);
     const [previousApplicationCredit, setPreviousApplicationCredit] = useState(0);
     const [credit, setCredit] = useState(0);
+    const [backlogCredit, setBacklogCredit] = useState(0);
     const [totalCredit, setTotalCredit] = useState(0);
     const [hall, setHall] = useState({});
     const [isLoadingHall, setIsLoadingHall] = useState(true);
@@ -72,14 +73,16 @@ const CourseRegistration = () => {
                     .then(res => res.json())
                     .then(info => {
                         setPreviousApplicationCredit(info?.data)
+                        setSemesterCode(result?.data?.semesterCode)
+                        // setCredit(info?.data)
                     })
-                setSemesterCode(result?.data?.semesterCode)
             })
     }, [user])
 
     useEffect(() => {
         // if()
-        if (previousApplicationCredit > 0 && semesterCode !== -1) {
+        console.log("fgsgd ", previousApplicationCredit, semesterCode)
+        if (previousApplicationCredit < 0 && semesterCode !== -1) {
             fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode}`, {
                 headers: {
                     'Content-type': 'application/json',
@@ -98,6 +101,10 @@ const CourseRegistration = () => {
                     setTotalCredit(sum);
                     setIsLoadingRegularCourse(false)
                 })
+        }
+        else {
+            setSemesterName("Backlog Exam")
+            setIsLoadingRegularCourse(false)
         }
     }, [semesterCode, previousApplicationCredit])
 
@@ -216,7 +223,12 @@ const CourseRegistration = () => {
                                         <h4 className='text-center py-3 fw-bold'> Course Registration from</h4>
                                         <Form onSubmit={handleSubmit(onSubmit)}>
                                             <h5>
-                                                <input type='text' className="w-100 text-center border-0" value={`${semesterName} ${degree} Final Examination `} />
+                                                {
+                                                    previousApplicationCredit ?
+                                                        <input type='text' className="w-100 text-center border-0" value={`${semesterName} ${degree} Final Examination `} />
+                                                        :
+                                                        <input type='text' className="w-100 text-center border-0" value={`${semesterName}`} />
+                                                }
                                                 <input type='text' hidden  {...register("name")} className="w-100 text-center border-0" defaultValue={`${semesterName}`} />
                                                 <input type='text' hidden  {...register("degree")} className="w-100 text-center border-0" value={` ${degree}`} />
                                             </h5>
@@ -251,7 +263,7 @@ const CourseRegistration = () => {
                                             <br />
                                             <Form.Group className='mb-3'>
                                                 {
-                                                    (regularCourses.length != 0) &&
+                                                    (regularCourses.length !== 0) &&
                                                     <> <Form.Label className='text-primary mb-3'>Regular Courses: </Form.Label>
                                                         <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
                                                             <col width="15%" />
@@ -325,12 +337,19 @@ const CourseRegistration = () => {
                                                                                     onChange={(e) => {
                                                                                         //console.log(`${x?.courseCode}_check`, e.target.checked)
                                                                                         if (e.target.checked) {
+                                                                                            //critical
+                                                                                            setBacklogCredit(credit + parseFloat(x?.credit))
+
+
                                                                                             const sum = totalCredit + parseFloat(x?.credit)
                                                                                             setTotalCredit(sum)
                                                                                             if (sum > 27)
                                                                                                 setCreditError("You can't take more than 27 credit")
                                                                                         }
                                                                                         else {
+                                                                                            //critical
+                                                                                            setBacklogCredit(credit - parseFloat(x?.credit))
+
                                                                                             const sum = totalCredit - parseFloat(x?.credit)
                                                                                             setTotalCredit(sum)
                                                                                             if (sum <= 27)
@@ -348,6 +367,7 @@ const CourseRegistration = () => {
                                                                         // }
                                                                     })
                                                                 }
+                                                                {/* backlog credit sum */}
                                                                 <tr className='text-center' style={{ border: "1px solid black" }}>
                                                                     <td></td>
                                                                     <td></td>
