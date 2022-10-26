@@ -123,21 +123,21 @@ const CreateSemester = () => {
 
         console.log("semesters to push ", semester);
         // console.log(" teacher List ", teacherList)
-        // fetch('http://localhost:5000/api/v1/semester', {
-        //     method: 'post',
-        //     headers: {
-        //         'content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(semester)
-        // })
-        //     .then(res => res.json())
-        //     .then(info => {
-        //         console.log("data ", info);
-        //         Toast.fire({
-        //             icon: info.status,
-        //             title: info.message
-        //         })
-        //     });
+        fetch('http://localhost:5000/api/v1/semester', {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(semester)
+        })
+            .then(res => res.json())
+            .then(info => {
+                console.log("data ", info);
+                Toast.fire({
+                    icon: info.status,
+                    title: info.message
+                })
+            });
     }
 
     const visibile = {

@@ -17,7 +17,7 @@ const BacklogCourseRegistration = (props) => {
         applications.map(x => {
             sum += x.totalCredit;
             x?.backlogCourses.map(b => {
-                const find = backlogCourses.find(bc => bc.course_code === b.course_code)
+                const find = backlogCourses.find(bc => bc.courseCode === b.courseCode)
                 if (find) {
                     backlogCourses[backlogCourses.indexOf(find)].isApplied = true;
                     console.log(backlogCourses.indexOf(find))
@@ -49,7 +49,7 @@ const BacklogCourseRegistration = (props) => {
             if (key.endsWith('_check') && data[`${key}`] === true) {
                 //console.log(key)
                 const obj = {}
-                obj.course_code = data[`${key.split("_")[0]}_code`];
+                obj.courseCode = data[`${key.split("_")[0]}_code`];
                 obj.course_title = data[`${key.split("_")[0]}_title`];
                 obj.credit = data[`${key.split("_")[0]}_credit`];
                 backlog.push(obj)
@@ -67,7 +67,7 @@ const BacklogCourseRegistration = (props) => {
         application.backlogCourses = backlog;
         application.totalCredit = currentCredit;
         application.isPaymentDone = false;
-        // application.regularCourses = regularCourses.map(c => ({ course_code: c.course_code, course_title: c.course_title, credit: c.credit }))
+        // application.regularCourses = regularCourses.map(c => ({ courseCode: c.courseCode, course_title: c.course_title, credit: c.credit }))
         console.log('form to push ', application);
         if (totalCreditTaken < 27) {
             fetch('http://localhost:5000/application-course-registration', {
@@ -150,60 +150,59 @@ const BacklogCourseRegistration = (props) => {
                             <tbody>
                                 {
                                     backlogCourses?.map(x => {
-                                        if (x.isRunningCourse) {
-                                            return (<>
-                                                {
-                                                    !x?.isApplied
-                                                    &&
+                                        // if (x.isRunningCourse) {
+                                        return (<>
+                                            {
 
-                                                    <tr key={`${x.course_code}`} className='text-center' style={{ border: "1px solid black" }}>
-                                                        <td style={{ border: "1px solid black" }}>
-                                                            <input type='text' {...register(`${x?.course_code}_code`)} className="w-100 border-0 text-center input-color-inherit" value={x?.course_code} />
-                                                        </td>
-                                                        <td style={{ border: "1px solid black" }}>
-                                                            <input type='text' {...register(`${x?.course_code}_title`)} className="w-100 border-0 text-center input-color-inherit" value={x?.course_title} />
-                                                        </td>
-                                                        <td style={{ border: "1px solid black" }}>
 
-                                                            <Form.Check
-                                                                inline
-                                                                size='lg'
-                                                                type='checkbox'
-                                                                label="Select"
-                                                                id={`${x?.course_code}_check`}
-                                                                {...register(`${x?.course_code}_check`)}
-                                                                onChange={(e) => {
-                                                                    //console.log(`${x?.course_code}_check`, e.target.checked)
-                                                                    if (e.target.checked) {
-                                                                        const sum = totalCreditTaken + parseFloat(x?.credit)
-                                                                        setTotalCreditTaken(sum)
-                                                                        setCurrentCredit(currentCredit + parseFloat(x?.credit))
-                                                                        if (sum > 27) {
-                                                                            setCreditError("You can't take more than 27 credit")
-                                                                        }
+                                                <tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        <input type='text' {...register(`${x?.courseCode}_code`)} className="w-100 border-0 text-center input-color-inherit" value={x?.courseCode} />
+                                                    </td>
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        <input type='text' {...register(`${x?.courseCode}_title`)} className="w-100 border-0 text-center input-color-inherit" value={x?.course_title} />
+                                                    </td>
+                                                    <td style={{ border: "1px solid black" }}>
 
+                                                        <Form.Check
+                                                            inline
+                                                            size='lg'
+                                                            type='checkbox'
+                                                            label="Select"
+                                                            id={`${x?.courseCode}_check`}
+                                                            {...register(`${x?.courseCode}_check`)}
+                                                            onChange={(e) => {
+                                                                //console.log(`${x?.courseCode}_check`, e.target.checked)
+                                                                if (e.target.checked) {
+                                                                    const sum = totalCreditTaken + parseFloat(x?.credit)
+                                                                    setTotalCreditTaken(sum)
+                                                                    setCurrentCredit(currentCredit + parseFloat(x?.credit))
+                                                                    if (sum > 27) {
+                                                                        setCreditError("You can't take more than 27 credit")
                                                                     }
-                                                                    else {
-                                                                        const sum = totalCreditTaken - parseFloat(x?.credit)
-                                                                        setTotalCreditTaken(sum)
-                                                                        setCurrentCredit(currentCredit - parseFloat(x?.credit))
-                                                                        if (sum <= 27) {
-                                                                            setCreditError("")
-                                                                        }
 
+                                                                }
+                                                                else {
+                                                                    const sum = totalCreditTaken - parseFloat(x?.credit)
+                                                                    setTotalCreditTaken(sum)
+                                                                    setCurrentCredit(currentCredit - parseFloat(x?.credit))
+                                                                    if (sum <= 27) {
+                                                                        setCreditError("")
                                                                     }
-                                                                }
-                                                                }
-                                                            />
-                                                        </td>
-                                                        <td style={{ border: "1px solid black" }}>
-                                                            <input type='text' {...register(`${x?.course_code}_credit`)} className="w-100 border-0 text-center input-color-inherit" value={x?.credit} />
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            </>)
 
-                                        }
+                                                                }
+                                                            }
+                                                            }
+                                                        />
+                                                    </td>
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        <input type='text' {...register(`${x?.courseCode}_credit`)} className="w-100 border-0 text-center input-color-inherit" value={x?.credit} />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </>)
+
+                                        // }
                                     })
                                 }
                                 <tr className='text-center' style={{ border: "1px solid black" }}>

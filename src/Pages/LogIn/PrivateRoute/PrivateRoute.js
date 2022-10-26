@@ -5,6 +5,7 @@ import useAuth from '../../../Hooks/useAuth';
 
 const PrivateRoute = ({ children, ...rest }) => {
     const { user, isLoading } = useAuth();
+
     if (isLoading) {
         return <div className='text-center my-5 py-5 '>
             <Spinner className='align-items-center justify-content-start mx-auto' animation="border" role="status">
@@ -30,5 +31,6 @@ const PrivateRoute = ({ children, ...rest }) => {
         />
     );
 };
+
 
 export default PrivateRoute;

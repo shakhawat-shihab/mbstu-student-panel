@@ -23,15 +23,18 @@ const useMongoose = () => {
     const authenticate = (token, cb) => {
         if (typeof window !== 'undefined') {
             localStorage.setItem('jwt', JSON.stringify(token));
+
         }
         setChangeState(!changeState)
         cb();
+
     }
 
     // check if token in local storage is valid
     const isAuthenticated = () => {
         if (typeof window === 'undefined') return false;
         if (localStorage.getItem('jwt')) {
+
             const { exp } = jwt_decode(JSON.parse(localStorage.getItem('jwt')));
             if ((new Date()).getTime() <= exp * 1000) {
                 return true
@@ -46,6 +49,7 @@ const useMongoose = () => {
     }
 
     useEffect(() => {
+        console.log('inside useEffect');
         const jwt = JSON.parse(localStorage.getItem('jwt'));
         // no jwt means no user logged in
         if (jwt === null) {
@@ -55,6 +59,7 @@ const useMongoose = () => {
         }
         //decode jwt
         const decoded = jwt_decode(jwt);
+
         // if jwt session expires then remove that jwt
         if ((new Date()).getTime() >= decoded.exp * 1000) {
             setUser({});
@@ -63,9 +68,12 @@ const useMongoose = () => {
             return;
         }
         // valid jwt, so set the information to user
+        // console.log('decodes ', decoded)
         setUser({ ...decoded });
         setIsLoading(false);
     }, [changeState])
+
+
 
 
     //get user info from token
@@ -116,17 +124,20 @@ const useMongoose = () => {
 
     //signOut and remove token from local storage
     const logOut = () => {
+        console.log('logging out')
         if (typeof window !== 'undefined') {
             localStorage.removeItem('jwt');
             setUser({});
-            setChangeState(!changeState)
         }
     }
+
+
 
     return {
         user,
         admin,
         token,
+        setToken,
         isLoading,
         register,
         login,
