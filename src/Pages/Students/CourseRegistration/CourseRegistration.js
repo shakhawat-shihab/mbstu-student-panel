@@ -81,7 +81,7 @@ const CourseRegistration = () => {
 
     useEffect(() => {
         // if()
-        console.log("fgsgd ", previousApplicationCredit, semesterCode)
+        // console.log("fgsgd ", previousApplicationCredit, semesterCode)
         if (previousApplicationCredit <= 0 && semesterCode !== -1) {
             fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode}`, {
                 headers: {
@@ -118,7 +118,7 @@ const CourseRegistration = () => {
             })
                 .then(res => res.json())
                 .then(info => {
-                    console.log('Backlog course ', info);
+                    // console.log('Backlog course ', info);
                     const arr = []
                     info?.data?.map(c => {
                         arr.push(c?.course)
@@ -203,8 +203,8 @@ const CourseRegistration = () => {
             })
         }
     };
-    console.log(totalCredit);
-    console.log(creditError);
+    // console.log(totalCredit);
+    // console.log(creditError);
     return (
         <>
             {

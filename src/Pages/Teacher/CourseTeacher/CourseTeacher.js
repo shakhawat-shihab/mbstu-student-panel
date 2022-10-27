@@ -8,6 +8,7 @@ import Application from '../../Students/Application/Application';
 import './CourseTeacher.css';
 
 import CourseTeacherMarksModal from './CourseTeacherMarksModal';
+import MarkModal from './MarkModal';
 const CourseTeacher = () => {
     const [state, setState] = useState(1);
     const { courseId } = useParams();
@@ -38,6 +39,20 @@ const CourseTeacher = () => {
     const [labReport, setLabReport] = useState(true);
     const [labQuiz, setLabQuiz] = useState(true);
     const [classPerformanceProject, setClassPerformanceProject] = useState(true);
+
+
+    const [showMarkModal, setShowMarkModal] = useState(false);
+    const [theoryAttendance, setTheoryAttendance] = useState(false);
+    const [theoryCT1, setTheoryCT1] = useState(false);
+    const [theoryCT2, setTheoryCT2] = useState(false);
+    const [theoryCT3, setTheoryCT3] = useState(false);
+    const [theoryFinal, setTheoryFinal] = useState(false);
+
+    const [lbAttendance, setLbAttendance] = useState(false);
+    const [lbReport, setLbReport] = useState(false);
+    const [lbQuiz, setLbQuiz] = useState(false);
+
+
 
     const history = useHistory();
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -214,6 +229,18 @@ const CourseTeacher = () => {
                             labAttendance={labAttendance} labQuiz={labQuiz} labReport={labReport}
                             classPerformanceProject={classPerformanceProject}
                         />
+                    </div>
+                    <div>
+                        <MarkModal
+                            showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal} marks={marks}
+                            theoryAttendance={theoryAttendance} setTheoryAttendance={setTheoryAttendance}
+                            theoryCT1={theoryCT1} setTheoryCT1={setTheoryCT1}
+                            theoryCT2={theoryCT2} setTheoryCT2={setTheoryCT2} theoryCT3={theoryCT3}
+                            setTheoryCT3={setTheoryCT3} theoryFinal={theoryFinal} setTheoryFinal={setTheoryFinal}
+                            lbAttendance={lbAttendance} setLbAttendance={setLbAttendance} lbReport={lbReport}
+                            setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz}
+                        />
+
                     </div>
 
                     <div>

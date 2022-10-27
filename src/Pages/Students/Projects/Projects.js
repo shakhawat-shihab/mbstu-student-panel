@@ -7,44 +7,46 @@ import useAuth from '../../../Hooks/useAuth';
 const Projects = () => {
     const { user } = useAuth();
     const email = user?.email;
+    const profileId = user?.profileId;
+    const department = user?.department;
     const [projectCourses, setProjectCourses] = useState([]);
-    const [student, setStudent] = useState({});
+    // const [student, setStudent] = useState({});
     const { url } = useRouteMatch();
+    // useEffect(() => {
+    //     fetch(`http://localhost:5000/students/${email}`)
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             console.log("student ", data);
+    //             setStudent(data);
+    //         })
+    // }, [email])
     useEffect(() => {
-        fetch(`http://localhost:5000/students/${email}`)
+        fetch(`http://localhost:5000/api/v1/project-application/find-project-course/${profileId}/${department}`)
             .then(res => res.json())
-            .then(data => {
-                console.log("student ", data);
-                setStudent(data);
+            .then(info => {
+                console.log("project courses ", info);
+                setProjectCourses(info?.data);
             })
-    }, [email])
-    useEffect(() => {
-        //console.log(`http://localhost:5000/results/projects/${student?.department}/${student?.s_id}`)
-        fetch(`http://localhost:5000/results/projects/${student?.department}/${student?.s_id}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log("project courses ", data);
-                setProjectCourses(data);
-            })
-    }, [student])
+    }, [profileId, department])
+
     return (
         <div>
             <h2 className='text-center my-5'>Projects</h2>
             <div className='row container mx-auto my-3'>
                 {
                     projectCourses?.map(x => {
-                        return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?.course_code}_${x?.semester_code}`}>
+                        return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?.courseCode}_${x?.semester_code}`}>
                             <Card style={{ border: "1px solid black" }} className="mb-3">
                                 {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                                 <Card.Body>
-                                    <Card.Title> {x?.title}</Card.Title>
+                                    <Card.Title> {x?.courseTitle}</Card.Title>
                                     <Card.Text>
-                                        {x?.course_code}
+                                        {x?.courseCode}
                                     </Card.Text>
                                     <Card.Text>
                                         Credit: {x?.credit}
                                     </Card.Text>
-                                    <Link to={`${url}/apply-supervisor/${x?.course_code}/${x?.semester_code}`}>
+                                    <Link to={`${url}/apply-supervisor/${x?.courseCode}/${x?.semester_code}`}>
                                         <Button variant="primary"
                                         // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
                                         >

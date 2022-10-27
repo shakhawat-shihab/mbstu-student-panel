@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import useAuth from '../../../Hooks/useAuth';
 import ThirdExaminerMarksModal from './ThirdExaminerMarksModal';
+import ThirdMarkModal from './ThirdMarkModal';
 
 
 
@@ -19,6 +20,11 @@ const ThirdExaminer = () => {
     const { user } = useAuth();
     const email = user?.email;
     const history = useHistory();
+
+    const [showMarkModal, setShowMarkModal] = useState(false);
+    const [thirdExaminerFinal, setThirdExaminerFinal] = useState(false);
+
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -120,6 +126,12 @@ const ThirdExaminer = () => {
                         <ThirdExaminerMarksModal
                             marks={marks} showModal={showModal} setShowModal={setShowModal}
                             final={final}
+                        />
+                    </div>
+                    <div>
+                        <ThirdMarkModal
+                            marks={marks} showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal}
+                            thirdExaminerFinal={thirdExaminerFinal} setThirdExaminerFinal={setThirdExaminerFinal}
                         />
                     </div>
                     <div>
