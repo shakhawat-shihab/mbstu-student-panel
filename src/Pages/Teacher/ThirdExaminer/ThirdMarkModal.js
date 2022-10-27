@@ -10,10 +10,6 @@ const ThirdMarkModal = (props) => {
     const { register, handleSubmit } = useForm();
     const [theoryThirdExaminer, setTheoryThirdExaminer] = useState();
     const [fileUpload, setFileUpload] = useState();
-
-    console.log(marks);
-
-
     const handleThirdExaminerFinalChange = e => {
         setTheoryThirdExaminer(e.target.value);
     }
@@ -21,10 +17,6 @@ const ThirdMarkModal = (props) => {
     const onSubmit = data => {
         let supObj = {};
         let arr = [];
-
-
-        // console.log(data);
-        // console.log(marks);
 
         supObj.propertyName = "theoryThirdExaminer";
 
@@ -40,7 +32,7 @@ const ThirdMarkModal = (props) => {
 
         supObj.mark = arr;
 
-        console.log(supObj);
+        console.log('marks to push ', supObj);
 
     }
 
@@ -80,7 +72,6 @@ const ThirdMarkModal = (props) => {
             choice = 'theoryThirdExaminer';
         }
 
-
         if (fileUpload[0][`${choice}`]) {
             supObj.propertyName = choice;
             fileUpload?.map(x => {
@@ -91,7 +82,7 @@ const ThirdMarkModal = (props) => {
             })
             supObj.mark = arr;
 
-            console.log("sooooooppppp ==== ", supObj);
+            console.log('marks to push ', supObj);
 
         }
 
@@ -194,8 +185,6 @@ const ThirdMarkModal = (props) => {
                                                                         </td>
 
                                                                     }
-                                                                    {/* _course_teacher_marks */}
-
 
                                                                 </tr>
                                                             )

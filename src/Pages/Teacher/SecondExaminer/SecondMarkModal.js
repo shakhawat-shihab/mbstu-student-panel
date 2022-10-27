@@ -22,29 +22,16 @@ const SecondMarkModal = (props) => {
     const onSubmit = data => {
         let supObj = {};
         let arr = [];
-
-
-        console.log(data);
-
-        console.log(marks);
         supObj.propertyName = "theorySecondExaminer";
 
         marks?.studentsMarks?.map(x => {
             const obj = {};
-
             obj.id = data[`${x.id}_id`];
             obj.theorySecondExaminer = data[`${x.id}_final`];
-
-
             arr.push(obj);
         })
-
         supObj.mark = arr;
-
-        console.log(supObj);
-
-
-
+        console.log('marks to push ', supObj);
     }
 
     const readExcel = (file) => {
@@ -76,14 +63,10 @@ const SecondMarkModal = (props) => {
         //console.log(fileUpload);
         let supObj = {};
         let arr = [];
-
         let choice;
-
         if (secondExaminerFinal) {
             choice = 'theorySecondExaminer';
         }
-
-
         if (fileUpload[0][`${choice}`]) {
             supObj.propertyName = choice;
             fileUpload?.map(x => {
@@ -93,11 +76,8 @@ const SecondMarkModal = (props) => {
                 arr.push(obj);
             })
             supObj.mark = arr;
-
-            console.log("sooooooppppp ==== ", supObj);
-
+            console.log('marks to push ', supObj);
         }
-
         else {
             alert("Please Select a correct file !!!!");
         }

@@ -10,18 +10,17 @@ import SecondMarkModal from './SecondMarkModal';
 const SecondExaminer = () => {
     const [marks, setMarks] = useState({});
     const [allInfo, setAllinfo] = useState({});
-    const { courseId } = useParams();
     const [editFinalMarks, setEditFinalMarks] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [final, setFinal] = useState(true);
-    const { user } = useAuth();
-    const email = user?.email;
-    const history = useHistory();
-
     const [showMarkModal, setShowMarkModal] = useState(false);
     const [secondExaminerFinal, setSecondExaminerFinal] = useState(false);
+    const [final, setFinal] = useState(true);
+    const { user } = useAuth();
+    const { courseId } = useParams();
 
 
+    const email = user?.email;
+    const history = useHistory();
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -83,8 +82,8 @@ const SecondExaminer = () => {
                 return;
             }
         }
-        console.log('submit ', data);
-        console.log("Hello")
+        // console.log('submit ', data)
+        // console.log("Hello")
         // fetch(`http://localhost:5000/add-marks/second-examiner/${semesterId}/${courseCode}`, {
         //     method: 'put',
         //     headers: {
@@ -116,6 +115,10 @@ const SecondExaminer = () => {
         visibility: 'visible'
     }
 
+    // console.log("semeeester idddd ===== ", semesterId);
+    // console.log("courseee codeeee ===== ", courseCode);
+    // console.log("allll infoooooo  ===== ", allInfo);
+
     return (
         <>
             {
@@ -124,7 +127,7 @@ const SecondExaminer = () => {
                     <div>
                         <SecondExaminerMarksModal
                             marks={marks} showModal={showModal} setShowModal={setShowModal}
-                            final={final}
+
                         />
 
                     </div>
@@ -161,7 +164,7 @@ const SecondExaminer = () => {
                                                         <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                             Final Exam Mark <br />(70 marks)
                                                             <br />
-                                                            <span className='edit' onClick={() => { setEditFinalMarks(true) }}>Edit</span>
+                                                            <span className='edit' onClick={() => { setShowMarkModal(true); setSecondExaminerFinal(true) }}>Edit</span>
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -208,9 +211,7 @@ const SecondExaminer = () => {
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                 </>
             }
         </>

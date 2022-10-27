@@ -12,6 +12,7 @@ import MarkModal from './MarkModal';
 const CourseTeacher = () => {
     const [state, setState] = useState(1);
     const { courseId } = useParams();
+    // console.log('cours-----id ==== ', courseId);
     //console.log("semester-ID = ", semesterId);
     const { user } = useAuth();
     const email = user?.email;
@@ -39,7 +40,7 @@ const CourseTeacher = () => {
     const [labReport, setLabReport] = useState(true);
     const [labQuiz, setLabQuiz] = useState(true);
     const [classPerformanceProject, setClassPerformanceProject] = useState(true);
-
+    const [info, setInfo] = useState({})
 
     const [showMarkModal, setShowMarkModal] = useState(false);
     const [theoryAttendance, setTheoryAttendance] = useState(false);
@@ -81,7 +82,7 @@ const CourseTeacher = () => {
         })
             .then(res => res.json())
             .then(info => {
-                console.log('info ', info)
+                // console.log('info ', info)
                 setMarks(info.data);
                 // if (data?.code === "403") {
                 //     Toast.fire({
@@ -171,8 +172,7 @@ const CourseTeacher = () => {
                 return;
             }
         }
-        console.log('submit ', data);
-        console.log("Hello")
+
         // fetch(`http://localhost:5000/add-marks/course-teacher/${semesterId}/${courseCode}`, {
         //     method: 'put',
         //     headers: {
@@ -208,6 +208,9 @@ const CourseTeacher = () => {
     const invisibile = {
         visibility: 'hidden'
     }
+
+    // console.log("alllll inffooo ======= ", allInfo);
+    // console.log("maaaarks ============ ", marks);
     return (
         <>
             {
@@ -272,27 +275,27 @@ const CourseTeacher = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 Attendance <br />(10 marks)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditAttendance(!editAttendance) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryAttendance(true) }}>Edit</span>
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 CT-1 <br />(20 marks)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditCt1(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT1(true) }}>Edit</span>
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 CT-2 <br />(20 marks)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditCt2(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT2(true) }}>Edit</span>
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 CT-3 <br />(20 marks)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditCt3(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT3(true) }}>Edit</span>
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 Final Exam Mark <br />(70 marks)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditFinalMarks(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryFinal(true) }}>Edit</span>
                                                             </th>
                                                         </tr>
                                                     </thead>
@@ -408,6 +411,8 @@ const CourseTeacher = () => {
                                 </div>
                             </div>
                         }
+
+                        {/* bashay giye korbo lab modal  */}
                         {
                             marks.type === 'lab'
                             &&
@@ -416,7 +421,7 @@ const CourseTeacher = () => {
                                     <div className='p-4'>
                                         <div className=' '>
                                             <h3 className='text-center mb-3' >Assign Marks</h3>
-                                            <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
+                                            <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
                                             <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
                                             <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                         </div>
@@ -435,17 +440,17 @@ const CourseTeacher = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 Lab Attendance (15%)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditLabAttendance(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setLbAttendance(true) }}>Edit</span>
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 Lab Report Marks (15%)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditLabReport(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setLbReport(true) }}>Edit</span>
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 Lab Quiz Marks (30%)
                                                                 <br />
-                                                                <span className='edit' onClick={() => { setEditLabQuiz(true) }}>Edit</span>
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setLbQuiz(true) }}>Edit</span>
                                                             </th>
 
                                                         </tr>
@@ -553,7 +558,7 @@ const CourseTeacher = () => {
                                                 <div className='p-4'>
                                                     <div className=' '>
                                                         <h3 className='text-center mb-3' >Assign Marks</h3>
-                                                        <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
+                                                        <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
                                                         <p><span className='fw-bold'>Course Code: </span>{allInfo?.courseCode}</p>
                                                         <p><span className='fw-bold'>Credit Hour: </span>{allInfo?.credit}</p>
                                                     </div>

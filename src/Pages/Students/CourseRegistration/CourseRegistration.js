@@ -93,7 +93,7 @@ const CourseRegistration = () => {
                 .then(info => {
                     console.log('info ', info)
                     setRegularCourses(info?.data?.coursesMarks);
-                    setSemesterName(info?.data?.name)
+                    setSemesterName(info?.data?.name + ' ' + info?.data?.degree + ' Final Examination')
                     setDegree(info?.data?.degree)
                     let sum = 0;
                     info?.data?.coursesMarks.map(x => sum += x.credit)
@@ -227,10 +227,10 @@ const CourseRegistration = () => {
                                         <Form onSubmit={handleSubmit(onSubmit)}>
                                             <h5>
                                                 {
-                                                    previousApplicationCredit ?
-                                                        <input type='text' className="w-100 text-center border-0" value={`${semesterName} ${degree} Final Examination `} />
-                                                        :
-                                                        <input type='text' className="w-100 text-center border-0" value={`${semesterName}`} />
+                                                    // previousApplicationCredit ?
+                                                    <input type='text' className="w-100 text-center border-0" value={`${semesterName}`} />
+                                                    // :
+                                                    // <input type='text' className="w-100 text-center border-0" value={`${semesterName}`} />
                                                 }
                                                 <input type='text' hidden  {...register("name")} className="w-100 text-center border-0" defaultValue={`${semesterName}`} />
                                                 <input type='text' hidden  {...register("degree")} className="w-100 text-center border-0" value={` ${degree}`} />

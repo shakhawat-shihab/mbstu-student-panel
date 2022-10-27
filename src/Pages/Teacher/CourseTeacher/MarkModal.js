@@ -21,15 +21,6 @@ const MarkModal = (props) => {
     const [labReport, setLabReport] = useState();
     const [labQuiz, setLabQuiz] = useState()
     const [fileUpload, setFileUpload] = useState();
-    // useEffect(() => {
-    //     marks?.studentsMarks?.map(x => {
-    //         setAttendance(x.theoryAttendance);
-    //         setCt1(x.theoryCT1);
-    //         setCt2(x.theoryCT2);
-    //         setCt3(x.theoryCT3);
-    //         setFinal(x.theoryFinal);
-    //     })
-    // }, [])
 
     const handleAttendanceChange = e => {
         setAttendance(e.target.value);
@@ -59,12 +50,6 @@ const MarkModal = (props) => {
     const onSubmit = data => {
         let supObj = {};
         let arr = [];
-
-
-        console.log(data);
-
-        console.log(marks);
-
         marks?.studentsMarks?.map(x => {
             const obj = {};
             obj.id = data[`${x.id}_id`];
@@ -101,14 +86,10 @@ const MarkModal = (props) => {
                 supObj.propertyName = "labQuiz";
                 obj.labQuiz = data[`${x.id}_lab_quiz`];
             }
-
             arr.push(obj);
         })
-
         supObj.mark = arr;
-
-        console.log(supObj);
-
+        console.log('marks to push ', supObj);
     }
 
     const readExcel = (file) => {
@@ -136,7 +117,6 @@ const MarkModal = (props) => {
         });
     };
 
-    // console.log("fillleeee === ", fileUpload);
 
     const onFileUpload = () => {
         //console.log(fileUpload);
@@ -180,7 +160,7 @@ const MarkModal = (props) => {
             })
             supObj.mark = arr;
 
-            console.log("sooooooppppp ==== ", supObj);
+            console.log('marks to push ', supObj);
 
         }
 

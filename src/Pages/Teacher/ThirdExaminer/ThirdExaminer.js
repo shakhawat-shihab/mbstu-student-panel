@@ -10,21 +10,17 @@ import ThirdMarkModal from './ThirdMarkModal';
 
 
 const ThirdExaminer = () => {
+    const [showMarkModal, setShowMarkModal] = useState(false);
     const [marks, setMarks] = useState({});
     const { courseId } = useParams();
     const [allInfo, setAllinfo] = useState({});
     const { semesterId, courseCode } = useParams();
-    const [editFinalMarks, setEditFinalMarks] = useState(false);
+    const [thirdExaminerFinal, setThirdExaminerFinal] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [final, setFinal] = useState(true);
     const { user } = useAuth();
     const email = user?.email;
     const history = useHistory();
-
-    const [showMarkModal, setShowMarkModal] = useState(false);
-    const [thirdExaminerFinal, setThirdExaminerFinal] = useState(false);
-
-
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -84,8 +80,7 @@ const ThirdExaminer = () => {
                 return;
             }
         }
-        console.log('submit ', data);
-        console.log("Hello")
+
         // fetch(`http://localhost:5000/add-marks/third-examiner/${semesterId}/${courseCode}`, {
         //     method: 'put',
         //     headers: {
@@ -158,7 +153,7 @@ const ThirdExaminer = () => {
                                                         <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                             Final Exam Mark <br />(70 marks)
                                                             <br />
-                                                            <span className='edit' onClick={() => { setEditFinalMarks(true) }}>Edit</span>
+                                                            <span className='edit' onClick={() => { setShowMarkModal(true); setThirdExaminerFinal(true) }}>Edit</span>
                                                         </th>
                                                     </tr>
                                                 </thead>
