@@ -123,7 +123,7 @@ const Dashboard = () => {
                 <StudentRoute path={`${path}/course-registration`}>
                     <CourseRegistration></CourseRegistration>
                 </StudentRoute>
-                <StudentRoute path={`${path}/project/apply-supervisor/:courseCode/:semesterCode`}>
+                <StudentRoute path={`${path}/project/apply-supervisor/:courseId`}>
                     <ApplyToSupervisor></ApplyToSupervisor>
                 </StudentRoute>
                 <StudentRoute path={`${path}/project`}>

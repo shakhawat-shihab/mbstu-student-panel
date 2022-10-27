@@ -21,7 +21,13 @@ const Projects = () => {
     //         })
     // }, [email])
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/project-application/find-project-course/${profileId}/${department}`)
+
+        fetch(`http://localhost:5000/api/v1/project-application/find-project-course`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+        })
             .then(res => res.json())
             .then(info => {
                 console.log("project courses ", info);
@@ -46,7 +52,7 @@ const Projects = () => {
                                     <Card.Text>
                                         Credit: {x?.credit}
                                     </Card.Text>
-                                    <Link to={`${url}/apply-supervisor/${x?.courseCode}/${x?.semester_code}`}>
+                                    <Link to={`${url}/apply-supervisor/${x?._id}`}>
                                         <Button variant="primary"
                                         // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
                                         >

@@ -74,6 +74,7 @@ const CourseRegistration = () => {
                     .then(info => {
                         setPreviousApplicationCredit(info?.data)
                         setSemesterCode(result?.data?.semesterCode)
+                        console.log(result?.data?.semesterCode)
                         // setCredit(info?.data)
                     })
             })
@@ -83,7 +84,7 @@ const CourseRegistration = () => {
         // if()
         // console.log("fgsgd ", previousApplicationCredit, semesterCode)
         if (previousApplicationCredit <= 0 && semesterCode !== -1) {
-            fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode}`, {
+            fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode + 1}`, {
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -93,7 +94,7 @@ const CourseRegistration = () => {
                 .then(info => {
                     console.log('info ', info)
                     setRegularCourses(info?.data?.coursesMarks);
-                    setSemesterName(info?.data?.name + ' ' + info?.data?.degree + ' Final Examination')
+                    setSemesterName(info?.data?.name)
                     setDegree(info?.data?.degree)
                     let sum = 0;
                     info?.data?.coursesMarks.map(x => sum += x.credit)
@@ -103,7 +104,6 @@ const CourseRegistration = () => {
                 })
         }
         else {
-            setSemesterName("Backlog Exam")
             setIsLoadingRegularCourse(false)
         }
     }, [semesterCode, previousApplicationCredit])
@@ -131,7 +131,7 @@ const CourseRegistration = () => {
 
 
     const onSubmit = data => {
-        // console.log('form data ', data);
+        console.log('form data ', data);
         const backlog = [];
         for (const key in data) {
             if (key.endsWith('_check') && data[`${key}`] === true) {
@@ -149,8 +149,17 @@ const CourseRegistration = () => {
         })
 
         const application = {}
-        application.name = data.name;
-        application.semesterCode = semesterCode;
+
+        // data.name ? (application.name = data.name) : (application.name = "Backlog Exam")
+
+        if (previousApplicationCredit > 0) {
+            application.name = "Backlog Exam"
+        }
+        else {
+            application.name = data?.name
+            application.semesterCode = semesterCode + 1;
+        }
+
         application.department = data.department;
         application.departmentName = data.departmentName;
         application.degree = data.degree;
@@ -168,7 +177,7 @@ const CourseRegistration = () => {
 
         data.regularCourses = regularCourses.map(c => c._id)
         console.log('form to push ', application);
-        console.log('credit ', totalCredit)
+        // console.log('credit ', totalCredit)
         if (backlogCredit + credit + previousApplicationCredit < 27) {
             fetch('http://localhost:5000/api/v1/course-application/create', {
                 method: 'post',
@@ -227,10 +236,10 @@ const CourseRegistration = () => {
                                         <Form onSubmit={handleSubmit(onSubmit)}>
                                             <h5>
                                                 {
-                                                    // previousApplicationCredit ?
-                                                    <input type='text' className="w-100 text-center border-0" value={`${semesterName}`} />
-                                                    // :
-                                                    // <input type='text' className="w-100 text-center border-0" value={`${semesterName}`} />
+                                                    !semesterName ?
+                                                        <p className='text-center'>Backlog Exam</p>
+                                                        :
+                                                        <p className='text-center'>{semesterName + ' Final Examination'}</p>
                                                 }
                                                 <input type='text' hidden  {...register("name")} className="w-100 text-center border-0" defaultValue={`${semesterName}`} />
                                                 <input type='text' hidden  {...register("degree")} className="w-100 text-center border-0" value={` ${degree}`} />

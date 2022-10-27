@@ -199,7 +199,7 @@ const CreateSemester = () => {
                     <br></br>
                     <Form.Select {...register("degree", { required: true })}>
                         <option value="">Select the type</option>
-                        <option value="bsc-engg">Bachelor of Science (Engg.)</option>
+                        <option value="Bsc (Engg)">Bachelor of Science (Engg.)</option>
                         <option value="bsc-hons">Bachelor of Science (Hons.)</option>
                         <option value="bba">Bachelor of Business Administration</option>
                         <option value="b-pharm">Bachelor of Pharmacy</option>
