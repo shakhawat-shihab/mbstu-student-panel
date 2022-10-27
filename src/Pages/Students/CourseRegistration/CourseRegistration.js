@@ -82,7 +82,7 @@ const CourseRegistration = () => {
     useEffect(() => {
         // if()
         console.log("fgsgd ", previousApplicationCredit, semesterCode)
-        if (previousApplicationCredit < 0 && semesterCode !== -1) {
+        if (previousApplicationCredit <= 0 && semesterCode !== -1) {
             fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode}`, {
                 headers: {
                     'Content-type': 'application/json',
@@ -168,8 +168,8 @@ const CourseRegistration = () => {
 
         data.regularCourses = regularCourses.map(c => c._id)
         console.log('form to push ', application);
-
-        if (totalCredit < 27) {
+        console.log('credit ', totalCredit)
+        if (backlogCredit + credit + previousApplicationCredit < 27) {
             fetch('http://localhost:5000/api/v1/course-application/create', {
                 method: 'post',
                 headers: {
@@ -185,6 +185,8 @@ const CourseRegistration = () => {
                             icon: 'success',
                             title: 'Registration successful.'
                         })
+                        reset();
+                        history.push('/home');
                     }
                     else {
                         Toast.fire({
@@ -192,7 +194,6 @@ const CourseRegistration = () => {
                             title: 'Registration failed.'
                         })
                     }
-                    //     reset();
                 });
         }
         else {
@@ -202,11 +203,13 @@ const CourseRegistration = () => {
             })
         }
     };
+    console.log(totalCredit);
+    console.log(creditError);
     return (
         <>
             {
                 // (isLoadingRegularCourses | isLoadingBacklogCourses | isLoadingHall | isLoadingStudent)
-                (isLoadingRegularCourses)
+                (isLoadingRegularCourses || isLoadingBacklogCourses)
                     ?
                     <div className='text-center my-5 py-5 '>
                         <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
@@ -256,6 +259,10 @@ const CourseRegistration = () => {
                                                     <input type='text' {...register("applicantHallName")} readOnly className="w-100" value={hallName} />
                                                     <input type='text' {...register("applicantHallId")} hidden className="w-100" value={hallId} />
                                                 </Form.Group>
+                                                <Form.Group className="mb-3">
+                                                    <Form.Label className='text-primary'>Email: </Form.Label>
+                                                    <input type='text' {...register("email", { required: true })} className="w-100" value={email} />
+                                                </Form.Group>
                                                 <input type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
                                             </div>
 
@@ -290,7 +297,7 @@ const CourseRegistration = () => {
                                                                 }
                                                                 <tr className='text-center' style={{ border: "1px solid black" }}>
                                                                     <td></td>
-                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>Total Credit</td>
+                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>Regular Courses Credit</td>
                                                                     <td style={{ border: "1px solid black" }} className='fw-bold'>{credit}</td>
                                                                 </tr>
                                                             </tbody>
@@ -338,19 +345,19 @@ const CourseRegistration = () => {
                                                                                         //console.log(`${x?.courseCode}_check`, e.target.checked)
                                                                                         if (e.target.checked) {
                                                                                             //critical
-                                                                                            setBacklogCredit(credit + parseFloat(x?.credit))
+                                                                                            setBacklogCredit(backlogCredit + parseFloat(x?.credit))
 
 
-                                                                                            const sum = totalCredit + parseFloat(x?.credit)
+                                                                                            const sum = credit + parseFloat(x?.credit) + previousApplicationCredit
                                                                                             setTotalCredit(sum)
                                                                                             if (sum > 27)
                                                                                                 setCreditError("You can't take more than 27 credit")
                                                                                         }
                                                                                         else {
                                                                                             //critical
-                                                                                            setBacklogCredit(credit - parseFloat(x?.credit))
+                                                                                            setBacklogCredit(backlogCredit - parseFloat(x?.credit))
 
-                                                                                            const sum = totalCredit - parseFloat(x?.credit)
+                                                                                            const sum = credit - parseFloat(x?.credit) + previousApplicationCredit
                                                                                             setTotalCredit(sum)
                                                                                             if (sum <= 27)
                                                                                                 setCreditError("")
@@ -372,23 +379,28 @@ const CourseRegistration = () => {
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td style={{ border: "1px solid black" }} className='fw-bold'>Total Backlog Credit</td>
-                                                                    <td className='fw-bold'>{totalCredit - credit}</td>
+                                                                    <td className='fw-bold'>{backlogCredit}</td>
+                                                                </tr>
+
+                                                                {/* Previous application credit sum */}
+                                                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>Already Taken Credit</td>
+                                                                    <td className='fw-bold'>{previousApplicationCredit}</td>
                                                                 </tr>
                                                             </tbody>
                                                         </Table>
                                                         {
                                                             creditError
                                                             &&
-                                                            <span className='text-danger'> {creditError} </span>
+                                                            <p className='text-danger me-2' style={{ 'textAlign': 'right' }}>  *{creditError} </p>
                                                         }
                                                     </>
                                                 }
-
-
-
                                             </Form.Group>
 
-                                            <h4 className='text-center'>Total Credits taken {totalCredit}</h4>
+                                            <h4 className='text-center'>Total Credits taken {backlogCredit + credit + previousApplicationCredit}</h4>
                                             <div className='text-center my-4'>
                                                 <input type="submit" value='Register' className='btn btn-primary' />
                                             </div>

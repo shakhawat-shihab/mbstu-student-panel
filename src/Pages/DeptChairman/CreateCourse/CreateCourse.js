@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import useAuth from '../../../Hooks/useAuth';
 import { components } from "react-select";
 const Option = (props) => {
+    console.log('props ', props)
     return (
         <div>
             <components.Option {...props}>

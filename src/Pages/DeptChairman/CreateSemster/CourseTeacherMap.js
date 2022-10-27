@@ -24,6 +24,7 @@ const CourseTeacherMap = (props) => {
     const { courseTitle, credit, courseCode, department, semesterCode, category, type } = props.course;
     const { register } = props;
     const { setOptionSelected, optionSelected, setTeacherList, teachersOption } = props;
+    // console.log(teachersOption)
     // const [teachersOption, setTeachersOption] = useState([]);
     // const arrOfTeachers = []
     // useEffect(() => {
@@ -35,13 +36,14 @@ const CourseTeacherMap = (props) => {
     //     })
     //     setTeachersOption(arrOfTeachers)
     // }, [])
-    //console.log("teachersOption == ", teachersOption)
+    // console.log("teachersOption == ", teachersOption)
     const visibile = {
         visibility: 'visible'
     }
     const invisibile = {
         visibility: 'hidden'
     }
+
 
     //console.log('fun ', props?.course?.courseTitle, ' category ', category);
 
@@ -95,7 +97,7 @@ const CourseTeacherMap = (props) => {
 
             {
                 type === 'lab' &&
-                <td colspan='3' style={{ border: '1px solid black' }}>
+                <td colSpan='3' style={{ border: '1px solid black' }}>
                     <Form.Select {...register(`${department}${semesterCode}_course_teacher.${courseCode}`, { required: true })}>
                         <option value="" className='text-center'>Select a teacher</option>
                         {
@@ -120,9 +122,9 @@ const CourseTeacherMap = (props) => {
 
             {
                 type === 'project' &&
-                <td colspan='3' style={{ border: '1px solid black' }}>
+                <td colSpan='3' >
                     <ReactSelect
-                        className="w-100 text-center"
+                        className="w-100 text-center "
                         options={teachersOption}
                         isMulti
                         closeMenuOnSelect={false}
@@ -136,6 +138,8 @@ const CourseTeacherMap = (props) => {
                     >
                         <Option />
                     </ReactSelect>
+
+
                 </td>
             }
 
@@ -195,5 +199,6 @@ const CourseTeacherMap = (props) => {
         </tr >
     );
 };
+
 
 export default CourseTeacherMap;

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
+import ReactSelect from 'react-select';
+import { components } from "react-select";
 import Swal from 'sweetalert2';
 import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
@@ -33,9 +35,10 @@ const CreateSemester = () => {
     useEffect(() => {
         const arrOfTeachers = []
         teachers?.map(x => {
+            // console.log(x)
             const obj = {}
-            obj.label = x?.displayName;
-            obj.value = x?.email;
+            obj.label = x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+            obj.value = x?.profile?._id;
             arrOfTeachers.push(obj);
         })
         setTeachersOption(arrOfTeachers)
@@ -66,6 +69,7 @@ const CreateSemester = () => {
     const onSubmit = data => {
         data.name = checkSemesterName(data?.semesterCode);
         console.log("on Submit Data ", data);
+
         let semester = {
             session: data.session,
             semesterCode: parseInt(data.semesterCode),
@@ -84,14 +88,18 @@ const CreateSemester = () => {
             //obj.secondExaminer = data[`${department}${data.semesterCode}_second_examiner`][key];
             //obj.thirdExaminer = data[`${department}${data.semesterCode}_third_examiner`][key];
             if (data[`${department}${data.semesterCode}_course_type`][key] == 'project') {
-                obj.teacher_student = [];
-                obj.course_teacher = [];
-                teacherList.map(x => {
-                    const supervisor = {}
-                    supervisor[`${x.value}`] = [];
-                    obj.teacher_student.push(supervisor);
-                    obj.course_teacher.push(x?.value);
+                // obj.teacher_student = [];
+                // obj.course_teacher = [];
+                // teacherList.map(x => {
+                //     const supervisor = {}
+                //     supervisor[`${x.value}`] = [];
+                //     obj.teacher_student.push(supervisor);
+                //     obj.course_teacher.push(x?.value);
+                // })
+                const arrayOfProjectTeacher = optionSelected?.map(x => {
+                    return x.value;
                 })
+                obj.teacherList = arrayOfProjectTeacher;
             }
             else if (data[`${department}${data.semesterCode}_course_type`][key] == 'theory') {
                 const courseTeacherValues = data[`${department}${data.semesterCode}_course_teacher`][key].split("=/=")
@@ -272,38 +280,41 @@ const CreateSemester = () => {
                 {
                     currentCourses.length != 0
                     &&
-                    <Table responsive striped bordered hover style={{ border: '1px solid black' }}>
-                        <col width="10%" />
-                        <col width="20%" />
-                        <col width="8%" />
-                        <col width="5%" />
-                        <col width="12%" />
-                        <col width="12%" />
-                        <col width="12%" />
-                        <thead>
-                            <tr style={{ border: '1px solid black' }}>
-                                <th style={{ border: '1px solid black' }}>Course Code</th>
-                                <th style={{ border: '1px solid black' }}>Course Title</th>
-                                <th style={{ border: '1px solid black' }}>Type</th>
-                                <th style={{ border: '1px solid black' }}>Credit</th>
-                                <th style={{ border: '1px solid black' }}>Course Teacher</th>
-                                <th style={{ border: '1px solid black' }}>Second Examiner</th>
-                                <th style={{ border: '1px solid black' }}>Third Examiner</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div>
+                        <Table className='py-5' striped bordered hover style={{ border: '1px solid black' }}>
+                            <col width="10%" />
+                            <col width="20%" />
+                            <col width="8%" />
+                            <col width="5%" />
+                            <col width="12%" />
+                            <col width="12%" />
+                            <col width="12%" />
+                            <thead>
+                                <tr style={{ border: '1px solid black' }}>
+                                    <th style={{ border: '1px solid black' }}>Course Code</th>
+                                    <th style={{ border: '1px solid black' }}>Course Title</th>
+                                    <th style={{ border: '1px solid black' }}>Type</th>
+                                    <th style={{ border: '1px solid black' }}>Credit</th>
+                                    <th style={{ border: '1px solid black' }}>Course Teacher</th>
+                                    <th style={{ border: '1px solid black' }}>Second Examiner</th>
+                                    <th style={{ border: '1px solid black' }}>Third Examiner</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                            {
-                                currentCourses.map(x => <CourseTeacherMap key={x.courseCode} course={x} teachers={teachers} register={register} errors={errors}
-                                    optionSelected={optionSelected}
-                                    setOptionSelected={setOptionSelected}
-                                    setTeacherList={setTeacherList}
-                                    teachersOption={teachersOption}
-                                ></CourseTeacherMap>)
-                            }
+                                {
+                                    currentCourses.map(x => <CourseTeacherMap key={x.courseCode} course={x} teachers={teachers} register={register} errors={errors}
+                                        optionSelected={optionSelected}
+                                        setOptionSelected={setOptionSelected}
+                                        setTeacherList={setTeacherList}
+                                        teachersOption={teachersOption}
+                                    ></CourseTeacherMap>)
+                                }
 
-                        </tbody>
-                    </Table>
+                            </tbody>
+                        </Table>
+                    </div>
+
                 }
 
 
@@ -318,4 +329,18 @@ const CreateSemester = () => {
     );
 };
 
+const Option = (props) => {
+    return (
+        <div>
+            <components.Option {...props}>
+                <input
+                    type="checkbox"
+                    checked={props.isSelected}
+                    onChange={() => null}
+                />{" "}
+                <label>{props.label}</label>
+            </components.Option>
+        </div>
+    );
+};
 export default CreateSemester;
