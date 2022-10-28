@@ -14,8 +14,6 @@ const ApplyToSupervisor = () => {
     const id = email.substr(0, 7);
     const name = (user?.fullName);
     const session = '20' + parseInt(id.substring(2, 4)) - 1 + '-' + id.substring(2, 4);
-    const hallName = (user?.hall?.name)
-    const hallId = (user?.hall?.hallId)
     const studentProfileId = user?.profileId;
     const department = user?.department;
     const departmentName = checkDepartmentNameFromIdCode(id);
@@ -23,12 +21,15 @@ const ApplyToSupervisor = () => {
     const [student, setStudent] = useState({});
     const [isLoadingTeacher, setIsLoadingTeacher] = useState(true);
     const [teachers, setTeachers] = useState([]);
+    const [courseCode, setCourseCode] = useState('');
+    const [courseTitle, setCourseTitle] = useState('');
     const [waitMessage, setWaitMessage] = useState(false);
     const [message, setMessage] = useState(false);
     const [errorMessageForId, setErrorMessageForId] = useState('');
     const [state, setState] = useState(1);
     const [proposals, setProposals] = useState([]);
-    const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
+    const [isLoadingProposals, setIsLoadingProposals] = useState(true);
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     const Toast = Swal.mixin({
         toast: true,
@@ -43,24 +44,20 @@ const ApplyToSupervisor = () => {
     })
 
     useEffect(() => {
-        fetch(`http://localhost:5000/myProposal/${courseId}`)
+        fetch(`http://localhost:5000/api/v1/project-application/my-proposal/${courseId}`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+        })
             .then(res => res.json())
-            .then(data => {
-                console.log("proposals ", data);
-                setProposals(data);
-                setWaitMessage(false);
-                data.map(x => {
-                    if (x.status === 'accepted') {
-                        setMessage('Your Application is Accepted!')
-                        setWaitMessage(true);
-                    }
-                    if (x.status === 'pending') {
-                        setMessage("You have done an application already wait for response")
-                        setWaitMessage(true);
-                    }
-                })
+            .then(proposal => {
+                // console.log("proposal ", proposal);
+                setProposals(proposal.data);
+                setIsLoadingProposals(false)
+
             })
-    }, [student, state])
+    }, [courseId])
 
 
     // useEffect(() => {
@@ -80,100 +77,80 @@ const ApplyToSupervisor = () => {
     // useEffect use kore teacher nam khuje ber korbo jar kase se already allocated
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`)
+        fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+        })
             .then(res => res.json())
             .then(info => {
-                console.log("teachers of a project course ", info.data);
-                setTeachers(info.data);
+                // console.log("teachers of a project course ", info);
+                setCourseCode(info?.data?.courseCode);
+                setCourseTitle(info?.data?.courseTitle)
+                setTeachers(info?.data?.teacherList);
                 setIsLoadingTeacher(false);
             })
     }, [courseId])
+
+    // console.log(teachers);
 
 
 
 
     const onSubmit = data => {
-        console.log('application ', data);
+        // console.log('on submit ', data);
 
-        // let i = 0;
-        // const array = [];
-        // array.push(data.student_id);
-        // while (i < counter) {
-        //     if (data[`student_id_${i}`].trim()) {
-        //         array.push(data[`student_id_${i}`].trim().toLowerCase());
-        //     }
-        //     i++;
-        // }
-        // const application = {}
-        // application.subject = data.subject;
-        // application.description = data.description;
-        // application.teacher = data.teacher;
-        // application.status = "pending";
-        // application.course_code = courseCode
-        // application.students = array;
+        const application = {};
+
+        application.courseCode = data.courseCode;
+        application.courseTitle = data.courseTitle;
+        application.courseMarksId = data.courseId;
+        application.projectApplicationTitle = data.projectApplicationTitle;
+        application.projectApplicationDescription = data.projectApplicationDescription;
 
 
-        // fetch(`http://localhost:5000/application-to-supervisor/id-check/${courseCode}`, {
-        //     method: 'put',
-        //     headers: {
-        //         'content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(application.students)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log("app ", data);
-        //         if (data.length === 0) {
-        //             console.log('student id not exist')
-        //             fetch('http://localhost:5000/application-to-supervisor', {
-        //                 method: 'put',
-        //                 headers: {
-        //                     'content-type': 'application/json'
-        //                 },
-        //                 body: JSON.stringify(application)
-        //             })
-        //                 .then(res => res.json())
-        //                 .then(data => {
-        //                     console.log("data ", data);
-        //                     if (data.insertedId) {
-        //                         Toast.fire({
-        //                             icon: 'success',
-        //                             title: 'Successfully Applied to Supervisor'
-        //                         })
-        //                         reset();
-        //                     }
-        //                 });
-        //         }
-        //         else {
-        //             console.log('student id already exist')
-        //             Toast.fire({
-        //                 icon: 'error',
-        //                 title: "You can't make group with these students!!"
-        //             })
-        //             setErrorMessageForId('The Id you inserted already applied to superrvisor')
-        //         }
-        //     });
+        application.department = data.department;
+        application.departmentName = data.departmentName;
+        const obj = {};
+        obj.teacherProfileId = data.teacher.split("=/=")[0]
+        obj.name = data.teacher.split("=/=")[1]
+        application.teacher = obj
 
-        // console.log('application to push ', application);
-        // fetch('http://localhost:5000/application-to-supervisor', {
-        //     method: 'put',
-        //     headers: {
-        //         'content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(application)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log("data ", data);
-        //         if (data.insertedId) {
-        //             Toast.fire({
-        //                 icon: 'success',
-        //                 title: 'Successfully Applied to Supervisor'
-        //             })
-        //             reset();
-        //         }
-        //     });
+        application.applicantName = data.applicantName;
+        application.applicantId = data.applicantId;
+        application.applicantEmail = data.applicantEmail;
+        application.applicantProfileId = data.applicantProfileId;
+        application.applicantSession = data.applicantSession;
 
+
+        console.log('application to push ', application);
+
+        fetch('http://localhost:5000/api/v1/project-application/create', {
+            method: 'post',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+            },
+            body: JSON.stringify(application)
+        })
+            .then(res => res.json())
+            .then(data => {
+                // console.log("data ", data);
+                if (data?.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: data.message
+                    })
+                    reset();
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: data.message
+                    })
+                }
+            });
     }
     return (
         <div>
@@ -188,37 +165,73 @@ const ApplyToSupervisor = () => {
                 </Nav>
             </div>
             {
-                state === 1 ?
-                    <>
-                        <div className='container my-4 py-3 w-100'>
-                            {/* <h4 className='text-center text-primary mb-4'>My Applications</h4> */}
-                            {
-                                proposals?.map(x =>
-                                    <Application key={x._id} details={x}></Application>)
-                            }
-                        </div>
-                    </>
+                (isLoadingProposals || isLoadingTeacher)
+                    ?
+                    <div className='text-center my-5 py-5 '>
+                        <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div>
                     :
-                    // isLoading
-                    //     ?
-                    //     <div className='text-center my-5 py-5 '>
-                    //         <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
-                    //             <span className="visually-hidden">Loading...</span>
-                    //         </Spinner>
-                    //     </div>
-                    //     :
-                    waitMessage ?
-                        <h5 className='text-info text-center my-3'>{message}</h5>
-                        :
-                        <>
-                            {
+                    <>
+                        {
+                            state === 1 ?
 
-                                <div className='w-75 mx-auto shadow-lg px-4 py-5'>
-                                    <h2 className='text-center'>Apply </h2>
+                                <div className='container my-4 py-3 w-100'>
+                                    {/* <h4 className='text-center text-primary mb-4'>My Applications</h4> */}
+                                    {
+                                        proposals?.map(x =>
+                                            <Application key={x._id} applicationDetais={x}></Application>)
+                                    }
+                                </div>
+
+                                :
+
+                                <div className='w-75 mx-auto shadow-lg rounded px-4 py-5 my-4'>
+                                    {/* <h2 className='text-center'>Apply </h2> */}
                                     <Form onSubmit={handleSubmit(onSubmit)}>
+
+                                        <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Course Title: </Form.Label>
+                                                <input type='text' {...register("courseTitle")} className="w-100" value={courseTitle} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Course Code: </Form.Label>
+                                                <input type='text' {...register("courseCode", { required: true })} className="w-100 text-uppercase" value={courseCode} />
+                                                <input type='text' hidden {...register("courseId", { required: true })} className="w-100 text-uppercase" value={courseId} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Name: </Form.Label>
+                                                <input type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
+                                                <input hidden type='text' {...register("applicantEmail")} className="w-100" value={email} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>ID: </Form.Label>
+                                                <input type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
+                                                <input type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Department: </Form.Label>
+                                                <input type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
+                                                <input type='text' hidden  {...register("department")} className="w-100" value={department} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Session: </Form.Label>
+                                                <input type='text' {...register("applicantSession")} className="w-100" value={session} />
+                                            </Form.Group>
+
+                                            {/* <Form.Group className="mb-3">
+                                                 <Form.Label className='text-primary'>Email: </Form.Label>
+                                                 <input type='text' {...register("email")} className="w-100" value={email} />
+                                             </Form.Group> */}
+
+                                        </div>
+
+
                                         <Form.Group className="mb-3" >
                                             <Form.Label className='text-primary'>Subject</Form.Label>
-                                            <Form.Control {...register("subject", { required: true })} type="text" placeholder="Write the Subject" />
+                                            <Form.Control {...register("projectApplicationTitle", { required: true })} type="text" placeholder="Write the Subject" />
                                         </Form.Group>
                                         <Form.Group className="mb-3" >
                                             <Form.Label className='text-primary'>Teacher List</Form.Label>
@@ -226,13 +239,14 @@ const ApplyToSupervisor = () => {
                                                 <option value="">Select teacher</option>
                                                 {
                                                     teachers.map(x => {
-                                                        return (<option key={x?.profile?.['_id']} value={x?.profile?.['_id']}>
+                                                        // console.log(x);
+                                                        return (<option key={x?._id} value={`${x?._id}=/=${x?.firstName} ${x?.lastName}`}>
                                                             {
-                                                                x?.profile?.['firstName']
+                                                                x?.firstName
                                                                     ?
-                                                                    x?.profile?.['firstName'] + ' ' + x?.profile?.['lastName'] + '    (' + x.department + ')'
+                                                                    x?.firstName + ' ' + x?.lastName
                                                                     :
-                                                                    x?.email + '    (' + x.department + ')'
+                                                                    x?.email
                                                             }
                                                         </option>)
                                                     })
@@ -241,7 +255,7 @@ const ApplyToSupervisor = () => {
                                         </Form.Group>
                                         <Form.Group className="mb-3" >
                                             <Form.Label className='text-primary'>Give a short description on which type of work you want to do</Form.Label>
-                                            <Form.Control {...register("description", { required: true })} as="textarea" rows={3} />
+                                            <Form.Control {...register("projectApplicationDescription", { required: true })} as="textarea" rows={3} />
                                         </Form.Group>
 
                                         <br />
@@ -251,13 +265,16 @@ const ApplyToSupervisor = () => {
                                         </div>
                                     </Form>
                                 </div>
-                                // :
-                                // <h5 className='text-center text-danger'>Sorry there is no running semester</h5>
+                            // :
+                            // <h5 className='text-center text-danger'>Sorry there is no running semester</h5>
 
-                            }
-                        </>
-
+                        }
+                    </>
             }
+
+
+
+
 
         </div >
     );

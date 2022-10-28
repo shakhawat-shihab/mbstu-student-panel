@@ -6,8 +6,12 @@ import useAuth from '../../../Hooks/useAuth';
 const Application = (props) => {
     //const { subject, teacher, students, status, description } = props?.details;
     const { teacher, student } = useAuth();
+    const { applicationDetais } = props;
+    console.log('applicationDetais ', applicationDetais);
+
     return (
         <div className=' mb-3 border shadow-sm  rounded px-5 py-3'>
+            <p>{applicationDetais.status}</p>
             <h5 className='mb-2 mb-3'>{props?.details?.subject}</h5>
             {
                 student &&

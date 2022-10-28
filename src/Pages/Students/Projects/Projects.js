@@ -21,7 +21,6 @@ const Projects = () => {
     //         })
     // }, [email])
     useEffect(() => {
-
         fetch(`http://localhost:5000/api/v1/project-application/find-project-course`, {
             headers: {
                 'Content-type': 'application/json',
