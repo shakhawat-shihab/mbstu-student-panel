@@ -27,19 +27,21 @@ const DashboardHome = () => {
 
     let userPhoto = "https://i.ibb.co/FmK44jt/blank-user.png";
 
-    if (user?.photoURL)
-        userPhoto = user?.photoURL;
 
-    if (student) {
+
+    if (user?.isStudent) {
         // userPhoto = "https://i.ibb.co/6HBxzwW/student.png";
         userPhoto = "https://i.ibb.co/QJn9RVQ/student.png";
         // const { first_name, last_name, email, phone, address, hall, session } = student;
 
     }
 
-    if (teacher)
+    if (user?.isTeacher)
         // userPhoto = "https://i.ibb.co/ScpX2fD/teacher.png";
         userPhoto = "https://i.ibb.co/WFx7JDb/teacher.png";
+
+    if (user?.imageURL)
+        userPhoto = user?.photoURL;
     // const { first_name, last_name, email, phone, address, designation, field } = teacher;
 
     // const email = 'lubnaju@yahoo.com';

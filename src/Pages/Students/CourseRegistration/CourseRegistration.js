@@ -92,7 +92,7 @@ const CourseRegistration = () => {
             })
                 .then(res => res.json())
                 .then(info => {
-                    console.log('info ', info)
+                    console.log('info ========== ', info)
                     setRegularCourses(info?.data?.coursesMarks);
                     setSemesterName(info?.data?.name)
                     setDegree(info?.data?.degree)
@@ -118,7 +118,7 @@ const CourseRegistration = () => {
             })
                 .then(res => res.json())
                 .then(info => {
-                    // console.log('Backlog course ', info);
+                    console.log('Backlog course ======== ', info);
                     const arr = []
                     info?.data?.map(c => {
                         arr.push(c?.course)
@@ -156,7 +156,7 @@ const CourseRegistration = () => {
             application.name = "Backlog Exam"
         }
         else {
-            application.name = data?.name
+            application.name = semesterName;
             application.semesterCode = semesterCode + 1;
         }
 
@@ -188,7 +188,7 @@ const CourseRegistration = () => {
             })
                 .then(res => res.json())
                 .then(info => {
-                    console.log("info ", info);
+                    console.log("info  ", info);
                     if (info?.status === 'success') {
                         Toast.fire({
                             icon: 'success',
@@ -221,215 +221,231 @@ const CourseRegistration = () => {
                 (isLoadingRegularCourses || isLoadingBacklogCourses)
                     ?
                     <div className='text-center my-5 py-5 '>
-                        <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                        {/* <>
+                            {
+                                // console.log('helllo')
+                                console.log(isLoadingBacklogCourses, isLoadingRegularCourses)
+                                // console.log(isLoadingRegularCourses)
+                            }
+                        </> */}
+                        <Spinner className='align-items-center justify-content-start mx-auto text-danger' animation="grow" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
                     </div>
                     :
                     <>
                         {
-                            regularCourseAppliedDone === false
-                                ?
-                                <div>
-                                    <div className='container-fluid shadow-lg rounded w-75 my-5 py-2'>
-                                        <h4 className='text-center py-3 fw-bold'> Course Registration from</h4>
-                                        <Form onSubmit={handleSubmit(onSubmit)}>
-                                            <h5>
-                                                {
-                                                    !semesterName ?
-                                                        <p className='text-center'>Backlog Exam</p>
-                                                        :
-                                                        <p className='text-center'>{semesterName + ' Final Examination'}</p>
-                                                }
-                                                <input type='text' hidden  {...register("name")} className="w-100 text-center border-0" defaultValue={`${semesterName}`} />
-                                                <input type='text' hidden  {...register("degree")} className="w-100 text-center border-0" value={` ${degree}`} />
-                                            </h5>
 
-                                            <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className='text-primary'>Name: </Form.Label>
-                                                    <input type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className='text-primary'>ID: </Form.Label>
-                                                    <input type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className='text-primary'>Department: </Form.Label>
-                                                    <input type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
-                                                    <input type='text' hidden  {...register("department", { required: true })} className="w-100" value={department} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className='text-primary'>Session: </Form.Label>
-                                                    <input type='text' {...register("applicantSession", { required: true })} className="w-100" value={session} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className='text-primary'>Hall: </Form.Label>
-                                                    <input type='text' {...register("applicantHallName")} readOnly className="w-100" value={hallName} />
-                                                    <input type='text' {...register("applicantHallId")} hidden className="w-100" value={hallId} />
-                                                </Form.Group>
-                                                <Form.Group className="mb-3">
-                                                    <Form.Label className='text-primary'>Email: </Form.Label>
-                                                    <input type='text' {...register("email", { required: true })} className="w-100" value={email} />
-                                                </Form.Group>
-                                                <input type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
-                                            </div>
+                            // regularCourseAppliedDone === false
+                            //     ?
+                            <div>
+                                {/* {
+                                    <>
+                                        {
+                                            // console.log('gelllo')
+                                            console.log(isLoadingBacklogCourses, isLoadingRegularCourses)
+                                        }
+                                    </>
+                                } */}
+                                <div className='container-fluid shadow-lg rounded w-75 my-5 py-2'>
+                                    <h4 className='text-center py-3 fw-bold'> Course Registration Form</h4>
+                                    <Form onSubmit={handleSubmit(onSubmit)}>
+                                        <h5>
+                                            {
+                                                !semesterName ?
+                                                    <p className='text-center'>Backlog Exam</p>
+                                                    :
+                                                    <p className='text-center'>{semesterName + ' Final Examination'}</p>
+                                            }
+                                            {/* <input type='text' hidden  {...register("name")} className="w-100 text-center border-0" defaultValue={`${semesterName}`} /> */}
+                                            <input type='text' hidden  {...register("degree")} className="w-100 text-center border-0" value={`${degree}`} />
+                                        </h5>
+
+                                        <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Name: </Form.Label>
+                                                <Form.Control type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>ID: </Form.Label>
+                                                <Form.Control type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Department: </Form.Label>
+                                                <Form.Control type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
+                                                <Form.Control type='text' hidden  {...register("department", { required: true })} className="w-100" value={department} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Session: </Form.Label>
+                                                <Form.Control type='text' {...register("applicantSession", { required: true })} className="w-100" value={session} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Hall: </Form.Label>
+                                                <Form.Control type='text' {...register("applicantHallName")} readOnly className="w-100" value={hallName} />
+                                                <Form.Control type='text' {...register("applicantHallId")} hidden className="w-100" value={hallId} />
+                                            </Form.Group>
+                                            <Form.Group className="mb-3">
+                                                <Form.Label className='text-primary'>Email: </Form.Label>
+                                                <Form.Control type='text' {...register("email", { required: true })} className="w-100" value={email} />
+                                            </Form.Group>
+                                            <Form.Control type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
+                                        </div>
 
 
+                                        <br />
+                                        <Form.Group className='mb-3'>
+                                            {
+                                                (regularCourses.length !== 0) &&
+                                                <> <Form.Label className='text-primary mb-3'>Regular Courses: </Form.Label>
+                                                    <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
+                                                        <col width="15%" />
+                                                        <col width="40%" />
+                                                        <col width="10%" />
+
+                                                        <thead>
+                                                            <tr className='text-center' style={{ border: "1px solid black" }}>
+                                                                <th style={{ border: "1px solid black" }}>Course Code</th>
+                                                                <th style={{ border: "1px solid black" }}>Course Title</th>
+                                                                <th style={{ border: "1px solid black" }}>Credit</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                regularCourses?.map(x => {
+                                                                    // console.log(x);
+                                                                    return (<tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
+                                                                        <td style={{ border: "1px solid black" }}>{x?.courseCode}</td>
+                                                                        <td style={{ border: "1px solid black" }}>{x?.courseTitle}</td>
+                                                                        <td style={{ border: "1px solid black" }}>{x?.credit}</td>
+                                                                    </tr>)
+                                                                })
+                                                            }
+                                                            <tr className='text-center' style={{ border: "1px solid black" }}>
+                                                                <td></td>
+                                                                <td style={{ border: "1px solid black" }} className='fw-bold'>Regular Courses Credit</td>
+                                                                <td style={{ border: "1px solid black" }} className='fw-bold'>{credit}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                </>
+                                            }
                                             <br />
-                                            <Form.Group className='mb-3'>
-                                                {
-                                                    (regularCourses.length !== 0) &&
-                                                    <> <Form.Label className='text-primary mb-3'>Regular Courses: </Form.Label>
-                                                        <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
-                                                            <col width="15%" />
-                                                            <col width="40%" />
-                                                            <col width="10%" />
+                                        </Form.Group>
 
-                                                            <thead>
-                                                                <tr className='text-center' style={{ border: "1px solid black" }}>
-                                                                    <th style={{ border: "1px solid black" }}>Course Code</th>
-                                                                    <th style={{ border: "1px solid black" }}>Course Title</th>
-                                                                    <th style={{ border: "1px solid black" }}>Credit</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {
-                                                                    regularCourses?.map(x => {
-                                                                        // console.log(x);
-                                                                        return (<tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
-                                                                            <td style={{ border: "1px solid black" }}>{x?.courseCode}</td>
-                                                                            <td style={{ border: "1px solid black" }}>{x?.courseTitle}</td>
-                                                                            <td style={{ border: "1px solid black" }}>{x?.credit}</td>
-                                                                        </tr>)
-                                                                    })
-                                                                }
-                                                                <tr className='text-center' style={{ border: "1px solid black" }}>
-                                                                    <td></td>
-                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>Regular Courses Credit</td>
-                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>{credit}</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </Table>
-                                                    </>
-                                                }
-                                                <br />
-                                            </Form.Group>
-
-                                            <Form.Group className='mb-3'>
-                                                {
-                                                    (backlogCourses.length !== 0) &&
-                                                    <>
-                                                        <Form.Label className='text-primary mb-3'>Backlog Courses: </Form.Label>
-                                                        <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
-                                                            <thead>
-                                                                <tr style={{ border: "1px solid black" }}>
-                                                                    <th style={{ border: "1px solid black" }}>Course Code</th>
-                                                                    <th style={{ border: "1px solid black" }}>Course Title</th>
-                                                                    {/* <th style={{ border: "1px solid black" }}>Status</th> */}
-                                                                    <th style={{ border: "1px solid black" }}>Check to select</th>
-                                                                    <th style={{ border: "1px solid black" }}>Credit</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {
-                                                                    backlogCourses?.map(x => {
-                                                                        return (<tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
-                                                                            <td style={{ border: "1px solid black" }}>
-                                                                                <input type='text' {...register(`${x?.courseCode}_code`)} className="w-100 border-0 text-center input-color-inherit" value={x?.courseCode} />
-                                                                            </td>
-                                                                            <td style={{ border: "1px solid black" }}>
-                                                                                <input type='text' {...register(`${x?.courseCode}_title`)} className="w-100 border-0 text-center input-color-inherit" value={x?.courseTitle} />
-                                                                                <input type='text' hidden {...register(`${x?.courseCode}_id`)} className="w-100 border-0 text-center input-color-inherit" value={x?._id} />
-                                                                            </td>
-                                                                            <td style={{ border: "1px solid black" }}>
-                                                                                <Form.Check
-                                                                                    inline
-                                                                                    size='lg'
-                                                                                    type='checkbox'
-                                                                                    label="Select"
-                                                                                    id={`${x?.courseCode}_check`}
-                                                                                    {...register(`${x?.courseCode}_check`)}
-                                                                                    onChange={(e) => {
-                                                                                        //console.log(`${x?.courseCode}_check`, e.target.checked)
-                                                                                        if (e.target.checked) {
-                                                                                            //critical
-                                                                                            setBacklogCredit(backlogCredit + parseFloat(x?.credit))
+                                        <Form.Group className='mb-3'>
+                                            {
+                                                (backlogCourses.length !== 0) &&
+                                                <>
+                                                    <Form.Label className='text-primary mb-3'>Backlog Courses: </Form.Label>
+                                                    <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
+                                                        <thead>
+                                                            <tr style={{ border: "1px solid black" }}>
+                                                                <th style={{ border: "1px solid black" }}>Course Code</th>
+                                                                <th style={{ border: "1px solid black" }}>Course Title</th>
+                                                                {/* <th style={{ border: "1px solid black" }}>Status</th> */}
+                                                                <th style={{ border: "1px solid black" }}>Check to select</th>
+                                                                <th style={{ border: "1px solid black" }}>Credit</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                backlogCourses?.map(x => {
+                                                                    return (<tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input type='text' {...register(`${x?.courseCode}_code`)} className="w-100 border-0 text-center input-color-inherit" value={x?.courseCode} />
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input type='text' {...register(`${x?.courseCode}_title`)} className="w-100 border-0 text-center input-color-inherit" value={x?.courseTitle} />
+                                                                            <input type='text' hidden {...register(`${x?.courseCode}_id`)} className="w-100 border-0 text-center input-color-inherit" value={x?._id} />
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <Form.Check
+                                                                                inline
+                                                                                size='lg'
+                                                                                type='checkbox'
+                                                                                label="Select"
+                                                                                id={`${x?.courseCode}_check`}
+                                                                                {...register(`${x?.courseCode}_check`)}
+                                                                                onChange={(e) => {
+                                                                                    //console.log(`${x?.courseCode}_check`, e.target.checked)
+                                                                                    if (e.target.checked) {
+                                                                                        //critical
+                                                                                        setBacklogCredit(backlogCredit + parseFloat(x?.credit))
 
 
-                                                                                            const sum = credit + parseFloat(x?.credit) + previousApplicationCredit
-                                                                                            setTotalCredit(sum)
-                                                                                            if (sum > 27)
-                                                                                                setCreditError("You can't take more than 27 credit")
-                                                                                        }
-                                                                                        else {
-                                                                                            //critical
-                                                                                            setBacklogCredit(backlogCredit - parseFloat(x?.credit))
-
-                                                                                            const sum = credit - parseFloat(x?.credit) + previousApplicationCredit
-                                                                                            setTotalCredit(sum)
-                                                                                            if (sum <= 27)
-                                                                                                setCreditError("")
-                                                                                        }
+                                                                                        const sum = credit + parseFloat(x?.credit) + previousApplicationCredit
+                                                                                        setTotalCredit(sum)
+                                                                                        if (sum > 27)
+                                                                                            setCreditError("You can't take more than 27 credit")
                                                                                     }
+                                                                                    else {
+                                                                                        //critical
+                                                                                        setBacklogCredit(backlogCredit - parseFloat(x?.credit))
+
+                                                                                        const sum = credit - parseFloat(x?.credit) + previousApplicationCredit
+                                                                                        setTotalCredit(sum)
+                                                                                        if (sum <= 27)
+                                                                                            setCreditError("")
                                                                                     }
-                                                                                />
-                                                                            </td>
-                                                                            <td style={{ border: "1px solid black" }}>
-                                                                                <input type='text' {...register(`${x?.courseCode}_credit`)} className="w-100 border-0 text-center input-color-inherit" value={x?.credit} />
-                                                                            </td>
-                                                                            <input type='text' hidden {...register(`${x?.courseCode}_courseMarksId`)} className="w-100 border-0 text-center input-color-inherit" value={x?._id} />
-                                                                        </tr>)
-                                                                        // }
-                                                                    })
-                                                                }
-                                                                {/* backlog credit sum */}
-                                                                <tr className='text-center' style={{ border: "1px solid black" }}>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>Total Backlog Credit</td>
-                                                                    <td className='fw-bold'>{backlogCredit}</td>
-                                                                </tr>
+                                                                                }
+                                                                                }
+                                                                            />
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input type='text' {...register(`${x?.courseCode}_credit`)} className="w-100 border-0 text-center input-color-inherit" value={x?.credit} />
+                                                                        </td>
+                                                                        <input type='text' hidden {...register(`${x?.courseCode}_courseMarksId`)} className="w-100 border-0 text-center input-color-inherit" value={x?._id} />
+                                                                    </tr>)
+                                                                    // }
+                                                                })
+                                                            }
+                                                            {/* backlog credit sum */}
+                                                            <tr className='text-center' style={{ border: "1px solid black" }}>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td style={{ border: "1px solid black" }} className='fw-bold'>Total Backlog Credit</td>
+                                                                <td className='fw-bold'>{backlogCredit}</td>
+                                                            </tr>
 
-                                                                {/* Previous application credit sum */}
-                                                                <tr className='text-center' style={{ border: "1px solid black" }}>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td style={{ border: "1px solid black" }} className='fw-bold'>Already Taken Credit</td>
-                                                                    <td className='fw-bold'>{previousApplicationCredit}</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </Table>
-                                                        {
-                                                            creditError
-                                                            &&
-                                                            <p className='text-danger me-2' style={{ 'textAlign': 'right' }}>  *{creditError} </p>
-                                                        }
-                                                    </>
-                                                }
-                                            </Form.Group>
+                                                            {/* Previous application credit sum */}
+                                                            <tr className='text-center' style={{ border: "1px solid black" }}>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td style={{ border: "1px solid black" }} className='fw-bold'>Already Taken Credit</td>
+                                                                <td className='fw-bold'>{previousApplicationCredit}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </Table>
+                                                    {
+                                                        creditError
+                                                        &&
+                                                        <p className='text-danger me-2' style={{ 'textAlign': 'right' }}>  *{creditError} </p>
+                                                    }
+                                                </>
+                                            }
+                                        </Form.Group>
 
-                                            <h4 className='text-center'>Total Credits taken {backlogCredit + credit + previousApplicationCredit}</h4>
-                                            <div className='text-center my-4'>
-                                                <input type="submit" value='Register' className='btn btn-primary' />
-                                            </div>
-                                        </Form>
+                                        <h4 className='text-center'>Total Credits taken {backlogCredit + credit + previousApplicationCredit}</h4>
+                                        <div className='text-center my-4'>
+                                            <input type="submit" value='Register' className='btn btn-primary' />
+                                        </div>
+                                    </Form>
 
-                                    </div>
                                 </div>
-                                :
-                                <div>
-                                    <BacklogCourseRegistration
-                                        backlogCourses={backlogCourses}
-                                        applications={applications}
-                                        name={name}
-                                        id={id}
-                                        department={department}
-                                        session={session}
-                                        hall_code={hall?.hall_code}
-                                        hall_name={hall?.hall_name}
-                                    />
-                                </div>
+                            </div>
+                            // :
+                            // <div>
+                            //     <BacklogCourseRegistration
+                            //         backlogCourses={backlogCourses}
+                            //         applications={applications}
+                            //         name={name}
+                            //         id={id}
+                            //         department={department}
+                            //         session={session}
+                            //         hall_code={hall?.hall_code}
+                            //         hall_name={hall?.hall_name}
+                            //     />
+                            // </div>
                         }
                     </>
 

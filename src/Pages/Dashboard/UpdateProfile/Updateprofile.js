@@ -6,26 +6,30 @@ import useAuth from '../../../Hooks/useAuth';
 
 const UpdateProfile = () => {
     let field = [];
-    const { user, student, teacher } = useAuth();
+    const { user } = useAuth();
+
+    console.log("update profile user === ", user)
 
     const [selectedFile, setSelectedFile] = useState("");
     const inputFile = useRef(null);
 
-    let userPhoto = "https://i.ibb.co/FmK44jt/blank-user.png";
+    let userPhoto = "";
 
-    if (user?.photoURL)
-        userPhoto = user?.photoURL;
 
-    if (student) {
+
+    if (user?.isStudent) {
         // userPhoto = "https://i.ibb.co/6HBxzwW/student.png";
         userPhoto = "https://i.ibb.co/QJn9RVQ/student.png";
         // const { first_name, last_name, email, phone, address, hall, session } = student;
 
     }
 
-    if (teacher)
+    if (user?.isTeacher)
         // userPhoto = "https://i.ibb.co/ScpX2fD/teacher.png";
         userPhoto = "https://i.ibb.co/WFx7JDb/teacher.png";
+
+    if (user?.imageURL)
+        userPhoto = user?.imageURL;
 
     const { register, handleSubmit, reset } = useForm({
         defaultValues: {
@@ -47,7 +51,7 @@ const UpdateProfile = () => {
     };
 
     const onSubmit = data => {
-        if (teacher) {
+        if (user?.isTeacher) {
             data['field'] = field;
         }
 
@@ -110,39 +114,45 @@ const UpdateProfile = () => {
                         <div className='col mt-2 ms-4 mb-4 py-2'>
 
                             <Form.Group className="mb-3">
-                                <Form.Label className='text-primary'>Full name: </Form.Label>
+                                <Form.Label className='text-primary'>First name: </Form.Label>
 
-                                <input type="text" style={{ paddingLeft: "10px" }} {...register("name", { required: true })} className="w-100" />
+                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("first_name", { required: true })} className="w-100" />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3">
+                                <Form.Label className='text-primary'>Last name: </Form.Label>
+
+                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("last_name", { required: true })} className="w-100" />
                             </Form.Group>
 
                             <Form.Group className="mb-3">
                                 <Form.Label className='text-primary'>Email address:</Form.Label>
 
-                                <input type="email" style={{ paddingLeft: "10px" }} {...register("email", { required: true })} className="w-100" />
+                                <Form.Control type="email" style={{ paddingLeft: "10px" }} {...register("email", { required: true })} className="w-100" />
                             </Form.Group>
 
                             <Form.Group className="mb-3">
                                 <Form.Label className='text-primary'>Phone:</Form.Label>
 
-                                <input type="text" style={{ paddingLeft: "10px" }} {...register("phone", { required: true })} className="w-100" />
+                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("contact_number", { required: true })} className="w-100" />
                             </Form.Group>
 
                             <Form.Group className="mb-3">
                                 <Form.Label className='text-primary'>Address: </Form.Label>
 
-                                <input type="text" style={{ paddingLeft: "10px" }} {...register("address", { required: true })} className="w-100" />
+                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("address", { required: true })} className="w-100" />
                             </Form.Group>
 
                             {
-                                student &&
+                                user?.isStudent &&
                                 <Form.Group className="mb-3">
                                     <Form.Label className='text-primary'>Hall: </Form.Label>
-                                    <input type="text" style={{ paddingLeft: "10px" }} {...register("hall", { required: true })} className="w-100" />
+                                    <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("hall", { required: true })} className="w-100" />
                                 </Form.Group>
                             }
 
                             {
-                                student &&
+                                user?.isStudent &&
                                 <Form.Group className="mb-3">
                                     <Form.Label className='text-primary'>Session:</Form.Label>
 
@@ -160,15 +170,15 @@ const UpdateProfile = () => {
                             }
 
                             {
-                                teacher &&
+                                user?.isTeacher &&
                                 <Form.Group className="mb-3">
                                     <Form.Label className='text-primary'>Designation: </Form.Label>
-                                    <input type="text" {...register("designation", { required: true })} className="w-100" />
+                                    <Form.Control type="text" {...register("designation", { required: true })} className="w-100" />
                                 </Form.Group>
                             }
 
                             {
-                                teacher &&
+                                user?.isTeacher &&
                                 <Form.Group className="mb-3">
                                     <Form.Label className='text-primary'>Field of Interest:</Form.Label>
                                     <br></br>

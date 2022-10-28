@@ -23,15 +23,19 @@ import ApplyToSupervisor from '../../Students/ApplyToSupervisor/ApplyToSuperviso
 import Projects from '../../Students/Projects/Projects';
 import ResultSheet from '../../DeptChairman/ResultSheet/ResultSheet';
 import Updateprofile from '../UpdateProfile/Updateprofile';
+import ApproveApplication from '../../DeptChairman/ApproveApplication/ApproveApplication';
+import ApplicationDetails from '../../DeptChairman/ApplicationDetails/ApplicationDetails';
 
 const Dashboard = () => {
-    const { user, student, teacher, deptChairman, isLoading, isLoadingRole } = useAuth();
+    const { user, isLoading, isLoadingRole } = useAuth();
     const [show, setShow] = useState(false);
     let { path, url } = useRouteMatch();
-    console.log('url =', url, student);
+    // console.log('url =', url, student);
     const stateChange = () => {
         setShow(true)
     }
+
+    // console.log("path === ", path);
     return (
         <>
             {/* <div className='text-center'>
@@ -46,7 +50,7 @@ const Dashboard = () => {
 
             <Offcanvas show={show} onHide={() => { setShow(false) }} >
                 <Offcanvas.Header closeButton className='bg-secondary'>
-                    <Offcanvas.Title>Dashboard of <br /> <span className='text-info'>{user.displayName}</span> </Offcanvas.Title>
+                    <Offcanvas.Title>Dashboard of <br /> <span className='text-info'>{user?.fullName}</span> </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className='p-0'>
                     <ListGroup defaultActiveKey="#link1">
@@ -104,6 +108,11 @@ const Dashboard = () => {
                                         <ListGroup.Item action >
                                             <Link to={`${url}/create-course`}>Create Course (C) </Link>
                                         </ListGroup.Item>
+
+                                        {/* loading application testing (28-OcT) */}
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/approve-course-registration`}>Approve Application (C) </Link>
+                                        </ListGroup.Item>
                                     </>
                                 }
                             </>
@@ -160,6 +169,11 @@ const Dashboard = () => {
                 </TeacherRoute>
 
                 {/* department chairman Routes */}
+
+                {/* <DeptChairmanRoute path={`${path}/view-details`}>
+                    <ApplicationDetails></ApplicationDetails>
+                </DeptChairmanRoute> */}
+
                 <DeptChairmanRoute path={`${path}/running-semesters/:semesterId/result-sheet`}>
                     <ResultSheet></ResultSheet>
                 </DeptChairmanRoute>
@@ -178,6 +192,16 @@ const Dashboard = () => {
                 <DeptChairmanRoute path={`${path}/add-teacher`}>
                     <AddTeacher></AddTeacher>
                 </DeptChairmanRoute>
+
+                {/* loading application testing (28-OcT) */}
+                <DeptChairmanRoute path={`${path}/approve-course-registration/:id`}>
+                    <ApplicationDetails></ApplicationDetails>
+                </DeptChairmanRoute>
+                <DeptChairmanRoute path={`${path}/approve-course-registration`}>
+                    <ApproveApplication></ApproveApplication>
+                </DeptChairmanRoute>
+
+
 
 
             </Switch>

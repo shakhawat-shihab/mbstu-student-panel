@@ -18,17 +18,15 @@ const ApplyToSupervisor = () => {
     const department = user?.department;
     const departmentName = checkDepartmentNameFromIdCode(id);
 
-    const [student, setStudent] = useState({});
     const [isLoadingTeacher, setIsLoadingTeacher] = useState(true);
     const [teachers, setTeachers] = useState([]);
     const [courseCode, setCourseCode] = useState('');
     const [courseTitle, setCourseTitle] = useState('');
-    const [waitMessage, setWaitMessage] = useState(false);
-    const [message, setMessage] = useState(false);
-    const [errorMessageForId, setErrorMessageForId] = useState('');
     const [state, setState] = useState(1);
     const [proposals, setProposals] = useState([]);
+    const [acceptedProposal, setAcceptedProposal] = useState([]);
     const [isLoadingProposals, setIsLoadingProposals] = useState(true);
+    const [isLoadingAcceptedProposal, setIsLoadingAcceptedProposal] = useState(true);
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     const Toast = Swal.mixin({
@@ -59,22 +57,24 @@ const ApplyToSupervisor = () => {
             })
     }, [courseId])
 
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/v1/project-application/check-any-accepted/${courseId}`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+        })
+            .then(res => res.json())
+            .then(proposal => {
+                // console.log("accepted proposal ", proposal);
+                // setProposals(proposal.data);
+                // setIsLoadingProposals(false)
+                setAcceptedProposal(proposal?.data);
+                setIsLoadingAcceptedProposal(false)
+            })
+    }, [courseId])
 
-    // useEffect(() => {
-    //     fetch(`http://localhost:5000/semesters/isRunning/${courseCode}/${semesterCode}`)
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             if (Object.keys(data).length === 0) {
-    //                 setIsRunning(false);
-    //             }
-    //             else {
-    //                 setIsRunning(true);
-    //             }
-    //             setIsLoading(false);
-    //             setTeachers(data);
-    //         })
-    // }, [semesterCode, courseCode]);
-    // useEffect use kore teacher nam khuje ber korbo jar kase se already allocated
+
 
     useEffect(() => {
         fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`, {
@@ -165,7 +165,7 @@ const ApplyToSupervisor = () => {
                 </Nav>
             </div>
             {
-                (isLoadingProposals || isLoadingTeacher)
+                (isLoadingProposals || isLoadingTeacher || isLoadingAcceptedProposal)
                     ?
                     <div className='text-center my-5 py-5 '>
                         <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
@@ -186,85 +186,96 @@ const ApplyToSupervisor = () => {
                                 </div>
 
                                 :
+                                <>
+                                    {
+                                        !acceptedProposal
+                                            ?
+                                            <div className='w-75 mx-auto shadow-lg rounded px-4 py-5 my-4'>
+                                                {/* <h2 className='text-center'>Apply </h2> */}
+                                                <Form onSubmit={handleSubmit(onSubmit)}>
 
-                                <div className='w-75 mx-auto shadow-lg rounded px-4 py-5 my-4'>
-                                    {/* <h2 className='text-center'>Apply </h2> */}
-                                    <Form onSubmit={handleSubmit(onSubmit)}>
+                                                    <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label className='text-primary'>Course Title: </Form.Label>
+                                                            <input type='text' {...register("courseTitle")} className="w-100" value={courseTitle} />
+                                                        </Form.Group>
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label className='text-primary'>Course Code: </Form.Label>
+                                                            <input type='text' {...register("courseCode", { required: true })} className="w-100 text-uppercase" value={courseCode} />
+                                                            <input type='text' hidden {...register("courseId", { required: true })} className="w-100 text-uppercase" value={courseId} />
+                                                        </Form.Group>
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label className='text-primary'>Name: </Form.Label>
+                                                            <input type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
+                                                            <input hidden type='text' {...register("applicantEmail")} className="w-100" value={email} />
+                                                        </Form.Group>
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label className='text-primary'>ID: </Form.Label>
+                                                            <input type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
+                                                            <input type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
+                                                        </Form.Group>
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label className='text-primary'>Department: </Form.Label>
+                                                            <input type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
+                                                            <input type='text' hidden  {...register("department")} className="w-100" value={department} />
+                                                        </Form.Group>
+                                                        <Form.Group className="mb-3">
+                                                            <Form.Label className='text-primary'>Session: </Form.Label>
+                                                            <input type='text' {...register("applicantSession")} className="w-100" value={session} />
+                                                        </Form.Group>
 
-                                        <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className='text-primary'>Course Title: </Form.Label>
-                                                <input type='text' {...register("courseTitle")} className="w-100" value={courseTitle} />
-                                            </Form.Group>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className='text-primary'>Course Code: </Form.Label>
-                                                <input type='text' {...register("courseCode", { required: true })} className="w-100 text-uppercase" value={courseCode} />
-                                                <input type='text' hidden {...register("courseId", { required: true })} className="w-100 text-uppercase" value={courseId} />
-                                            </Form.Group>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className='text-primary'>Name: </Form.Label>
-                                                <input type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
-                                                <input hidden type='text' {...register("applicantEmail")} className="w-100" value={email} />
-                                            </Form.Group>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className='text-primary'>ID: </Form.Label>
-                                                <input type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
-                                                <input type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
-                                            </Form.Group>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className='text-primary'>Department: </Form.Label>
-                                                <input type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
-                                                <input type='text' hidden  {...register("department")} className="w-100" value={department} />
-                                            </Form.Group>
-                                            <Form.Group className="mb-3">
-                                                <Form.Label className='text-primary'>Session: </Form.Label>
-                                                <input type='text' {...register("applicantSession")} className="w-100" value={session} />
-                                            </Form.Group>
-
-                                            {/* <Form.Group className="mb-3">
+                                                        {/* <Form.Group className="mb-3">
                                                  <Form.Label className='text-primary'>Email: </Form.Label>
                                                  <input type='text' {...register("email")} className="w-100" value={email} />
                                              </Form.Group> */}
 
-                                        </div>
+                                                    </div>
 
 
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className='text-primary'>Subject</Form.Label>
-                                            <Form.Control {...register("projectApplicationTitle", { required: true })} type="text" placeholder="Write the Subject" />
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className='text-primary'>Teacher List</Form.Label>
-                                            <Form.Select {...register("teacher", { required: true })}>
-                                                <option value="">Select teacher</option>
-                                                {
-                                                    teachers.map(x => {
-                                                        // console.log(x);
-                                                        return (<option key={x?._id} value={`${x?._id}=/=${x?.firstName} ${x?.lastName}`}>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className='text-primary'>Subject</Form.Label>
+                                                        <Form.Control {...register("projectApplicationTitle", { required: true })} type="text" placeholder="Write the Subject" />
+                                                    </Form.Group>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className='text-primary'>Teacher List</Form.Label>
+                                                        <Form.Select {...register("teacher", { required: true })}>
+                                                            <option value="">Select teacher</option>
                                                             {
-                                                                x?.firstName
-                                                                    ?
-                                                                    x?.firstName + ' ' + x?.lastName
-                                                                    :
-                                                                    x?.email
+                                                                teachers.map(x => {
+                                                                    // console.log(x);
+                                                                    return (<option key={x?._id} value={`${x?._id}=/=${x?.firstName} ${x?.lastName}`}>
+                                                                        {
+                                                                            x?.firstName
+                                                                                ?
+                                                                                x?.firstName + ' ' + x?.lastName
+                                                                                :
+                                                                                x?.email
+                                                                        }
+                                                                    </option>)
+                                                                })
                                                             }
-                                                        </option>)
-                                                    })
-                                                }
-                                            </Form.Select>
-                                        </Form.Group>
-                                        <Form.Group className="mb-3" >
-                                            <Form.Label className='text-primary'>Give a short description on which type of work you want to do</Form.Label>
-                                            <Form.Control {...register("projectApplicationDescription", { required: true })} as="textarea" rows={3} />
-                                        </Form.Group>
+                                                        </Form.Select>
+                                                    </Form.Group>
+                                                    <Form.Group className="mb-3" >
+                                                        <Form.Label className='text-primary'>Give a short description on which type of work you want to do</Form.Label>
+                                                        <Form.Control {...register("projectApplicationDescription", { required: true })} as="textarea" rows={3} />
+                                                    </Form.Group>
 
-                                        <br />
-                                        <p className='text-danger' >{errorMessageForId}</p>
-                                        <div className='my-3'>
-                                            <Form.Control type="submit" value='Apply' className='btn btn-primary w-75' />
-                                        </div>
-                                    </Form>
-                                </div>
+                                                    <br />
+
+                                                    <div className='my-3'>
+                                                        <Form.Control type="submit" value='Apply' className='btn btn-primary w-75' />
+                                                    </div>
+                                                </Form>
+                                            </div>
+                                            :
+                                            <h5 className='text-center text-danger my-4 '>Your Application is accepted already</h5>
+                                    }
+
+                                </>
+
+
+
                             // :
                             // <h5 className='text-center text-danger'>Sorry there is no running semester</h5>
 
