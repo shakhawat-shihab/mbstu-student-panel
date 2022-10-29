@@ -3,6 +3,7 @@ import { Button, Card } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
 import { Spinner } from 'react-bootstrap';
+import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
 const ExamCommittee = () => {
     const { user } = useAuth();
     const email = user?.email;
@@ -11,11 +12,16 @@ const ExamCommittee = () => {
     const { url } = useRouteMatch();
     useEffect(() => {
         // console.log()
-        fetch(`http://localhost:5000/semester-view/exam-committee/${email}`)
+        fetch(`http://localhost:5000/api/v1/semester/load-running-semester/exam-committee/`, {
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+            },
+        })
             .then(res => res.json())
-            .then(data => {
-                console.log('exam committee semesters', data);
-                setSemesters(data);
+            .then(info => {
+                console.log('exam committee semesters', info);
+                setSemesters(info?.data);
                 setIsLoading(false)
             })
     }, [email]);
@@ -34,25 +40,29 @@ const ExamCommittee = () => {
                         <div className='row container mx-auto my-3'>
                             {
                                 semesters?.map(x => {
-                                    return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?.session}_${x?.semester_code}`}>
+                                    return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?._id}`}>
                                         <Card style={{ border: "1px solid black" }} className="mb-3">
                                             {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                                             <Card.Body>
-                                                <Card.Title> {x?.semester_code}</Card.Title>
+                                                <Card.Title> {x?.name}</Card.Title>
                                                 <Card.Text>
-                                                    {/* {x?.course_code} */}
+                                                    {x?.degree}
                                                 </Card.Text>
                                                 <Card.Text>
                                                     Session: {x?.session}
                                                 </Card.Text>
-                                                <Link to={`${url}/${x?._id}`}>
-                                                    <Button variant="primary"
-                                                    // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
-                                                    >
-                                                        View Semester
-                                                    </Button>
-                                                </Link>
-
+                                                <Card.Text className='text-primary'>
+                                                    {checkDepartmentName(x?.department)}
+                                                </Card.Text>
+                                                <div className='text-end'>
+                                                    <Link to={`${url}/${x?._id}`}>
+                                                        <Button variant="primary"
+                                                        // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
+                                                        >
+                                                            View Semester
+                                                        </Button>
+                                                    </Link>
+                                                </div>
                                             </Card.Body>
                                         </Card>
                                     </div >)
