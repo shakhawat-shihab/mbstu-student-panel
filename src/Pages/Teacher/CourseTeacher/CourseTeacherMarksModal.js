@@ -118,7 +118,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.attendance &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.attendance}</p>
+                                                        <p>{x?.theoryAttendance}</p>
                                                     }
                                                 </td>
                                             }
@@ -126,7 +126,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.ct1 &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.ct1}</p>
+                                                        <p>{x?.theoryCT1}</p>
                                                     }
                                                 </td>
                                             }
@@ -134,7 +134,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.ct2 &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.ct2}</p>
+                                                        <p>{x?.theoryCT2}</p>
                                                     }
                                                 </td>
                                             }
@@ -142,7 +142,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.ct3 &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.ct3}</p>
+                                                        <p>{x?.theoryCT3}</p>
                                                     }
                                                 </td>
                                             }
@@ -150,7 +150,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.final &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.course_teacher_marks}</p>
+                                                        <p>{x?.theoryFinal}</p>
                                                     }
                                                 </td>
                                             }
@@ -206,7 +206,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.labAttendance &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.lab_attendance}</p>
+                                                        <p>{x?.labAttendance}</p>
                                                     }
                                                 </td>
                                             }
@@ -214,7 +214,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.labReport &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.lab_report}</p>
+                                                        <p>{x?.labReport}</p>
                                                     }
                                                 </td>
                                             }
@@ -222,7 +222,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.labQuiz &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.lab_quiz}</p>
+                                                        <p>{x?.labQuiz}</p>
                                                     }
                                                 </td>
                                             }
@@ -264,7 +264,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 props?.classPerformanceProject &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
-                                                        <p>{x?.class_marks_project}</p>
+                                                        <p>{x?.classPerformanceProject}</p>
                                                     }
                                                 </td>
                                             }

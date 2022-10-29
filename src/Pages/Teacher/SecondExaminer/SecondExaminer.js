@@ -135,6 +135,7 @@ const SecondExaminer = () => {
                         <SecondMarkModal
                             marks={marks} showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal}
                             secondExaminerFinal={secondExaminerFinal} setSecondExaminerFinal={setSecondExaminerFinal}
+                            courseId={courseId}
 
                         />
 

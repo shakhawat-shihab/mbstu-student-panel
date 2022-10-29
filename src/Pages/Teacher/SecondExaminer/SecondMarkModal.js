@@ -7,12 +7,12 @@ import * as XLSX from 'xlsx';
 
 const SecondMarkModal = (props) => {
 
-    const { marks, showMarkModal, setShowMarkModal, secondExaminerFinal, setSecondExaminerFinal } = props;
+    const { marks, showMarkModal, setShowMarkModal, secondExaminerFinal, setSecondExaminerFinal, courseId } = props;
     const { register, handleSubmit } = useForm();
     const [theorySecondExaminer, setTheorySecondExaminer] = useState();
     const [fileUpload, setFileUpload] = useState();
 
-    console.log(marks);
+    // console.log(marks);
 
 
     const handleSecondExaminerFinalChange = e => {
@@ -32,6 +32,33 @@ const SecondMarkModal = (props) => {
         })
         supObj.mark = arr;
         console.log('marks to push ', supObj);
+
+        fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
+            method: 'patch',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+            },
+            body: JSON.stringify(supObj)
+        })
+            .then(res => res.json())
+            .then(info => {
+                console.log("info ", info);
+                // if (data?.status === 'success') {
+                //     Toast.fire({
+                //         icon: 'success',
+                //         title: data.message
+                //     })
+                //     reset();
+                // }
+                // else {
+                //     Toast.fire({
+                //         icon: 'error',
+                //         title: data.message
+                //     })
+                // }
+            });
+
     }
 
     const readExcel = (file) => {

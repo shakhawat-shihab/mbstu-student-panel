@@ -18,6 +18,8 @@ const CourseTeacher = () => {
     const email = user?.email;
     const displayName = user?.displayName;
     const [marks, setMarks] = useState({});
+    const [isLoadingMarks, setIsLoadingMarks] = useState(true);
+    const [isSaving, setIsSaving] = useState(true);
     const [proposalChange, setProposalChange] = useState(false);
     const [allInfo, setAllInfo] = useState({});
     const [proposals, setProposals] = useState([]);
@@ -69,11 +71,9 @@ const CourseTeacher = () => {
         }
     })
 
-    if (editAttendance) {
-        console.log('ee ', editAttendance)
-    }
 
     useEffect(() => {
+        setIsLoadingMarks(true);
         fetch(`http://localhost:5000/api/v1/marks/get-marks/course-teacher/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
@@ -84,19 +84,10 @@ const CourseTeacher = () => {
             .then(info => {
                 // console.log('info ', info)
                 setMarks(info.data);
-                // if (data?.code === "403") {
-                //     Toast.fire({
-                //         icon: 'error',
-                //         title: data?.message
-                //     })
-                //     history.push('/home');
-                // }
-                // else {
-                //     setAllInfo(data);
-                // }
+                setIsLoadingMarks(false);
 
             })
-    }, [courseId])
+    }, [courseId, state, isSaving])
 
     // useEffect(() => {
     //     console.log('proposalChange ', proposalChange);
@@ -132,28 +123,22 @@ const CourseTeacher = () => {
     //         });
     // }
 
-    // const handleReject = (proposal) => {
-    //     proposal.status = 'rejected';
-    //     console.log('a propodsal to add ', proposal);
-    //     fetch(`http://localhost:5000/proposal-evaluate/${semesterId}/${courseCode}/${email}`, {
-    //         method: 'put',
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify(proposal)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             setProposalChange(!proposalChange);
-    //             console.log("data ", data);
-    //             if (data?.code === "200") {
-    //                 Toast.fire({
-    //                     icon: 'success',
-    //                     title: data?.message
-    //                 })
-    //             }
-    //         });
-    // }
+    useEffect(() => {
+        if (marks?.type == 'project') {
+            fetch(`http://localhost:5000/api/v1/project-application/proposal-for-teacher/${courseId}`, {
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+                },
+            })
+                .then(res => res.json())
+                .then(proposal => {
+                    console.log("proposal ", proposal);
+                    setProposals(proposal.data);
+                })
+        }
+
+    }, [courseId, state, marks])
 
 
 
@@ -214,441 +199,434 @@ const CourseTeacher = () => {
     return (
         <>
             {
-                // Object.keys(allInfo).length === 0
-                //     ?
-                //     <div className='text-center my-5 py-5 '>
-                //         <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
-                //             <span className="visually-hidden">Loading...</span>
-                //         </Spinner>
-                //     </div>
-
-                //     :
-
-                <>
-                    <div>
-                        <CourseTeacherMarksModal
-                            marks={marks} showModal={showModal} setShowModal={setShowModal}
-                            attendance={attendance} ct1={ct1} ct2={ct2} ct3={ct3} final={final}
-                            labAttendance={labAttendance} labQuiz={labQuiz} labReport={labReport}
-                            classPerformanceProject={classPerformanceProject}
-                        />
-                    </div>
-                    <div>
-                        <MarkModal
-                            showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal} marks={marks}
-                            theoryAttendance={theoryAttendance} setTheoryAttendance={setTheoryAttendance}
-                            theoryCT1={theoryCT1} setTheoryCT1={setTheoryCT1}
-                            theoryCT2={theoryCT2} setTheoryCT2={setTheoryCT2} theoryCT3={theoryCT3}
-                            setTheoryCT3={setTheoryCT3} theoryFinal={theoryFinal} setTheoryFinal={setTheoryFinal}
-                            lbAttendance={lbAttendance} setLbAttendance={setLbAttendance} lbReport={lbReport}
-                            setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz}
-                        />
-
+                isLoadingMarks
+                    ?
+                    <div className='text-center my-5 py-5 '>
+                        <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
                     </div>
 
-                    <div>
-                        {
-                            marks.type === 'theory'
-                            &&
-                            <div className='container'>
-                                <div className='container-fluid shadow-lg  rounded  my-5 ' >
-                                    <div className='p-4 '>
-                                        <div className=' '>
-                                            <h3 className='text-center mb-3' >Assign Marks</h3>
-                                            <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
-                                            <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
-                                        </div>
-                                        <Form onSubmit={handleSubmit(onSubmit)}>
-                                            <Form.Group className='mb-2'>
-                                                <Table responsive striped bordered hover className='text-center' >
-                                                    <col width="11%" />
-                                                    <col width="30%" />
-                                                    <col width="12%" />
-                                                    <col width="12%" />
-                                                    <col width="12%" />
-                                                    <col width="12%" />
-                                                    <thead>
-                                                        <tr  >
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Attendance <br />(10 marks)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryAttendance(true) }}>Edit</span>
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                CT-1 <br />(20 marks)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT1(true) }}>Edit</span>
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                CT-2 <br />(20 marks)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT2(true) }}>Edit</span>
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                CT-3 <br />(20 marks)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT3(true) }}>Edit</span>
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Final Exam Mark <br />(70 marks)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryFinal(true) }}>Edit</span>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            marks?.studentsMarks?.map(x => {
-                                                                // console.log(x?.studentProfileId?.firstName);
-                                                                return (
-                                                                    <tr key={x?.id} style={{ border: "1px solid black" }}>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-                                                                                {...register(`${x?.id}_id`, { required: true })}
-                                                                                readOnly />
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
-                                                                                {...register(`${x?.id}_name`, { required: true })}
-                                                                                readOnly />
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
+                    :
 
-                                                                                <p>{x?.theoryAttendance}</p>
-                                                                            }
+                    <>
+                        <div>
+                            <CourseTeacherMarksModal
+                                marks={marks} showModal={showModal} setShowModal={setShowModal}
+                                attendance={attendance} ct1={ct1} ct2={ct2} ct3={ct3} final={final}
+                                labAttendance={labAttendance} labQuiz={labQuiz} labReport={labReport}
+                                classPerformanceProject={classPerformanceProject}
+                            />
+                        </div>
+                        <div>
+                            <MarkModal
+                                showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal} marks={marks}
+                                theoryAttendance={theoryAttendance} setTheoryAttendance={setTheoryAttendance}
+                                theoryCT1={theoryCT1} setTheoryCT1={setTheoryCT1}
+                                theoryCT2={theoryCT2} setTheoryCT2={setTheoryCT2} theoryCT3={theoryCT3}
+                                setTheoryCT3={setTheoryCT3} theoryFinal={theoryFinal} setTheoryFinal={setTheoryFinal}
+                                lbAttendance={lbAttendance} setLbAttendance={setLbAttendance} lbReport={lbReport}
+                                setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz}
+                                courseId={courseId} setIsSaving={setIsSaving} isSaving={isSaving}
+                            />
 
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
+                        </div>
 
-                                                                                <p>{x?.theoryCT1}</p>
-                                                                            }
-
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
-
-                                                                                <p>{x?.theoryCT2}</p>
-                                                                            }
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
-
-                                                                                <p>{x?.theoryCT3}</p>
-                                                                            }
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
-
-                                                                                <p>{x?.theoryFinal}</p>
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                            </Form.Group>
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Attendance"
-                                                // name='Attendance'
-                                                id='Attendance'
-                                                checked={attendance}
-                                                onChange={() => setAttendance(!attendance)}
-                                            />
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Ct-1"
-                                                // name="Ct1"
-                                                id="Ct1"
-                                                checked={ct1}
-                                                onChange={() => setCt1(!ct1)}
-                                            />
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Ct-2"
-                                                // name="Ct2"
-                                                id="Ct2"
-                                                checked={ct2}
-                                                onChange={() => setCt2(!ct2)}
-                                            />
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Ct-3"
-                                                // name="Ct3"
-                                                id="Ct3"
-                                                checked={ct3}
-                                                onChange={() => setCt3(!ct3)}
-                                            />
-
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Final Exam Mark"
-                                                // name="FinalExamMark"
-                                                id="FinalExamMark"
-                                                checked={final}
-                                                onChange={() => setFinal(!final)}
-                                            />
-                                            <div className='text-center'>
-                                                <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                        <div>
+                            {
+                                marks.type === 'theory'
+                                &&
+                                <div className='container'>
+                                    <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                        <div className='p-4 '>
+                                            <div className=' '>
+                                                <h3 className='text-center mb-3' >Assign Marks</h3>
+                                                <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                             </div>
-                                        </Form>
-
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        {/* bashay giye korbo lab modal  */}
-                        {
-                            marks.type === 'lab'
-                            &&
-                            <div className='container'>
-                                <div className='container-fluid shadow-lg  rounded  my-5 ' >
-                                    <div className='p-4'>
-                                        <div className=' '>
-                                            <h3 className='text-center mb-3' >Assign Marks</h3>
-                                            <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
-                                            <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
-                                        </div>
-                                        <Form onSubmit={handleSubmit(onSubmit)}>
-                                            <Form.Group className='mb-2'>
-                                                <Table responsive striped bordered hover className='text-center'  >
-                                                    <col width="15%" />
-                                                    <col width="30%" />
-                                                    <col width="15%" />
-                                                    <col width="15%" />
-                                                    <col width="15%" />
-                                                    <thead>
-                                                        <tr style={{ border: "1px solid black" }}>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Lab Attendance (15%)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setLbAttendance(true) }}>Edit</span>
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Lab Report Marks (15%)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setLbReport(true) }}>Edit</span>
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Lab Quiz Marks (30%)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setLbQuiz(true) }}>Edit</span>
-                                                            </th>
-
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            marks.studentsMarks.map(x => {
-                                                                // console.log(x)
-                                                                return (
-                                                                    <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-                                                                                {...register(`${x?.id}_id`, { required: true })}
-                                                                                readOnly />
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
-                                                                                {...register(`${x?.id}_name`, { required: true })}
-                                                                                readOnly />
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
-
-                                                                                <p>{x?.labAttendance}</p>
-                                                                            }
-
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
-
-                                                                                <p>{x?.labReport}</p>
-                                                                            }
-
-                                                                        </td>
-                                                                        <td style={{ border: "1px solid black" }}>
-                                                                            {
-
-                                                                                <p>{x?.labQuiz}</p>
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                            </Form.Group>
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Lab Attendance"
-                                                id="labAttendance"
-                                                checked={labAttendance}
-                                                onChange={() => setLabAttendance(!labAttendance)}
-                                            />
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Lab Report"
-                                                id="labReport"
-                                                checked={labReport}
-                                                onChange={() => setLabReport(!labReport)}
-                                            />
-                                            <Form.Check
-                                                inline
-                                                type='checkbox'
-                                                label="Lab Quiz"
-                                                id="labQuiz"
-                                                checked={labQuiz}
-                                                onChange={() => setLabQuiz(!labQuiz)}
-                                            />
-                                            <div className='text-center'>
-                                                <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
-                                            </div>
-
-                                        </Form>
-                                    </div>
-
-                                </div>
-                            </div>
-                        }
-
-                        {
-                            marks.type === 'project'
-                            &&
-                            <div className='container'>
-                                <div className='mt-4' >
-                                    <Nav justify variant="pills" defaultActiveKey="1" >
-                                        <Nav.Item>
-                                            <Nav.Link onClick={() => { setState(1) }} eventKey="1" >Marks Assign</Nav.Link>
-                                        </Nav.Item>
-                                        <Nav.Item>
-                                            <Nav.Link onClick={() => { setState(2) }} eventKey="link-1" >Student Application</Nav.Link>
-                                        </Nav.Item>
-                                    </Nav>
-                                </div>
-
-                                <div className=' ' >
-
-                                    {
-                                        state === 1
-                                            ?
-                                            <div className='container-fluid shadow-lg  rounded  my-5'>
-                                                <div className='p-4'>
-                                                    <div className=' '>
-                                                        <h3 className='text-center mb-3' >Assign Marks</h3>
-                                                        <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                                        <p><span className='fw-bold'>Course Code: </span>{allInfo?.courseCode}</p>
-                                                        <p><span className='fw-bold'>Credit Hour: </span>{allInfo?.credit}</p>
-                                                    </div>
-
-                                                    <Form onSubmit={handleSubmit(onSubmit)}>
-                                                        <Form.Group className='mb-2'>
-                                                            <Table responsive bordered striped hover className='text-center'  >
-                                                                <col width="15%" />
-                                                                <col width="40%" />
-                                                                <col width="25%" />
-                                                                <thead>
-                                                                    <tr style={{ border: "1px solid black" }}>
-                                                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                            Class Performance (70%)
-                                                                            <br />
-                                                                            <span className='edit' onClick={() => { setEditClassPerformance(true) }}>Edit</span>
-                                                                        </th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {
-                                                                        Object.keys(marks).length !== 0 &&
-                                                                        marks?.studentsMarks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                            <Form onSubmit={handleSubmit(onSubmit)}>
+                                                <Form.Group className='mb-2'>
+                                                    <Table responsive striped bordered hover className='text-center' >
+                                                        <col width="11%" />
+                                                        <col width="30%" />
+                                                        <col width="12%" />
+                                                        <col width="12%" />
+                                                        <col width="12%" />
+                                                        <col width="12%" />
+                                                        <thead>
+                                                            <tr  >
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Attendance <br />(10 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryAttendance(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    CT-1 <br />(20 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT1(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    CT-2 <br />(20 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT2(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    CT-3 <br />(20 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT3(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Final Exam Mark <br />(70 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryFinal(true) }}>Edit</span>
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                marks?.studentsMarks?.map(x => {
+                                                                    // console.log(x?.studentProfileId?.firstName);
+                                                                    return (
+                                                                        <tr key={x?.id} style={{ border: "1px solid black" }}>
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-                                                                                    {...register(`${x?.id}_id`, { required: true })}
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
-                                                                                    {...register(`${x?.id}_name`, { required: true })}
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 {
 
+                                                                                    <p>{x?.theoryAttendance}</p>
+                                                                                }
 
-                                                                                    <p>{x?.class_marks_project}</p>
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.theoryCT1}</p>
+                                                                                }
+
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.theoryCT2}</p>
                                                                                 }
                                                                             </td>
-                                                                        </tr>)
-                                                                    }
-                                                                </tbody>
-                                                            </Table>
-                                                        </Form.Group>
-                                                        <Form.Check
-                                                            inline
-                                                            // disabled
-                                                            type='checkbox'
-                                                            label="Class Performance"
-                                                            id="labQuiz"
-                                                            // checked={classPerformanceProject}
-                                                            // onChange={() => setClassPerformanceProject(!classPerformanceProject)}
-                                                            checked
-                                                        />
-                                                        <div className='text-center'>
-                                                            <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                            <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
-                                                        </div>
-                                                    </Form>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.theoryCT3}</p>
+                                                                                }
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.theoryFinal}</p>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    )
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </Table>
+                                                </Form.Group>
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Attendance"
+                                                    // name='Attendance'
+                                                    id='Attendance'
+                                                    checked={attendance}
+                                                    onChange={() => setAttendance(!attendance)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Ct-1"
+                                                    // name="Ct1"
+                                                    id="Ct1"
+                                                    checked={ct1}
+                                                    onChange={() => setCt1(!ct1)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Ct-2"
+                                                    // name="Ct2"
+                                                    id="Ct2"
+                                                    checked={ct2}
+                                                    onChange={() => setCt2(!ct2)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Ct-3"
+                                                    // name="Ct3"
+                                                    id="Ct3"
+                                                    checked={ct3}
+                                                    onChange={() => setCt3(!ct3)}
+                                                />
+
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Final Exam Mark"
+                                                    // name="FinalExamMark"
+                                                    id="FinalExamMark"
+                                                    checked={final}
+                                                    onChange={() => setFinal(!final)}
+                                                />
+                                                <div className='text-center'>
+                                                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
+                                                    <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                </div>
+                                            </Form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+
+                            {
+                                marks.type === 'lab'
+                                &&
+                                <div className='container'>
+                                    <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                        <div className='p-4'>
+                                            <div className=' '>
+                                                <h3 className='text-center mb-3' >Assign Marks</h3>
+                                                <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                            </div>
+                                            <Form onSubmit={handleSubmit(onSubmit)}>
+                                                <Form.Group className='mb-2'>
+                                                    <Table responsive striped bordered hover className='text-center'  >
+                                                        <col width="15%" />
+                                                        <col width="30%" />
+                                                        <col width="15%" />
+                                                        <col width="15%" />
+                                                        <col width="15%" />
+                                                        <thead>
+                                                            <tr style={{ border: "1px solid black" }}>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Lab Attendance (15%)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setLbAttendance(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Lab Report Marks (15%)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setLbReport(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Lab Quiz Marks (30%)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowMarkModal(true); setLbQuiz(true) }}>Edit</span>
+                                                                </th>
+
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {
+                                                                marks.studentsMarks.map(x => {
+                                                                    // console.log(x)
+                                                                    return (
+                                                                        <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                                    readOnly />
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                    readOnly />
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.labAttendance}</p>
+                                                                                }
+
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.labReport}</p>
+                                                                                }
+
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.labQuiz}</p>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </tbody>
+                                                    </Table>
+                                                </Form.Group>
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Lab Attendance"
+                                                    id="labAttendance"
+                                                    checked={labAttendance}
+                                                    onChange={() => setLabAttendance(!labAttendance)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Lab Report"
+                                                    id="labReport"
+                                                    checked={labReport}
+                                                    onChange={() => setLabReport(!labReport)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Lab Quiz"
+                                                    id="labQuiz"
+                                                    checked={labQuiz}
+                                                    onChange={() => setLabQuiz(!labQuiz)}
+                                                />
+                                                <div className='text-center'>
+                                                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
+                                                    <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
                                                 </div>
 
-                                            </div>
-                                            :
-                                            <div className='mt-4'>
-                                                <h3 className='my-5 text-center '>Applications</h3>
-                                                {
-                                                    proposals?.map(x => <Application
-                                                        // proposal={setProposalChange}
-                                                        key={x._id} details={x}
-                                                    // handleAccept={handleAccept}
-                                                    // handleReject={handleReject}
-                                                    >
-                                                    </Application >)
-                                                }
-                                            </div>
-                                    }
+                                            </Form>
+                                        </div>
 
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
 
-                        {
-                            Object.keys(errors).length ? <p style={visibile} className='text-danger ps-2 text-center' >*Don't put a feild empty, you can assign 0</p> : <p></p>
-                        }
+                            {
+                                marks.type === 'project'
+                                &&
+                                <div className='container'>
+                                    <div className='mt-4' >
+                                        <Nav justify variant="pills" defaultActiveKey="1" >
+                                            <Nav.Item>
+                                                <Nav.Link onClick={() => { setState(1) }} eventKey="1" >Marks Assign</Nav.Link>
+                                            </Nav.Item>
+                                            <Nav.Item>
+                                                <Nav.Link onClick={() => { setState(2) }} eventKey="link-1" >Student Application</Nav.Link>
+                                            </Nav.Item>
+                                        </Nav>
+                                    </div>
 
-                    </div >
-                </>
+                                    <div className=' ' >
+
+                                        {
+                                            state === 1
+                                                ?
+                                                <div className='container-fluid shadow-lg  rounded  my-5'>
+                                                    <div className='p-4'>
+                                                        <div className=' '>
+                                                            <h3 className='text-center mb-3' >Assign Marks</h3>
+                                                            <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                            <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                                        </div>
+
+                                                        <Form onSubmit={handleSubmit(onSubmit)}>
+                                                            <Form.Group className='mb-2'>
+                                                                <Table responsive bordered striped hover className='text-center'  >
+                                                                    <col width="15%" />
+                                                                    <col width="40%" />
+                                                                    <col width="25%" />
+                                                                    <thead>
+                                                                        <tr style={{ border: "1px solid black" }}>
+                                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                                Class Performance (70%)
+                                                                                <br />
+                                                                                <span className='edit' onClick={() => { setEditClassPerformance(true) }}>Edit</span>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {
+                                                                            Object.keys(marks).length !== 0 &&
+                                                                            marks?.studentsMarks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                                                <td style={{ border: "1px solid black" }}>
+                                                                                    <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                                        readOnly />
+                                                                                </td>
+                                                                                <td style={{ border: "1px solid black" }}>
+                                                                                    <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                        readOnly />
+                                                                                </td>
+                                                                                <td style={{ border: "1px solid black" }}>
+                                                                                    {
+                                                                                        <p>{x?.projectClassPerformance}</p>
+                                                                                    }
+                                                                                </td>
+                                                                            </tr>)
+                                                                        }
+                                                                    </tbody>
+                                                                </Table>
+                                                            </Form.Group>
+                                                            <Form.Check
+                                                                inline
+                                                                // disabled
+                                                                type='checkbox'
+                                                                label="Class Performance"
+                                                                id="labQuiz"
+                                                                // checked={classPerformanceProject}
+                                                                // onChange={() => setClassPerformanceProject(!classPerformanceProject)}
+                                                                checked
+                                                            />
+                                                            <div className='text-center'>
+                                                                <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
+                                                                <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                            </div>
+                                                        </Form>
+                                                    </div>
+
+                                                </div>
+                                                :
+                                                <div className='mt-4'>
+                                                    <h3 className='my-5 text-center '>Applications</h3>
+                                                    {
+                                                        proposals?.map(x => <Application
+                                                            // proposal={setProposalChange}
+                                                            key={x._id} applicationDetais={x}
+                                                        // handleAccept={handleAccept}
+                                                        // handleReject={handleReject}
+                                                        >
+                                                        </Application >)
+                                                    }
+                                                </div>
+                                        }
+
+                                    </div>
+                                </div>
+                            }
+
+                            {
+                                Object.keys(errors).length ? <p style={visibile} className='text-danger ps-2 text-center' >*Don't put a feild empty, you can assign 0</p> : <p></p>
+                            }
+
+                        </div >
+                    </>
             }
         </>
 

@@ -1,51 +1,76 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
-// import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
-// import { FaDownload } from 'react-icons/fa';
-// import useAuth from '../../../Hooks/useAuth';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 
 const MarkModal = (props) => {
     // const { user, dept } = useAuth();
-    const { showMarkModal, setShowMarkModal, marks, theoryAttendance, setTheoryAttendance, theoryCT1, setTheoryCT1, theoryCT2, setTheoryCT2,
-        theoryCT3, setTheoryCT3, theoryFinal, setTheoryFinal, lbAttendance, setLbAttendance, lbReport, setLbReport, lbQuiz, setLbQuiz } = props;
+    const { showMarkModal, setShowMarkModal, marks, theoryAttendance,
+        setTheoryAttendance, theoryCT1, setTheoryCT1, theoryCT2,
+        setTheoryCT2, theoryCT3, setTheoryCT3, theoryFinal, setTheoryFinal,
+        lbAttendance, setLbAttendance, lbReport, setLbReport, lbQuiz, setLbQuiz,
+        courseId, isSaving, setIsSaving } = props;
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, reset } = useForm();
     const [attendance, setAttendance] = useState();
     const [ct1, setCt1] = useState();
     const [ct2, setCt2] = useState();
     const [ct3, setCt3] = useState();
     const [final, setFinal] = useState();
-    const [labAttendance, setLabAttendance] = useState();
-    const [labReport, setLabReport] = useState();
-    const [labQuiz, setLabQuiz] = useState()
+    const [lAttendance, setLAttendance] = useState();
+    const [lReport, setLReport] = useState();
+    const [lQuiz, setLQuiz] = useState()
     const [fileUpload, setFileUpload] = useState();
 
-    const handleAttendanceChange = e => {
-        setAttendance(e.target.value);
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    const makeAllPropsFalse = () => {
+        setTheoryAttendance(false);
+        setTheoryCT1(false);
+        setTheoryCT2(false);
+        setTheoryCT3(false);
+        setTheoryFinal(false);
+        setLbAttendance(false);
+        setLbReport(false);
+        setLbQuiz(false);
     }
-    const handleCt1Change = e => {
-        setCt1(e.target.value);
-    }
-    const handleCt2Change = e => {
-        setCt2(e.target.value);
-    }
-    const handleCt3Change = e => {
-        setCt3(e.target.value);
-    }
-    const handleFinalChange = e => {
-        setFinal(e.target.value);
-    }
-    const handleLabAttendanceChange = e => {
-        setLabAttendance(e.target.value);
-    }
-    const handleLabReportChange = e => {
-        setLabReport(e.target.value);
-    }
-    const handleLabQuizChange = e => {
-        setLabQuiz(e.target.value);
-    }
+
+    // const handleAttendanceChange = e => {
+    //     setAttendance(e.target.value);
+    // }
+    // const handleCt1Change = e => {
+    //     setCt1(e.target.value);
+    // }
+    // const handleCt2Change = e => {
+    //     setCt2(e.target.value);
+    // }
+    // const handleCt3Change = e => {
+    //     setCt3(e.target.value);
+    // }
+    // const handleFinalChange = e => {
+    //     setFinal(e.target.value);
+    // }
+    // const handlelAttendanceChange = e => {
+    //     setLAttendance(e.target.value);
+    // }
+    // const handleLabReportChange = e => {
+    //     setLReport(e.target.value);
+    // }
+    // const handleLabQuizChange = e => {
+    //     setLQuiz(e.target.value);
+    // }
 
     const onSubmit = data => {
         let supObj = {};
@@ -88,8 +113,39 @@ const MarkModal = (props) => {
             }
             arr.push(obj);
         })
-        supObj.mark = arr;
+        supObj.marks = arr;
         console.log('marks to push ', supObj);
+
+        fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
+            method: 'put',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+            },
+            body: JSON.stringify(supObj)
+        })
+            .then(res => res.json())
+            .then(info => {
+                // console.log("info ", info);
+                if (info?.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Successfully updated marks'
+                    })
+                    setIsSaving(!isSaving)
+                    setShowMarkModal(false);
+                    reset()
+                    makeAllPropsFalse();
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Failed to update marks'
+                    })
+                    reset()
+                }
+            });
+
     }
 
     const readExcel = (file) => {
@@ -162,6 +218,36 @@ const MarkModal = (props) => {
 
             console.log('marks to push ', supObj);
 
+            fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
+                method: 'put',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+                },
+                body: JSON.stringify(supObj)
+            })
+                .then(res => res.json())
+                .then(info => {
+                    // console.log("info ", info);
+                    if (info?.status === 'success') {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Successfully updated marks'
+                        })
+                        setIsSaving(!isSaving)
+                        setShowMarkModal(false);
+                        reset()
+                        makeAllPropsFalse();
+                    }
+                    else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Failed to update marks'
+                        })
+                        reset()
+                    }
+                });
+
         }
 
         else {
@@ -188,12 +274,11 @@ const MarkModal = (props) => {
                             <span className='text-white ms-2 float-end' >Download Pdf</span>
                             <FaDownload className='float-end mt-1 mb-2' ></FaDownload>
                         </Button>
-
                     </Modal.Title> */}
                 </Modal.Header>
 
                 <Modal.Body>
-                    <div className='container w-100 my-5 ms-4 py-2'>
+                    <div className='container w-100 ms-4 py-2'>
                         <div className="d-flex">
                             <h4 className='text-primary my-3 me-3 '>Please Select a file: </h4>
                             <input type="file" className='mt-3' onChange={(e) => {
@@ -202,14 +287,14 @@ const MarkModal = (props) => {
                             }} />
 
                         </div>
-                        <input as Button variant='primary' className='btn btn-primary mt-5' onClick={onFileUpload} value="Upload File" />
+                        <Button variant='primary' className='btn btn-primary' onClick={onFileUpload}>Upload File</Button>
                     </div>
                     <div id="selectedPortion" className='px-4 py-2 my-5'>
                         {
                             marks.type === 'theory'
                             &&
                             <div className='container'>
-                                <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                <div className='container-fluid shadow-lg  rounded ' >
                                     <div className='p-4 '>
                                         <div className=' '>
                                             <h3 className='text-center mb-3' >Assign Marks</h3>
@@ -230,7 +315,6 @@ const MarkModal = (props) => {
                                                             {
                                                                 theoryAttendance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                     Attendance <br />(10 marks)
-
                                                                 </th>
                                                             }
                                                             {
@@ -282,8 +366,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryAttendance ? x.theoryAttendance : attendance
-                                                                                } onChange={() => handleAttendanceChange()} {...register(`${x?.id}_attendance`, { required: false })} />
-
+                                                                                } onChange={(e) => setAttendance(e.target.value)} {...register(`${x?.id}_attendance`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -293,7 +376,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryCT1 ? x.theoryCT1 : ct1
-                                                                                } onChange={() => handleCt1Change()} {...register(`${x?.id}_ct1`, { required: true })} />
+                                                                                } onChange={(e) => setCt1(e.target.value)} {...register(`${x?.id}_ct1`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -303,7 +386,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryCT2 ? x.theoryCT2 : ct2
-                                                                                } onChange={() => handleCt2Change()} {...register(`${x?.id}_ct2`, { required: true })} />
+                                                                                } onChange={(e) => setCt2(e.target.value)} {...register(`${x?.id}_ct2`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -313,7 +396,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryCT3 ? x.theoryCT3 : ct3
-                                                                                } onChange={() => handleCt3Change()} {...register(`${x?.id}_ct3`, { required: true })} />
+                                                                                } onChange={(e) => setCt3(e.target.value)} {...register(`${x?.id}_ct3`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -323,7 +406,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryFinal ? x.theoryFinal : final
-                                                                                } onChange={() => handleFinalChange()} {...register(`${x?.id}_final`, { required: true })} />
+                                                                                } onChange={(e) => setFinal(e.target.value)} {...register(`${x?.id}_final`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -350,7 +433,7 @@ const MarkModal = (props) => {
                             marks.type === 'lab'
                             &&
                             <div className='container'>
-                                <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                <div className='container-fluid shadow-lg  rounded ' >
                                     <div className='p-4'>
                                         <div className=' '>
                                             <h3 className='text-center mb-3' >Assign Marks</h3>
@@ -410,8 +493,8 @@ const MarkModal = (props) => {
                                                                             &&
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
-                                                                                    x?.labAttendance ? x.labAttendance : labAttendance
-                                                                                } onChange={() => handleLabAttendanceChange()} {...register(`${x?.id}_lab_attendance`, { required: true })} />
+                                                                                    x?.labAttendance ? x.labAttendance : lAttendance
+                                                                                } onChange={(e) => setLAttendance(e.target.value)} {...register(`${x?.id}_lab_attendance`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -420,8 +503,8 @@ const MarkModal = (props) => {
                                                                             &&
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
-                                                                                    x?.labReport ? x.labReport : labReport
-                                                                                } onChange={() => handleLabReportChange()} {...register(`${x?.id}_lab_report`, { required: true })} />
+                                                                                    x?.labReport ? x.labReport : lReport
+                                                                                } onChange={(e) => setLReport(e.target.value)} {...register(`${x?.id}_lab_report`, { required: true })} />
                                                                             </td>
 
                                                                         }
@@ -430,8 +513,8 @@ const MarkModal = (props) => {
                                                                             &&
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
-                                                                                    x?.labQuiz ? x.labQuiz : labQuiz
-                                                                                } onChange={() => handleLabQuizChange()} {...register(`${x?.id}_lab_quiz`, { required: true })} />
+                                                                                    x?.labQuiz ? x.labQuiz : lQuiz
+                                                                                } onChange={(e) => setLQuiz(e.target.value)} {...register(`${x?.id}_lab_quiz`, { required: true })} />
                                                                             </td>
 
                                                                         }
