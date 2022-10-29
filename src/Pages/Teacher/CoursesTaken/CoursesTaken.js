@@ -58,7 +58,7 @@ const TakenCourses = () => {
                 {
                     courses?.map(x => {
                         return (<div className='col-lg-3 col-sm-4 col-12' key={`${x?._id}`}>
-                            <Card style={{ border: "1px solid black" }} className="mb-3">
+                            <Card style={{ border: "1px solid black" }} className="mb-3 h-100 ">
                                 <Card.Body>
                                     <Card.Title> {x?.courseTitle}</Card.Title>
                                     <Card.Text>

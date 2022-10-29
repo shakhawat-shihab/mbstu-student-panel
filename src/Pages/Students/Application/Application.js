@@ -2,71 +2,91 @@ import React from 'react';
 import { Accordion, Button } from 'react-bootstrap';
 import { MdPendingActions, MdCancel } from "react-icons/md";
 import { FcApproval } from "react-icons/fc";
+import { AiOutlineDisconnect } from "react-icons/ai";
 import useAuth from '../../../Hooks/useAuth';
 const Application = (props) => {
     //const { subject, teacher, students, status, description } = props?.details;
-    const { teacher, student } = useAuth();
+    const { user } = useAuth();
     const { applicationDetais } = props;
     console.log('applicationDetais ', applicationDetais);
 
     return (
-        <div className=' mb-3 border shadow-sm  rounded px-5 py-3'>
-            <p>{applicationDetais.status}</p>
-            <h5 className='mb-2 mb-3'>{props?.details?.subject}</h5>
+        <div className=' mb-3 border border border-3 rounded  rounded px-5 py-3'>
+            {/* <p>{applicationDetais.status}</p> */}
             {
-                student &&
-                <h5 className='mb-2 text-primary'>Supervisor: <span className='fw-light text-dark'>{props?.details?.teacher}</span></h5>
+                user?.isStudent &&
+                <div>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Title: </span>{applicationDetais?.courseTitle}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Code: </span>{applicationDetais?.courseCode.toUpperCase()}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Project Title: </span>{applicationDetais?.projectApplicationTitle}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Supervisor: </span>{applicationDetais?.teacher?.name}</p>
+
+                    <br />
+
+                    <Accordion>
+                        <Accordion.Item eventKey="0">
+                            <Accordion.Header style={{ fontSize: "20px" }}>Project Description</Accordion.Header>
+                            <Accordion.Body>
+                                {applicationDetais?.projectApplicationDescription}
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
+
+                    <br />
+
+                    <p className='my-3 ' style={{ fontSize: "20px" }}>
+                        {
+                            applicationDetais?.status === "denied" &&
+                            <>
+                                <span className='text-capitalize '>
+                                    <span className="fw-bold">Status: </span>
+                                    <span className='text-danger'>{applicationDetais?.status}</span>
+                                    <MdCancel className=' ms-1 fs-3 text-danger '></MdCancel>
+                                </span>
+                            </>
+                        }
+                        {
+                            applicationDetais?.status === "pending" &&
+                            <>
+                                <span className='text-capitalize '>
+                                    <span className="fw-bold">Status: </span>
+                                    <span className='text-warning'>{applicationDetais?.status}</span>
+                                    <MdPendingActions className=' ms-1 fs-2 text-warning '></MdPendingActions>
+                                </span>
+                            </>
+                        }
+                        {
+                            applicationDetais?.status === "accepted" &&
+                            <>
+                                <span className='text-capitalize '>
+                                    <span className="fw-bold">Status: </span>
+                                    <span className='text-success'>{applicationDetais?.status}</span>
+                                    <FcApproval className=' ms-1 fs-2 text-success '></FcApproval>
+                                </span>
+                            </>
+                        }
+                        {
+                            applicationDetais?.status === "discontinued" &&
+                            <>
+                                <span className='text-capitalize '>
+                                    <span className="fw-bold">Status: </span>
+                                    <span className='text-danger'>{applicationDetais?.status}</span>
+                                    <AiOutlineDisconnect className=' ms-1 fs-2 text-warning ' />
+                                </span>
+                            </>
+                        }
+
+                    </p>
+                </div>
+
             }
 
-            <h5 className='mb-2 text-primary'>Group Members: </h5>
+
             {
-                props?.details?.students?.map(x => <li className='ms-5 text-uppercase'>{x}</li>)
-
-            }
-            <h5 className='my-3 '>
-                {
-                    props?.details?.status === "rejected" &&
-                    <>
-                        <span className='text-capitalize '>
-                            Status: <span className='text-danger'>{props?.details?.status}</span>
-                            <MdCancel className=' ms-1 fs-3 text-danger '></MdCancel>
-                        </span>
-                    </>
-                }
-                {
-                    props?.details?.status === "pending" &&
-                    <>
-                        <span className='text-capitalize '>
-                            Status: <span className='text-warning'>{props?.details?.status}</span>
-                            <MdPendingActions className=' ms-1 fs-2 text-warning '></MdPendingActions>
-                        </span>
-                    </>
-                }
-                {
-                    props?.details?.status === "accepted" &&
-                    <>
-                        <span className='text-capitalize '>
-                            Status: <span className='text-success'>{props?.details?.status}</span>
-                            <FcApproval className=' ms-1 fs-2 text-success '></FcApproval>
-                        </span>
-                    </>
-                }
-
-            </h5>
-
-            <Accordion>
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header>Project Description</Accordion.Header>
-                    <Accordion.Body>
-                        {props?.details?.description}
-                    </Accordion.Body>
-                </Accordion.Item>
-            </Accordion>
-            {
-                teacher &&
+                user?.isTeacher &&
                 <div className='my-2 text-center'>
                     {
-                        props?.details?.status === 'pending' &&
+                        applicationDetais?.status === 'pending' &&
                         <>
                             <Button variant='success' onClick={() => {
                                 //  handleAdd(props?.details)

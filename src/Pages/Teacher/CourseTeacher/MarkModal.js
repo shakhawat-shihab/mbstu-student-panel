@@ -10,7 +10,7 @@ const MarkModal = (props) => {
         setTheoryAttendance, theoryCT1, setTheoryCT1, theoryCT2,
         setTheoryCT2, theoryCT3, setTheoryCT3, theoryFinal, setTheoryFinal,
         lbAttendance, setLbAttendance, lbReport, setLbReport, lbQuiz, setLbQuiz,
-        courseId, isSaving, setIsSaving } = props;
+        projectClassPerformance, setProjectClassPerformance, courseId, isSaving, setIsSaving } = props;
 
     const { register, handleSubmit, reset } = useForm();
     const [attendance, setAttendance] = useState();
@@ -22,6 +22,8 @@ const MarkModal = (props) => {
     const [lReport, setLReport] = useState();
     const [lQuiz, setLQuiz] = useState()
     const [fileUpload, setFileUpload] = useState();
+
+    const [projectPerformance, setProjectPerformance] = useState();
 
 
     const Toast = Swal.mixin({
@@ -45,34 +47,13 @@ const MarkModal = (props) => {
         setLbAttendance(false);
         setLbReport(false);
         setLbQuiz(false);
+        setProjectClassPerformance(false);
     }
 
-    // const handleAttendanceChange = e => {
-    //     setAttendance(e.target.value);
-    // }
-    // const handleCt1Change = e => {
-    //     setCt1(e.target.value);
-    // }
-    // const handleCt2Change = e => {
-    //     setCt2(e.target.value);
-    // }
-    // const handleCt3Change = e => {
-    //     setCt3(e.target.value);
-    // }
-    // const handleFinalChange = e => {
-    //     setFinal(e.target.value);
-    // }
-    // const handlelAttendanceChange = e => {
-    //     setLAttendance(e.target.value);
-    // }
-    // const handleLabReportChange = e => {
-    //     setLReport(e.target.value);
-    // }
-    // const handleLabQuizChange = e => {
-    //     setLQuiz(e.target.value);
-    // }
 
     const onSubmit = data => {
+
+        console.log("my submitted data ==== ", data)
         let supObj = {};
         let arr = [];
         marks?.studentsMarks?.map(x => {
@@ -111,6 +92,11 @@ const MarkModal = (props) => {
                 supObj.propertyName = "labQuiz";
                 obj.labQuiz = data[`${x.id}_lab_quiz`];
             }
+            if (projectClassPerformance) {
+                supObj.propertyName = "projectClassPerformance";
+                obj.projectClassPerformance = data[`${x.id}_project_performance`];
+            }
+
             arr.push(obj);
         })
         supObj.marks = arr;
@@ -204,6 +190,10 @@ const MarkModal = (props) => {
         }
         if (lbQuiz) {
             choice = "labQuiz";
+        }
+
+        if (projectPerformance) {
+            choice = "projectClassPerformance";
         }
 
         if (fileUpload[0][`${choice}`]) {
@@ -366,7 +356,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryAttendance ? x.theoryAttendance : attendance
-                                                                                } onChange={(e) => setAttendance(e.target.value)} {...register(`${x?.id}_attendance`, { required: true })} />
+                                                                                } onChange={(e) => setAttendance(e.target.value)} {...register(`${x?.id}_attendance`, { required: true })} min="0" max="10" />
                                                                             </td>
 
                                                                         }
@@ -376,7 +366,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryCT1 ? x.theoryCT1 : ct1
-                                                                                } onChange={(e) => setCt1(e.target.value)} {...register(`${x?.id}_ct1`, { required: true })} />
+                                                                                } onChange={(e) => setCt1(e.target.value)} {...register(`${x?.id}_ct1`, { required: true })} min="0" max="20" />
                                                                             </td>
 
                                                                         }
@@ -386,7 +376,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryCT2 ? x.theoryCT2 : ct2
-                                                                                } onChange={(e) => setCt2(e.target.value)} {...register(`${x?.id}_ct2`, { required: true })} />
+                                                                                } onChange={(e) => setCt2(e.target.value)} {...register(`${x?.id}_ct2`, { required: true })} min="0" max="20" />
                                                                             </td>
 
                                                                         }
@@ -396,7 +386,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryCT3 ? x.theoryCT3 : ct3
-                                                                                } onChange={(e) => setCt3(e.target.value)} {...register(`${x?.id}_ct3`, { required: true })} />
+                                                                                } onChange={(e) => setCt3(e.target.value)} {...register(`${x?.id}_ct3`, { required: true })} min="0" max="20" />
                                                                             </td>
 
                                                                         }
@@ -406,7 +396,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.theoryFinal ? x.theoryFinal : final
-                                                                                } onChange={(e) => setFinal(e.target.value)} {...register(`${x?.id}_final`, { required: true })} />
+                                                                                } onChange={(e) => setFinal(e.target.value)} {...register(`${x?.id}_final`, { required: true })} min="0" max="70" />
                                                                             </td>
 
                                                                         }
@@ -456,18 +446,18 @@ const MarkModal = (props) => {
 
                                                             {
                                                                 lbAttendance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Attendance (15%)
+                                                                    Lab Attendance<br /> (15 marks)
 
                                                                 </th>
                                                             }
                                                             {
                                                                 lbReport && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Report Marks (15%)
+                                                                    Lab Report Marks<br /> (15 marks)
                                                                 </th>
                                                             }
                                                             {
                                                                 lbQuiz && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Quiz Marks (30%)
+                                                                    Lab Quiz Marks<br /> (30 marks)
                                                                 </th>
                                                             }
                                                         </tr>
@@ -494,7 +484,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.labAttendance ? x.labAttendance : lAttendance
-                                                                                } onChange={(e) => setLAttendance(e.target.value)} {...register(`${x?.id}_lab_attendance`, { required: true })} />
+                                                                                } onChange={(e) => setLAttendance(e.target.value)} {...register(`${x?.id}_lab_attendance`, { required: true })} min="0" max="15" />
                                                                             </td>
 
                                                                         }
@@ -504,7 +494,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.labReport ? x.labReport : lReport
-                                                                                } onChange={(e) => setLReport(e.target.value)} {...register(`${x?.id}_lab_report`, { required: true })} />
+                                                                                } onChange={(e) => setLReport(e.target.value)} {...register(`${x?.id}_lab_report`, { required: true })} min="0" max="15" />
                                                                             </td>
 
                                                                         }
@@ -514,7 +504,84 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.labQuiz ? x.labQuiz : lQuiz
-                                                                                } onChange={(e) => setLQuiz(e.target.value)} {...register(`${x?.id}_lab_quiz`, { required: true })} />
+                                                                                } onChange={(e) => setLQuiz(e.target.value)} {...register(`${x?.id}_lab_quiz`, { required: true })} min="0" max="30" />
+                                                                            </td>
+
+                                                                        }
+                                                                    </tr>
+                                                                )
+                                                            })
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                            </Form.Group>
+
+                                            <div className='text-center'>
+                                                <input as Button variant='primary' type="submit" value='Save Marks' className='btn btn-primary' />
+                                            </div>
+
+                                        </Form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+                        {
+                            marks.type === 'project'
+                            &&
+                            <div className='container'>
+                                <div className='container-fluid shadow-lg  rounded ' >
+                                    <div className='p-4'>
+                                        <div className=' '>
+                                            <h3 className='text-center mb-3' >Assign Marks</h3>
+                                            <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                            <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                        </div>
+                                        <Form onSubmit={handleSubmit(onSubmit)}>
+                                            <Form.Group className='mb-2'>
+                                                <Table responsive striped bordered hover className='text-center'  >
+                                                    <col width="15%" />
+                                                    <col width="30%" />
+                                                    <col width="15%" />
+                                                    {/* <col width="15%" />
+                                                    <col width="15%" /> */}
+                                                    <thead>
+                                                        <tr style={{ border: "1px solid black" }}>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+
+                                                            {
+                                                                projectClassPerformance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Class Performance<br /> (70 marks)
+
+                                                                </th>
+                                                            }
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            marks?.studentsMarks?.map(x => {
+                                                                // console.log(x)
+                                                                return (
+                                                                    <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                                {...register(`${x?.id}_id`, { required: true })}
+                                                                                readOnly />
+                                                                        </td>
+                                                                        <td style={{ border: "1px solid black" }}>
+                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                {...register(`${x?.id}_name`, { required: true })}
+                                                                                readOnly />
+                                                                        </td>
+                                                                        {
+                                                                            projectClassPerformance
+                                                                            &&
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
+                                                                                    x?.projectClassPerformance ? x.projectClassPerformance : projectPerformance
+                                                                                } onChange={(e) => setProjectPerformance(e.target.value)} {...register(`${x?.id}_project_performance`, { required: true })} min="0" max="70" />
                                                                             </td>
 
                                                                         }

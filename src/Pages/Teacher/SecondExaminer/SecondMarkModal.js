@@ -3,12 +3,13 @@ import { Button, Form, Modal, Table } from 'react-bootstrap';
 // import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
 // import useAuth from '../../../Hooks/useAuth';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 
 const SecondMarkModal = (props) => {
 
-    const { marks, showMarkModal, setShowMarkModal, secondExaminerFinal, setSecondExaminerFinal, courseId } = props;
-    const { register, handleSubmit } = useForm();
+    const { marks, showMarkModal, setShowMarkModal, secondExaminerFinal, setSecondExaminerFinal, courseId, isSaving, setIsSaving } = props;
+    const { register, handleSubmit, reset } = useForm();
     const [theorySecondExaminer, setTheorySecondExaminer] = useState();
     const [fileUpload, setFileUpload] = useState();
 
@@ -17,6 +18,23 @@ const SecondMarkModal = (props) => {
 
     const handleSecondExaminerFinalChange = e => {
         setTheorySecondExaminer(e.target.value);
+    }
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+    const makeAllPropsFalse = () => {
+        setSecondExaminerFinal(false);
+
     }
 
     const onSubmit = data => {
@@ -33,8 +51,8 @@ const SecondMarkModal = (props) => {
         supObj.mark = arr;
         console.log('marks to push ', supObj);
 
-        fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
-            method: 'patch',
+        fetch(`http://localhost:5000/api/v1/marks/update-marks/second-examiner/${courseId}`, {
+            method: 'put',
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
@@ -43,20 +61,24 @@ const SecondMarkModal = (props) => {
         })
             .then(res => res.json())
             .then(info => {
-                console.log("info ", info);
-                // if (data?.status === 'success') {
-                //     Toast.fire({
-                //         icon: 'success',
-                //         title: data.message
-                //     })
-                //     reset();
-                // }
-                // else {
-                //     Toast.fire({
-                //         icon: 'error',
-                //         title: data.message
-                //     })
-                // }
+                // console.log("info ", info);
+                if (info?.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Successfully updated marks'
+                    })
+                    setIsSaving(!isSaving)
+                    setShowMarkModal(false);
+                    reset()
+                    makeAllPropsFalse();
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: info?.message
+                    })
+                    reset()
+                }
             });
 
     }
@@ -134,7 +156,7 @@ const SecondMarkModal = (props) => {
                 </Modal.Header>
 
                 <Modal.Body>
-                    <div className='container w-100 my-5 ms-4 py-2'>
+                    <div className='container w-100 ms-4 py-2'>
                         <div className="d-flex">
                             <h4 className='text-primary my-3 me-3 '>Please Select a file: </h4>
                             <input type="file" className='mt-3' onChange={(e) => {
@@ -143,7 +165,7 @@ const SecondMarkModal = (props) => {
                             }} />
 
                         </div>
-                        <input as Button variant='primary' className='btn btn-primary mt-5' onClick={onFileUpload} value="Upload File" />
+                        <Button variant='primary' className='btn btn-primary' onClick={onFileUpload}>Upload File</Button>
                     </div>
                     <div id="selectedPortion" className='px-4 py-2 my-5'>
 
@@ -200,11 +222,11 @@ const SecondMarkModal = (props) => {
                                                                         <td style={{ border: "1px solid black" }}>
                                                                             <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                 x.theorySecondExaminer ? x.theorySecondExaminer : theorySecondExaminer
-                                                                            } onChange={() => handleSecondExaminerFinalChange()} {...register(`${x?.id}_final`, { required: true })} />
+                                                                            } onChange={() => handleSecondExaminerFinalChange()} {...register(`${x?.id}_final`, { required: true })} min="0" max="70" />
                                                                         </td>
 
                                                                     }
-                                                                    {/* _course_teacher_marks */}
+
 
 
                                                                 </tr>

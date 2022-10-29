@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, InputGroup, Nav, Spinner } from 'react-bootstrap';
+import { Form, Nav, Spinner } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import checkDepartmentNameFromIdCode from '../../../Functions/IdCodeToDeptName';
 import useAuth from '../../../Hooks/useAuth';
 import Application from '../Application/Application';
-
+import './ApplyToSupervisor.css'
 const ApplyToSupervisor = () => {
     const { courseId } = useParams();
     const { user } = useAuth();
@@ -27,7 +27,7 @@ const ApplyToSupervisor = () => {
     const [acceptedProposal, setAcceptedProposal] = useState([]);
     const [isLoadingProposals, setIsLoadingProposals] = useState(true);
     const [isLoadingAcceptedProposal, setIsLoadingAcceptedProposal] = useState(true);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset } = useForm();
 
     const Toast = Swal.mixin({
         toast: true,
@@ -55,7 +55,7 @@ const ApplyToSupervisor = () => {
                 setIsLoadingProposals(false)
 
             })
-    }, [courseId])
+    }, [courseId, state])
 
     useEffect(() => {
         fetch(`http://localhost:5000/api/v1/project-application/check-any-accepted/${courseId}`, {
@@ -152,6 +152,8 @@ const ApplyToSupervisor = () => {
                 }
             });
     }
+
+    console.log("prooopooosals === ", proposals);
     return (
         <div>
             <div className='container my-5'>
@@ -179,9 +181,15 @@ const ApplyToSupervisor = () => {
 
                                 <div className='container my-4 py-3 w-100'>
                                     {/* <h4 className='text-center text-primary mb-4'>My Applications</h4> */}
-                                    {
-                                        proposals?.map(x =>
+                                    {proposals.length === 0 ?
+                                        <div className=' d-flex justify-content-center align-items-center half-height' >
+                                            <h5 className='text-center fs-2 text-danger my-4 fw-bold error-opacity' >You have no Project application</h5>
+                                        </div>
+
+                                        :
+                                        proposals.map(x =>
                                             <Application key={x._id} applicationDetais={x}></Application>)
+
                                     }
                                 </div>
 
@@ -190,38 +198,38 @@ const ApplyToSupervisor = () => {
                                     {
                                         !acceptedProposal
                                             ?
-                                            <div className='w-75 mx-auto shadow-lg rounded px-4 py-5 my-4'>
-                                                {/* <h2 className='text-center'>Apply </h2> */}
+                                            <div className='w-75 mx-auto shadow-lg rounded px-4 py-3 my-3'>
+                                                <h4 className='text-center mb-5'>Project Proposal Form </h4>
                                                 <Form onSubmit={handleSubmit(onSubmit)}>
 
                                                     <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>Course Title: </Form.Label>
-                                                            <input type='text' {...register("courseTitle")} className="w-100" value={courseTitle} />
+                                                            <Form.Control type='text' {...register("courseTitle")} className="w-100" value={courseTitle} />
                                                         </Form.Group>
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>Course Code: </Form.Label>
-                                                            <input type='text' {...register("courseCode", { required: true })} className="w-100 text-uppercase" value={courseCode} />
-                                                            <input type='text' hidden {...register("courseId", { required: true })} className="w-100 text-uppercase" value={courseId} />
+                                                            <Form.Control type='text' {...register("courseCode", { required: true })} className="w-100 text-uppercase" value={courseCode} />
+                                                            <Form.Control type='text' hidden {...register("courseId", { required: true })} className="w-100 text-uppercase" value={courseId} />
                                                         </Form.Group>
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>Name: </Form.Label>
-                                                            <input type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
-                                                            <input hidden type='text' {...register("applicantEmail")} className="w-100" value={email} />
+                                                            <Form.Control type='text' {...register("applicantName")} className="w-100" defaultValue={name} />
+                                                            <Form.Control hidden type='text' {...register("applicantEmail")} className="w-100" value={email} />
                                                         </Form.Group>
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>ID: </Form.Label>
-                                                            <input type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
-                                                            <input type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
+                                                            <Form.Control type='text' {...register("applicantId", { required: true })} className="w-100 text-uppercase" value={id} />
+                                                            <Form.Control type='text' hidden {...register("applicantProfileId", { required: true })} className="w-100" value={studentProfileId} />
                                                         </Form.Group>
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>Department: </Form.Label>
-                                                            <input type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
-                                                            <input type='text' hidden  {...register("department")} className="w-100" value={department} />
+                                                            <Form.Control type='text'  {...register("departmentName", { required: true })} className="w-100" value={departmentName} />
+                                                            <Form.Control type='text' hidden  {...register("department")} className="w-100" value={department} />
                                                         </Form.Group>
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>Session: </Form.Label>
-                                                            <input type='text' {...register("applicantSession")} className="w-100" value={session} />
+                                                            <Form.Control type='text' {...register("applicantSession")} className="w-100" value={session} />
                                                         </Form.Group>
 
                                                         {/* <Form.Group className="mb-3">
@@ -263,8 +271,8 @@ const ApplyToSupervisor = () => {
 
                                                     <br />
 
-                                                    <div className='my-3'>
-                                                        <Form.Control type="submit" value='Apply' className='btn btn-primary w-75' />
+                                                    <div className='text-center my-3'>
+                                                        <Form.Control style={{ width: "140px" }} type="submit" value='Apply' className='btn btn-primary' />
                                                     </div>
                                                 </Form>
                                             </div>

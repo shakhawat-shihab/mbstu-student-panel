@@ -18,6 +18,9 @@ const SecondExaminer = () => {
     const { user } = useAuth();
     const { courseId } = useParams();
 
+    const [isLoadingMarks, setIsLoadingMarks] = useState(true);
+    const [isSaving, setIsSaving] = useState(true);
+
 
     const email = user?.email;
     const history = useHistory();
@@ -53,6 +56,7 @@ const SecondExaminer = () => {
     // }, [email, semesterId, courseCode])
 
     useEffect(() => {
+        setIsLoadingMarks(true);
         fetch(`http://localhost:5000/api/v1/marks/get-marks/second-examiner/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
@@ -63,9 +67,10 @@ const SecondExaminer = () => {
             .then(info => {
                 console.log('info ', info)
                 setMarks(info.data);
+                setIsLoadingMarks(false);
 
             })
-    }, [courseId])
+    }, [courseId, isSaving])
 
     const onSubmit = data => {
         //setSubmitClick(!submitClick);
@@ -111,6 +116,49 @@ const SecondExaminer = () => {
         //     });
     };
 
+    const submitAllMarksSecondExaminer = () => {
+
+        Swal.fire({
+            title: 'Do you want to Turn In the marks?',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            confirmButtonColor: 'green',
+            icon: 'warning',
+            cancelButtonText: 'No, cancel!',
+            cancelButtonColor: 'red'
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('Saved!', '', 'success')
+                fetch(`http://localhost:5000/api/v1/marks/turn-in/second-examiner/${courseId}`, {
+                    method: 'put',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(info => {
+                        console.log('info second ', info)
+                        // setMarks(info.data);
+                        // setIsLoadingMarks(false);
+                        if (info.status === 'success') {
+                            Toast.fire({
+                                icon: 'success',
+                                title: info.message
+                            })
+                        }
+                        else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: info.message
+                            })
+                        }
+                    })
+            }
+        })
+    }
+
     const visibile = {
         visibility: 'visible'
     }
@@ -122,98 +170,107 @@ const SecondExaminer = () => {
     return (
         <>
             {
-
-                <>
-                    <div>
-                        <SecondExaminerMarksModal
-                            marks={marks} showModal={showModal} setShowModal={setShowModal}
-
-                        />
-
+                isLoadingMarks ?
+                    <div className='text-center my-5 py-5 '>
+                        <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
                     </div>
-                    <div>
-                        <SecondMarkModal
-                            marks={marks} showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal}
-                            secondExaminerFinal={secondExaminerFinal} setSecondExaminerFinal={setSecondExaminerFinal}
-                            courseId={courseId}
 
-                        />
+                    :
 
-                    </div>
-                    <div>
+                    <>
+                        <div>
+                            <SecondExaminerMarksModal
+                                marks={marks} showModal={showModal} setShowModal={setShowModal}
 
-                        <div className='container'>
-                            <div className='container-fluid shadow-lg  rounded  my-5 ' >
-                                <div className='p-4 '>
-                                    <div className=' '>
-                                        <h3 className='text-center mb-3' >Assign Marks</h3>
-                                        <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
-                                        <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
-                                        <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
-                                    </div>
-                                    <Form onSubmit={handleSubmit(onSubmit)}>
-                                        <Form.Group className='mb-2'>
-                                            <Table responsive striped bordered hover className='text-center'  >
-                                                <col width="25%" />
-                                                <col width="50%" />
-                                                <col width="30%" />
+                            />
 
-                                                <thead>
-                                                    <tr style={{ border: "1px solid black" }}>
-                                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                            Final Exam Mark <br />(70 marks)
-                                                            <br />
-                                                            <span className='edit' onClick={() => { setShowMarkModal(true); setSecondExaminerFinal(true) }}>Edit</span>
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {
-                                                        // Object.keys(allInfo).length !== 0 &&
-                                                        marks?.studentsMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
-                                                            <td style={{ border: "1px solid black" }}>
-                                                                <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-                                                                    {...register(`${x?.id}_id`, { required: true })}
-                                                                    readOnly />
-                                                            </td>
-                                                            <td style={{ border: "1px solid black" }}>
-                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
-                                                                    {...register(`${x?.id}_name`, { required: true })}
-                                                                    readOnly />
-                                                            </td>
+                        </div>
+                        <div>
+                            <SecondMarkModal
+                                marks={marks} showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal}
+                                secondExaminerFinal={secondExaminerFinal} setSecondExaminerFinal={setSecondExaminerFinal}
+                                courseId={courseId} setIsSaving={setIsSaving} isSaving={isSaving}
 
-                                                            <td style={{ border: "1px solid black" }}>
-                                                                {
-                                                                    <p>{x?.theorySecondExaminer}</p>
-                                                                }
-                                                            </td>
-                                                        </tr>)
-                                                    }
-                                                </tbody>
-                                            </Table>
-                                        </Form.Group>
+                            />
 
-                                        <Form.Check
-                                            inline
-                                            type='checkbox'
-                                            label="Final Exam Mark"
-                                            // name="FinalExamMark"
-                                            id="FinalExamMark"
-                                            checked
-                                        />
-                                        <div className='text-center'>
-                                            <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                            <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                        </div>
+                        <div>
+
+                            <div className='container'>
+                                <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                    <div className='p-4 '>
+                                        <div className=' '>
+                                            <h3 className='text-center mb-3' >Assign Marks</h3>
+                                            <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
+                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                            <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                         </div>
-                                    </Form>
+                                        <Form onSubmit={handleSubmit(onSubmit)}>
+                                            <Form.Group className='mb-2'>
+                                                <Table responsive striped bordered hover className='text-center'  >
+                                                    <col width="25%" />
+                                                    <col width="50%" />
+                                                    <col width="30%" />
 
+                                                    <thead>
+                                                        <tr style={{ border: "1px solid black" }}>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                Final Exam Mark <br />(70 marks)
+                                                                <br />
+                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setSecondExaminerFinal(true) }}>Edit</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {
+                                                            // Object.keys(allInfo).length !== 0 &&
+                                                            marks?.studentsMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                                                <td style={{ border: "1px solid black" }}>
+                                                                    <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                        {...register(`${x?.id}_id`, { required: true })}
+                                                                        readOnly />
+                                                                </td>
+                                                                <td style={{ border: "1px solid black" }}>
+                                                                    <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                        {...register(`${x?.id}_name`, { required: true })}
+                                                                        readOnly />
+                                                                </td>
+
+                                                                <td style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        <p>{x?.theorySecondExaminer}</p>
+                                                                    }
+                                                                </td>
+                                                            </tr>)
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                            </Form.Group>
+
+                                            <Form.Check
+                                                inline
+                                                type='checkbox'
+                                                label="Final Exam Mark"
+                                                // name="FinalExamMark"
+                                                id="FinalExamMark"
+                                                checked
+                                            />
+                                            <div className='text-center'>
+                                                <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                <Button variant='success' className='me-2' onClick={() => submitAllMarksSecondExaminer()}>Submit Marks</Button>
+                                            </div>
+                                        </Form>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </>
+                    </>
             }
         </>
     );

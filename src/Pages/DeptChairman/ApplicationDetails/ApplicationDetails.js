@@ -5,8 +5,6 @@ import { FcApproval } from "react-icons/fc"
 import { MdPendingActions } from "react-icons/md"
 
 const ApplicationDetails = () => {
-    console.log('ewdwwwwwwwwwwwwww ')
-
     const { id } = useParams();
     const [applications, setApplications] = useState();
     const [chairmanVerified, setChairmanVerified] = useState(false);
@@ -41,7 +39,7 @@ const ApplicationDetails = () => {
 
             <div className='container shadow-lg p-3'>
                 <h4 className='fw-bold text-center mb-5'>{singleApplication?.name}</h4>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold ">Name: </span>{singleApplication?.applicantName}</p>
+                <p style={{ fontSize: "20px" }}><span className="fw-bold">Name: </span>{singleApplication?.applicantName}</p>
                 <p style={{ fontSize: "20px" }} className="text-uppercase"><span className="fw-bold">ID: </span>{singleApplication?.applicantId}</p>
                 <p style={{ fontSize: "20px" }}><span className="fw-bold">Session: </span>{singleApplication?.applicantSession}</p>
                 <p style={{ fontSize: "20px" }}><span className="fw-bold">Hall: </span>{singleApplication?.applicantHallName}</p> <br />
@@ -153,23 +151,15 @@ const ApplicationDetails = () => {
                         </Table>
                     </div>
                 }
-
                 <br />
-
-
                 {
-                    status == 'pending' ?
+                    status === 'pending' ?
                         <h5 className='fw-bold'>Status: <span className="text-warning text-capitalize">{status} <MdPendingActions /></span>  </h5> :
                         <h5 className='fw-bold'>Status: <span className="text-success text-capitalize">{status} <FcApproval /></span></h5>
 
                 }
-
                 <br />
-
                 <Button type="button" className="btn btn-success" onClick={handleApprove}>Approve</Button>
-
-
-
             </div>
         </div>
     );

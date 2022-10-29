@@ -6,10 +6,7 @@ const ApproveApplication = () => {
     const { url } = useRouteMatch();
     const [applications, setApplications] = useState();
     // const history = useHistory();
-
-
-    console.log('url ', url);
-
+    // console.log('url ', url);
     useEffect(() => {
         fetch('http://localhost:5000/api/v1/course-application/get-application-department', {
             headers: {

@@ -55,6 +55,8 @@ const CourseTeacher = () => {
     const [lbReport, setLbReport] = useState(false);
     const [lbQuiz, setLbQuiz] = useState(false);
 
+    const [projectClassPerformance, setProjectClassPerformance] = useState(false);
+
 
 
     const history = useHistory();
@@ -147,8 +149,10 @@ const CourseTeacher = () => {
             title: 'Do you want to Turn In the marks?',
             showCancelButton: true,
             confirmButtonText: 'Confirm',
+            confirmButtonColor: 'green',
             icon: 'warning',
             cancelButtonText: 'No, cancel!',
+            cancelButtonColor: 'red'
 
         }).then((result) => {
             if (result.isConfirmed) {
@@ -267,8 +271,8 @@ const CourseTeacher = () => {
                                 theoryCT2={theoryCT2} setTheoryCT2={setTheoryCT2} theoryCT3={theoryCT3}
                                 setTheoryCT3={setTheoryCT3} theoryFinal={theoryFinal} setTheoryFinal={setTheoryFinal}
                                 lbAttendance={lbAttendance} setLbAttendance={setLbAttendance} lbReport={lbReport}
-                                setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz}
-                                courseId={courseId} setIsSaving={setIsSaving} isSaving={isSaving}
+                                setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz} projectClassPerformance={projectClassPerformance}
+                                setProjectClassPerformance={setProjectClassPerformance} courseId={courseId} setIsSaving={setIsSaving} isSaving={isSaving}
                             />
 
                         </div>
@@ -427,7 +431,7 @@ const CourseTeacher = () => {
                                                     onChange={() => setFinal(!final)}
                                                 />
                                                 <div className='text-center'>
-                                                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                    <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
                                                     {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
                                                     <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>
                                                 </div>
@@ -464,17 +468,17 @@ const CourseTeacher = () => {
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Attendance (15%)
+                                                                    Lab Attendance<br />(15 marks)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbAttendance(true) }}>Edit</span>
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Report Marks (15%)
+                                                                    Lab Report Marks<br /> (15 marks)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbReport(true) }}>Edit</span>
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Quiz Marks (30%)
+                                                                    Lab Quiz Marks<br />(30 marks)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbQuiz(true) }}>Edit</span>
                                                                 </th>
@@ -547,8 +551,9 @@ const CourseTeacher = () => {
                                                     onChange={() => setLabQuiz(!labQuiz)}
                                                 />
                                                 <div className='text-center'>
-                                                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                    <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                    <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                    {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                    <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>
                                                 </div>
 
                                             </Form>
@@ -598,9 +603,9 @@ const CourseTeacher = () => {
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                                Class Performance (70%)
+                                                                                Class Performance<br />(70 marks)
                                                                                 <br />
-                                                                                <span className='edit' onClick={() => { setEditClassPerformance(true) }}>Edit</span>
+                                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setProjectClassPerformance(true) }}>Edit</span>
                                                                             </th>
                                                                         </tr>
                                                                     </thead>

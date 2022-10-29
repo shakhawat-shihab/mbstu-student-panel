@@ -6,7 +6,7 @@ import useAuth from '../../../Hooks/useAuth';
 
 const Projects = () => {
     const { user } = useAuth();
-    const email = user?.email;
+    // const email = user?.email;
     const profileId = user?.profileId;
     const department = user?.department;
     const [projectCourses, setProjectCourses] = useState([]);
@@ -45,14 +45,17 @@ const Projects = () => {
                                 {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                                 <Card.Body>
                                     <Card.Title> {x?.courseTitle}</Card.Title>
+                                    <br />
                                     <Card.Text>
-                                        {x?.courseCode}
+                                        <span className="fw-bold">Course Code: </span>
+                                        <span className="text-uppercase">{x?.courseCode}</span>
                                     </Card.Text>
                                     <Card.Text>
-                                        Credit: {x?.credit}
+                                        <span className="fw-bold">Credit: </span>
+                                        <span className="text-uppercase">{x?.credit}</span>
                                     </Card.Text>
                                     <Link to={`${url}/apply-supervisor/${x?._id}`}>
-                                        <Button variant="primary"
+                                        <Button variant="primary" className='float-end'
                                         // onClick={() => { history.push(`${url}/semester_id/${x?._id}`) }}
                                         >
                                             Apply
