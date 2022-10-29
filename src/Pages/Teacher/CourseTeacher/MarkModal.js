@@ -140,7 +140,7 @@ const MarkModal = (props) => {
                 else {
                     Toast.fire({
                         icon: 'error',
-                        title: 'Failed to update marks'
+                        title: info?.message
                     })
                     reset()
                 }

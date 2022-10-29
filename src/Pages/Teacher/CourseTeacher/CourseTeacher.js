@@ -141,6 +141,47 @@ const CourseTeacher = () => {
     }, [courseId, state, marks])
 
 
+    const submitAllMarksCourseTeacher = () => {
+
+        Swal.fire({
+            title: 'Do you want to Turn In the marks?',
+            showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            icon: 'warning',
+            cancelButtonText: 'No, cancel!',
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire('Saved!', '', 'success')
+                fetch(`http://localhost:5000/api/v1/marks/turn-in/course-teacher/${courseId}`, {
+                    method: 'put',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(info => {
+                        console.log('info ', info)
+                        // setMarks(info.data);
+                        // setIsLoadingMarks(false);
+                        if (info.status === 'success') {
+                            Toast.fire({
+                                icon: 'success',
+                                title: info.message
+                            })
+                        }
+                        else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: info.message
+                            })
+                        }
+                    })
+            }
+        })
+    }
+
 
     const onSubmit = data => {
         //setSubmitClick(!submitClick);
@@ -386,8 +427,9 @@ const CourseTeacher = () => {
                                                     onChange={() => setFinal(!final)}
                                                 />
                                                 <div className='text-center'>
-                                                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                    <input variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                    {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                    <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>
                                                 </div>
                                             </Form>
 
