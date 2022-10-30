@@ -11,20 +11,20 @@ import DeptChairmanRoute from '../../LogIn/LogIn/DeptChairmanRoute/DeptChairmanR
 import CreateSemester from '../../DeptChairman/CreateSemster/CreateSemester';
 import AddTeacher from '../../DeptChairman/AddTeacher/AddTeacher';
 import CourseTeacher from '../../Teacher/CourseTeacher/CourseTeacher';
-import RunningSemesters from '../../DeptChairman/RunningSemesters/RunningSemesters';
-import SemesterChairman from '../../DeptChairman/SemesterChairman/SemesterChairman';
 import DashboardNavigationBar from '../DashboardNaviagtionBar/DashboardNavigationBar';
 import SecondExaminer from '../../Teacher/SecondExaminer/SecondExaminer';
 import ThirdExaminer from '../../Teacher/ThirdExaminer/ThirdExaminer';
 import CreateCourse from '../../DeptChairman/CreateCourse/CreateCourse';
 import ExamCommittee from '../../Teacher/ExamCommittee/ExamCommittee';
-import MarkAssignCommittee from '../../Teacher/MarkAssignCommittee/MarkAssignCommittee';
 import ApplyToSupervisor from '../../Students/ApplyToSupervisor/ApplyToSupervisor';
 import Projects from '../../Students/Projects/Projects';
-import ResultSheet from '../../DeptChairman/ResultSheet/ResultSheet';
 import Updateprofile from '../UpdateProfile/Updateprofile';
 import ApproveApplication from '../../DeptChairman/ApproveApplication/ApproveApplication';
 import ApplicationDetails from '../../DeptChairman/ApplicationDetails/ApplicationDetails';
+import ExamCommitteeChairman from '../../Teacher/ExamCommitteeChairman/ExamCommitteeChairman';
+import MarksSheet from '../../Teacher/ExamCommitteeChairman/MarksSheet/MarksSheet';
+import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
+import MarksAssign from '../../Teacher/ExamCommittee/MarksAssign/MarksAssign';
 
 const Dashboard = () => {
     const { user, isLoading, isLoadingRole } = useAuth();
@@ -91,14 +91,14 @@ const Dashboard = () => {
                                         <ListGroup.Item action >
                                             <Link to={`${url}/exam-committee`}>Exam Committee (T) </Link>
                                         </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/exam-committee-chairman`}>Exam Committee Chairman (T) </Link>
+                                        </ListGroup.Item>
                                     </>
                                 }
                                 {
                                     user?.isDeptChairman &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/running-semesters`}> Current Semester (C) </Link>
-                                        </ListGroup.Item>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/create-semester`}> Create Semester (C) </Link>
                                         </ListGroup.Item>
@@ -139,14 +139,6 @@ const Dashboard = () => {
                     <Projects></Projects>
                 </StudentRoute>
 
-                {/* the below portion is added here just for testing purpose */}
-                {/* <StudentRoute path={`${path}/create-course`}>
-                    <CreateCourse></CreateCourse>
-                </StudentRoute>
-                <StudentRoute path={`${path}/create-semester`}>
-                    <CreateSemester></CreateSemester>
-                </StudentRoute> */}
-
 
                 {/* teacher Routes */}
                 <TeacherRoute path={`${path}/courses-taken/second-examiner/:courseId`}>
@@ -162,27 +154,29 @@ const Dashboard = () => {
                     <TakenCourses></TakenCourses>
                 </TeacherRoute>
                 <TeacherRoute path={`${path}/exam-committee/:semesterId`}>
-                    <MarkAssignCommittee></MarkAssignCommittee>
+                    <MarksAssign></MarksAssign>
                 </TeacherRoute>
                 <TeacherRoute path={`${path}/exam-committee`}>
                     <ExamCommittee></ExamCommittee>
                 </TeacherRoute>
+                <DeptChairmanRoute path={`${path}/exam-committee-chairman/:semesterId/result-sheet`}>
+                    <ResultSheet></ResultSheet>
+                </DeptChairmanRoute>
+                <TeacherRoute path={`${path}/exam-committee-chairman/:semesterId`}>
+                    <MarksSheet></MarksSheet>
+                </TeacherRoute>
+                <TeacherRoute path={`${path}/exam-committee-chairman`}>
+                    <ExamCommitteeChairman></ExamCommitteeChairman>
+                </TeacherRoute>
+
 
                 {/* department chairman Routes */}
-
-                {/* <DeptChairmanRoute path={`${path}/view-details`}>
-                    <ApplicationDetails></ApplicationDetails>
-                </DeptChairmanRoute> */}
-
-                <DeptChairmanRoute path={`${path}/running-semesters/:semesterId/result-sheet`}>
+                {/* <DeptChairmanRoute path={`${path}/running-semesters/:semesterId/result-sheet`}>
                     <ResultSheet></ResultSheet>
                 </DeptChairmanRoute>
                 <DeptChairmanRoute path={`${path}/running-semesters/:semesterId`}>
                     <SemesterChairman></SemesterChairman>
-                </DeptChairmanRoute>
-                <DeptChairmanRoute path={`${path}/running-semesters`}>
-                    <RunningSemesters></RunningSemesters>
-                </DeptChairmanRoute>
+                </DeptChairmanRoute> */}
                 <DeptChairmanRoute path={`${path}/create-course`}>
                     <CreateCourse></CreateCourse>
                 </DeptChairmanRoute>

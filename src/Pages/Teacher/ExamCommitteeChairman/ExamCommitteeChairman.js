@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Button, Card, Spinner } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
 import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
-const ExamCommittee = () => {
-    // const { user } = useAuth();
+
+const ExamCommitteeChairman = () => {
     const [semesters, setSemesters] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const { url } = useRouteMatch();
     useEffect(() => {
-        // console.log()
-        fetch(`http://localhost:5000/api/v1/semester/load-running-semester/exam-committee/`, {
+        fetch(`http://localhost:5000/api/v1/semester/load-running-semester/exam-committee-chairman/`, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
@@ -18,7 +16,7 @@ const ExamCommittee = () => {
         })
             .then(res => res.json())
             .then(info => {
-                console.log('exam committee semesters', info);
+                console.log('exam committee chairman semesters', info?.data);
                 setSemesters(info?.data);
                 setIsLoading(false)
             })
@@ -35,7 +33,7 @@ const ExamCommittee = () => {
                     </div >
                     :
                     < div >
-                        <h2 className='text-center py-5'> Exam committee </h2>
+                        <h2 className='text-center py-5'> Exam committee Chairman</h2>
                         <div className='row container mx-auto my-3'>
                             {
                                 semesters?.map(x => {
@@ -74,4 +72,4 @@ const ExamCommittee = () => {
     );
 };
 
-export default ExamCommittee;
+export default ExamCommitteeChairman;

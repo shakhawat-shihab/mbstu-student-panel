@@ -4,11 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import Swal from 'sweetalert2';
-import useAuth from '../../../Hooks/useAuth';
-import './MarkAssignCommittee.css';
-import MarkAssignCommitteeModal from './MarkAssignCommitteeModal';
+import useAuth from '../../../../Hooks/useAuth';
+import './MarksAssign.css';
+import MarksAssignModal from './MarksAssignModal';
 
-const MarkAssignCommittee = () => {
+
+const MarksAssign = () => {
     const { semesterId } = useParams();
     const [courseId, setCourseId] = useState('');
     const [marks, setMarks] = useState({});
@@ -289,7 +290,7 @@ const MarkAssignCommittee = () => {
 
             <div>
                 <div>
-                    <MarkAssignCommitteeModal
+                    <MarksAssignModal
                         course={course} courseName={courseName} courseCode={courseCode} credit={credit} semesterAllMarks={semesterAllMarks} showModal={showModal} setShowModal={setShowModal}
                     />
                 </div>
@@ -463,4 +464,4 @@ const MarkAssignCommittee = () => {
     );
 };
 
-export default MarkAssignCommittee;
+export default MarksAssign;

@@ -1,14 +1,15 @@
 import React from 'react';
-import { Button, Modal, Table } from 'react-bootstrap';
 import html2pdf from 'html2pdf.js';
-import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
-import useAuth from '../../../Hooks/useAuth';
 import { FaDownload } from 'react-icons/fa';
+import { Button, Modal, Table } from 'react-bootstrap';
+import useAuth from '../../../../Hooks/useAuth';
+import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
-const MarkAssignCommitteeModal = (props) => {
+const MarksSheetModal = (props) => {
     const { user, dept } = useAuth();
     // const allInfo = props.allInfo;
     const { showModal, setShowModal, course, courseName, courseCode, credit, semesterAllMarks } = props;
+
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
@@ -36,7 +37,6 @@ const MarkAssignCommitteeModal = (props) => {
 
                     </Modal.Title>
                 </Modal.Header>
-
                 <Modal.Body>
                     <div id="selectedPortion" className='px-4 py-2 my-5'>
                         <div className='mt-4'>
@@ -59,7 +59,7 @@ const MarkAssignCommitteeModal = (props) => {
                             semesterAllMarks[`${courseCode}_type`] === 'theory'
                             &&
                             <div className='container'>
-                                <div className='container-fluid rounded  my-5 ' >
+                                <div className='container rounded  my-5 ' >
                                     <div className='p-3 '>
                                         <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
                                             <thead>
@@ -100,9 +100,9 @@ const MarkAssignCommitteeModal = (props) => {
                             <div className='container'>
                                 <div className='container-fluid rounded  my-5 ' >
                                     <div className='p-3 '>
-                                        <Table responsive bordered className='text-center' style={{ border: '1px solid black' }}>
+                                        <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
                                             <thead>
-                                                <tr style={{ border: '1px solid black' }}>
+                                                <tr style={{ border: "1px solid black" }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks (60%)</th>
@@ -110,19 +110,14 @@ const MarkAssignCommitteeModal = (props) => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-
                                                 {
-                                                    course.map(x => <tr key={`${x?.s_id}_${courseCode}`} style={{ border: '1px solid black' }}>
-                                                        <td style={{ border: '1px solid black' }}>
-                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.s_id}
-                                                                readOnly />
-                                                        </td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.displayName}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.class_marks_lab}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.experiment_marks_lab}</td>
+                                                    course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.class_marks_lab}</td>
+                                                        <td title={x?.experiment_marks_lab_by} style={{ border: "1px solid black" }}>{x?.experiment_marks_lab}</td>
                                                     </tr>)
                                                 }
-
                                             </tbody>
                                         </Table>
                                     </div>
@@ -136,27 +131,22 @@ const MarkAssignCommitteeModal = (props) => {
                             <div className='container'>
                                 <div className='container-fluid rounded  my-5 ' >
                                     <div className='p-3 '>
-                                        <Table responsive bordered className='text-center' style={{ border: '1px solid black' }}>
+                                        <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
                                             <thead>
-                                                <tr style={{ border: '1px solid black' }}>
+                                                <tr style={{ border: "1px solid black" }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30%)
-                                                    </th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30%)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-
                                                 {
-                                                    course.map(x => <tr key={x?.s_id}>
-                                                        <td style={{ border: '1px solid black' }}>
-                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.s_id}
-                                                                readOnly />
-                                                        </td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.displayName}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.class_marks_project}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.presentation_marks_project}</td>
+                                                    course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.class_marks_project}</td>
+                                                        <td title={x?.presentation_marks_project_by} style={{ border: "1px solid black" }}>{x?.presentation_marks_project}</td>
                                                     </tr>)
                                                 }
                                             </tbody>
@@ -164,22 +154,30 @@ const MarkAssignCommitteeModal = (props) => {
                                     </div>
                                 </div>
                             </div>
+
                         }
+
                     </div>
-                    <div className='container d-flex justify-content-between ms-2 pe-4'>
+                    <div className="ms-5 ps-3 w-25">
+                        <hr style={{ height: "3px", color: "black", bordr: "none" }} />
+                        <p className='text-center'>Signature of the Chairman</p>
+                    </div>
+                    {/* <div className='container d-flex justify-content-between ms-2 pe-4'>
                         <div className="w-25">
                             <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                            <p className='text-center'>Signature of Exam Committee Chairman</p>
+                            <p className='text-center'>Signature of Chairman</p>
                         </div>
                         <div className="w-25">
                             <hr style={{ height: "3px", color: "black", bordr: "none" }} />
                             <p className='text-center'>Chairman</p>
                         </div>
-                    </div>
+                    </div> */}
+
                 </Modal.Body>
             </Modal>
+
         </div>
     );
 };
 
-export default MarkAssignCommitteeModal;
+export default MarksSheetModal;
