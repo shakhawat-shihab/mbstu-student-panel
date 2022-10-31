@@ -464,7 +464,7 @@ const MarksSheet = () => {
                                         variant='primary'>
                                         Publish Result</Button> */}
                                     <Link className='ms-2' to={`${url}/result-sheet`}>
-                                        <Button onClick={() => { }} variant='danger'>Generate Result Sheet</Button>
+                                        <Button onClick={() => { }} variant='success'>Generate Result Sheet</Button>
                                     </Link>
                                 </div>
                             </>
