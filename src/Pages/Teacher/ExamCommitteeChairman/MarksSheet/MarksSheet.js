@@ -180,7 +180,6 @@ const MarksSheet = () => {
     // const handleResult = () => {
     //     console.log("Handle result ", semesterAllMarks)
     //     console.log("semester ", semester)
-
     //     //console.log('students ', );
     //     const dropped = [];
     //     const students = [];

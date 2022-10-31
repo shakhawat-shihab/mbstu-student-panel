@@ -14,6 +14,7 @@ const ResultSheet = () => {
     const [marks, setMarks] = useState([]);
     const [processedResult, setProcessedResult] = useState([]);
     const [processNewMark, setProcessNewMarks] = useState(true);
+    const [offeredCredit, setOfferedCredit] = useState(0);
     const [courses, setCourses] = useState([]);
     const { history } = useHistory();
     const { user } = useAuth();
@@ -23,7 +24,7 @@ const ResultSheet = () => {
 
     const [totalCredit, setTotalCredit] = useState(0);
     const [studentResult, setStudentResult] = useState([]);
-    console.log('semesterId ', semesterId);
+    // console.log('semesterId ', semesterId);
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -49,8 +50,12 @@ const ResultSheet = () => {
                 setSemesterInfo(info?.data?.semester)
                 setMarks(info?.data?.marks)
                 setProcessNewMarks(!processNewMark)
+                setOfferedCredit(info?.data?.totalCreditOffered)
             })
     }, [semesterId]);
+
+    //need to claculate total credit
+
 
     const checkMarks = (marks) => {
         let grade_point, letter_grade;
@@ -224,6 +229,11 @@ const ResultSheet = () => {
         console.log(' ArrayOfStudentsResult == ', ArrayOfStudentsResult);
         setProcessedResult(ArrayOfStudentsResult);
     }, [processNewMark]);
+
+
+    const handleResultPublish = () => {
+        console.log('marks ==  ', marks)
+    }
 
 
     // useEffect(() => {
@@ -464,7 +474,7 @@ const ResultSheet = () => {
                             <th style={{ border: "1px solid black" }}>Student Id</th>
                             <th style={{ border: "1px solid black" }}>Name of the Candidates</th>
                             <th style={{ border: "1px solid black" }}>
-                                Credit earned (Out of {totalCredit} credits)
+                                Credit earned (Out of {offeredCredit} credits)
 
                             </th>
                             <th style={{ border: "1px solid black" }}>
@@ -489,29 +499,36 @@ const ResultSheet = () => {
                                 <td style={{ border: "1px solid black" }}>{x.id.toUpperCase()}</td>
                                 <td style={{ border: "1px solid black" }}>{x.name}</td>
                                 <td style={{ border: "1px solid black" }}>{x.creditEarned}</td>
-                                <td style={{ border: "1px solid black" }}>{x.creditLost + ' '}
-                                    (
+                                <td style={{ border: "1px solid black" }}>
                                     {
-                                        x?.failedCourses?.map(y => {
-                                            return (<>
-                                                <span>{y}</span>
-                                                <span>
-                                                    {
-                                                        y !== x?.failedCourses[x?.failedCourses.length - 1]
-                                                        &&
-                                                        `, `
-                                                    }
-                                                </span>
-                                            </>)
+                                        x?.creditLost !== 0
+                                        &&
+                                        <>
+                                            {x.creditLost + ' '}
+                                            {
+                                                x?.failedCourses?.map(y => {
+                                                    return (<>
+                                                        (<span>{y}</span>
+                                                        <span>
 
-                                        })
+                                                            {
+                                                                y !== x?.failedCourses[x?.failedCourses.length - 1]
+                                                                &&
+                                                                `, `
+                                                            }
+
+                                                        </span>)
+                                                    </>)
+                                                })
+                                            }
+                                        </>
                                     }
-                                    )
                                 </td>
                                 <td style={{ border: "1px solid black" }}>{x.cgpa}</td>
                                 <td style={{ border: "1px solid black" }}>{checkGpa(x.cgpa)}</td>
                                 {
-
+                                    (x.totalCreditTaken >= offeredCredit)
+                                    &&
                                     <td style={{ border: "1px solid black" }}>{x.remarks && <span>{x.remarks}</span>}</td>
                                 }
 
@@ -522,7 +539,11 @@ const ResultSheet = () => {
                     </tbody>
                 </Table>
                 <div className='text-center my-4'>
-                    <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
+                    <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
+                    <Button
+                        onClick={() => { handleResultPublish() }}
+                        variant='primary'>
+                        Publish Result</Button>
                 </div>
             </div>
 
