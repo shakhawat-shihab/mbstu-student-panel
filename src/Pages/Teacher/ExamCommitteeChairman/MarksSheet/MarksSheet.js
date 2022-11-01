@@ -67,7 +67,7 @@ const MarksSheet = () => {
             })
                 .then(res => res.json())
                 .then(info => {
-                    // console.log('marks of a course = ', info?.data);
+                    console.log('marks of a course = ', info?.data);
                     setMarks(info?.data);
                     setIsLoadingMarks(false);
                     setProcessNewMarks(!processNewMark)
@@ -292,9 +292,7 @@ const MarksSheet = () => {
     //                 })
     //             }
     //         });
-
     // }
-
     // console.log('course ', course)
     // console.log('semmeester = ', semester);
     // console.log('credit = ', credit);
@@ -353,6 +351,7 @@ const MarksSheet = () => {
                                                         <tr style={{ border: "1px solid black" }}>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance (30%)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Course Teacher </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Second Examiner </th>
@@ -366,6 +365,7 @@ const MarksSheet = () => {
                                                             processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
+                                                                <td style={{ border: "1px solid black" }}> <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i> </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.thirtyPercent}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.theoryFinal}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.theorySecondExaminer}</td>
@@ -398,6 +398,7 @@ const MarksSheet = () => {
                                                         <tr style={{ border: "1px solid black" }}>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks (60%)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks (40%)</th>
                                                         </tr>
@@ -407,6 +408,7 @@ const MarksSheet = () => {
                                                             processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
+                                                                <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.labClassMark}</td>
                                                                 <td title={'By ' + x?.labExperimentBy} style={{ border: "1px solid black" }}>{x?.labExperiment}</td>
                                                             </tr>)
@@ -435,6 +437,7 @@ const MarksSheet = () => {
                                                         <tr style={{ border: "1px solid black" }}>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70%)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30%)</th>
                                                         </tr>
@@ -444,6 +447,7 @@ const MarksSheet = () => {
                                                             processedMarks?.marks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
+                                                                <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
                                                                 <td title={`By ${x?.class_marks_project_by}`} style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
                                                                 <td title={'By ' + x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>
                                                             </tr>)
