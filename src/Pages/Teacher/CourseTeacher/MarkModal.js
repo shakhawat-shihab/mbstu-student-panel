@@ -196,7 +196,7 @@ const MarkModal = (props) => {
             choice = "projectClassPerformance";
         }
 
-        if (fileUpload[0][`${choice}`]) {
+        if (fileUpload?.[0][`${choice}`]) {
             supObj.propertyName = choice;
             fileUpload?.map(x => {
                 const obj = {};
@@ -204,9 +204,9 @@ const MarkModal = (props) => {
                 obj[`${choice}`] = x[`${choice}`];
                 arr.push(obj);
             })
-            supObj.mark = arr;
+            supObj.marks = arr;
 
-            console.log('marks to push ', supObj);
+            console.log('marks to push file == ', supObj);
 
             fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
                 method: 'put',

@@ -48,7 +48,7 @@ const SecondMarkModal = (props) => {
             obj.theorySecondExaminer = data[`${x.id}_final`];
             arr.push(obj);
         })
-        supObj.mark = arr;
+        supObj.marks = arr;
         console.log('marks to push ', supObj);
 
         fetch(`http://localhost:5000/api/v1/marks/update-marks/second-examiner/${courseId}`, {
@@ -124,8 +124,37 @@ const SecondMarkModal = (props) => {
                 obj[`${choice}`] = x[`${choice}`];
                 arr.push(obj);
             })
-            supObj.mark = arr;
-            console.log('marks to push ', supObj);
+            supObj.marks = arr;
+            console.log('marks to push file === ', supObj);
+            fetch(`http://localhost:5000/api/v1/marks/update-marks/second-examiner/${courseId}`, {
+                method: 'put',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+                },
+                body: JSON.stringify(supObj)
+            })
+                .then(res => res.json())
+                .then(info => {
+                    console.log("second excel info ", info);
+                    if (info?.status === 'success') {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Successfully updated marks'
+                        })
+                        setIsSaving(!isSaving)
+                        setShowMarkModal(false);
+                        reset()
+                        makeAllPropsFalse();
+                    }
+                    else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Failed to update marks'
+                        })
+                        reset()
+                    }
+                });
         }
         else {
             alert("Please Select a correct file !!!!");

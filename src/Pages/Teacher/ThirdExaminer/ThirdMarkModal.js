@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
-// import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
-// import useAuth from '../../../Hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
@@ -30,7 +28,6 @@ const ThirdMarkModal = (props) => {
 
     const makeAllPropsFalse = () => {
         setThirdExaminerFinal(false);
-
     }
 
     const onSubmit = data => {
@@ -49,7 +46,7 @@ const ThirdMarkModal = (props) => {
             arr.push(obj);
         })
 
-        supObj.mark = arr;
+        supObj.marks = arr;
 
         console.log('marks to push ', supObj);
 
@@ -129,9 +126,39 @@ const ThirdMarkModal = (props) => {
                 obj[`${choice}`] = x[`${choice}`];
                 arr.push(obj);
             })
-            supObj.mark = arr;
+            supObj.marks = arr;
 
             console.log('marks to push ', supObj);
+
+            fetch(`http://localhost:5000/api/v1/marks/update-marks/third-examiner/${courseId}`, {
+                method: 'put',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+                },
+                body: JSON.stringify(supObj)
+            })
+                .then(res => res.json())
+                .then(info => {
+                    console.log("third excel info ", info);
+                    if (info?.status === 'success') {
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Successfully updated marks'
+                        })
+                        setIsSaving(!isSaving)
+                        setShowMarkModal(false);
+                        reset()
+                        makeAllPropsFalse();
+                    }
+                    else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Failed to update marks'
+                        })
+                        reset()
+                    }
+                });
 
         }
 

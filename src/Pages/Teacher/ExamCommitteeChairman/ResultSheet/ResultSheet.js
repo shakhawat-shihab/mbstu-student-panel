@@ -186,8 +186,7 @@ const ResultSheet = () => {
                         theoryWritten = parseInt((theoryFinal + theorySecondExaminer) / 2)
 
                     }
-                    totalMarks = thirtyPercent + theoryWritten
-
+                    totalMarks = thirtyPercent + theoryWritten;
                 }
                 else if (x?.type === 'lab') {
                     const { labAttendance = 0, labReport = 0, labQuiz = 0, labExperiment = 0 } = x;
@@ -211,7 +210,9 @@ const ResultSheet = () => {
                 // console.log('gradeAndLetter ', gradeAndLetter)
                 sumOfGPA += gradeAndLetter.gp * x?.credit;
             })
-            const CGPA = sumOfGPA / creditEarned;
+            let CGPA = 0;
+            creditEarned && (CGPA = sumOfGPA / creditEarned);
+
             if (creditEarned < 2) {
                 supObj.remarks = 'Not Promoted'
             }
@@ -233,6 +234,7 @@ const ResultSheet = () => {
 
     const handleResultPublish = () => {
         console.log('marks ==  ', marks)
+
     }
 
 
@@ -505,10 +507,11 @@ const ResultSheet = () => {
                                         &&
                                         <>
                                             {x.creditLost + ' '}
+                                            (
                                             {
                                                 x?.failedCourses?.map(y => {
-                                                    return (<>
-                                                        (<span>{y}</span>
+                                                    return (<  >
+                                                        <span>{y}</span>
                                                         <span>
 
                                                             {
@@ -517,10 +520,11 @@ const ResultSheet = () => {
                                                                 `, `
                                                             }
 
-                                                        </span>)
+                                                        </span>
                                                     </>)
                                                 })
                                             }
+                                            )
                                         </>
                                     }
                                 </td>
