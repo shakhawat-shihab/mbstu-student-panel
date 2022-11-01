@@ -6,9 +6,10 @@ import useAuth from '../../../../Hooks/useAuth';
 import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
 const MarksAssignModal = (props) => {
-    const { user, dept } = useAuth();
+    const { user } = useAuth();
     // const allInfo = props.allInfo;
-    const { showModal, setShowModal, course, courseName, courseCode, credit, semesterAllMarks } = props;
+    const { showModal, setShowModal, course, courseName, courseCode, credit, semesterAllMarks, marks } = props;
+
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
@@ -16,6 +17,8 @@ const MarksAssignModal = (props) => {
         html2pdf().from(selected).save(`${courseCode}_marks.pdf`);
 
     }
+
+
     return (
         <div>
             <Modal
@@ -44,58 +47,20 @@ const MarksAssignModal = (props) => {
                             <h5 className='text-center'>Santosh,Tangail-1902</h5>
                         </div>
                         <div className='mt-3'>
-                            <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(dept)}</p>
+                            <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(user?.department)}</p>
                         </div>
                         <div className='container'>
                             <div className='my-4 ms-4'>
-                                <p><span className='fw-bold'>Course Code: </span>{courseCode}</p>
-                                <p><span className='fw-bold'>Course Name: </span>{courseName}</p>
-                                <p><span className='fw-bold'>Credit Hour: </span>{credit}</p>
+
+                                <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                <p><span className='fw-bold text-uppercase'>Course Code: </span>{marks?.courseCode?.toUpperCase()}</p>
+                                <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                 {/* <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.displayName}</p> */}
                             </div>
                         </div>
+
                         {
-                            courseCode &&
-                            semesterAllMarks[`${courseCode}_type`] === 'theory'
-                            &&
-                            <div className='container'>
-                                <div className='container-fluid rounded  my-5 ' >
-                                    <div className='p-3 '>
-                                        <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
-                                            <thead>
-                                                <tr style={{ border: "1px solid black" }}>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance (30%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Course Teacher </th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Second Examiner </th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Third Examiner </th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Marks (70%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total Marks (100%)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.thirtyPercent}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.course_teacher_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.second_examiner_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.third_examiner_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.final_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.total_marks}</td>
-                                                    </tr>)
-                                                }
-                                            </tbody>
-                                        </Table>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        {
-                            courseCode &&
-                            semesterAllMarks[`${courseCode}_type`] === 'lab'
+                            marks?.type === 'lab'
                             &&
                             <div className='container'>
                                 <div className='container-fluid rounded  my-5 ' >
@@ -105,21 +70,20 @@ const MarksAssignModal = (props) => {
                                                 <tr style={{ border: '1px solid black' }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks (60%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks (40%)</th>
+                                                    {/* <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks<br />(60 marks)</th> */}
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks<br /> (40 marks)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
 
                                                 {
-                                                    course.map(x => <tr key={`${x?.s_id}_${courseCode}`} style={{ border: '1px solid black' }}>
+                                                    marks?.studentsMarks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
                                                         <td style={{ border: '1px solid black' }}>
-                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.s_id}
+                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} value={x?.id.toUpperCase()}
                                                                 readOnly />
                                                         </td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.displayName}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.class_marks_lab}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.experiment_marks_lab}</td>
+                                                        <td style={{ border: '1px solid black' }}>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</td>
+                                                        <td style={{ border: '1px solid black' }}>{x?.labExperiment}</td>
                                                     </tr>)
                                                 }
 
@@ -130,8 +94,7 @@ const MarksAssignModal = (props) => {
                             </div>
                         }
                         {
-                            courseCode &&
-                            semesterAllMarks[`${courseCode}_type`] === 'project'
+                            marks.type === 'project'
                             &&
                             <div className='container'>
                                 <div className='container-fluid rounded  my-5 ' >
@@ -141,22 +104,22 @@ const MarksAssignModal = (props) => {
                                                 <tr style={{ border: '1px solid black' }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30%)
+                                                    {/* <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70%)</th> */}
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva <br />(30 marks)
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
 
                                                 {
-                                                    course.map(x => <tr key={x?.s_id}>
+                                                    marks?.studentsMarks?.map(x => <tr key={x?.id}>
                                                         <td style={{ border: '1px solid black' }}>
-                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.s_id}
+                                                            <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id.toUpperCase()}
                                                                 readOnly />
                                                         </td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.displayName}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.class_marks_project}</td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.presentation_marks_project}</td>
+                                                        <td style={{ border: '1px solid black' }}>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</td>
+                                                        {/* <td style={{ border: '1px solid black' }}>{x?.class_marks_project}</td> */}
+                                                        <td style={{ border: '1px solid black' }}>{x?.projectPresentation}</td>
                                                     </tr>)
                                                 }
                                             </tbody>

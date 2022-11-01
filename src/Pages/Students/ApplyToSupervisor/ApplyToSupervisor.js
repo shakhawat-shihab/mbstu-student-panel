@@ -66,13 +66,13 @@ const ApplyToSupervisor = () => {
         })
             .then(res => res.json())
             .then(proposal => {
-                // console.log("accepted proposal ", proposal);
+                console.log("accepted proposal ", proposal);
                 // setProposals(proposal.data);
                 // setIsLoadingProposals(false)
                 setAcceptedProposal(proposal?.data);
                 setIsLoadingAcceptedProposal(false)
             })
-    }, [courseId])
+    }, [courseId, state])
 
 
 
@@ -153,7 +153,7 @@ const ApplyToSupervisor = () => {
             });
     }
 
-    console.log("prooopooosals === ", proposals);
+    // console.log("prooopooosals === ", proposals);
     return (
         <div>
             <div className='container my-5'>
@@ -281,8 +281,6 @@ const ApplyToSupervisor = () => {
                                     }
 
                                 </>
-
-
 
                             // :
                             // <h5 className='text-center text-danger'>Sorry there is no running semester</h5>

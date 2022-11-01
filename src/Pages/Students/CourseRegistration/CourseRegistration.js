@@ -74,7 +74,7 @@ const CourseRegistration = () => {
                     .then(info => {
                         setPreviousApplicationCredit(info?.data)
                         setSemesterCode(result?.data?.semesterCode)
-                        console.log(result?.data?.semesterCode)
+                        // console.log(result?.data?.semesterCode)
                         // setCredit(info?.data)
                     })
             })
@@ -119,11 +119,11 @@ const CourseRegistration = () => {
                 .then(res => res.json())
                 .then(info => {
                     console.log('Backlog course ======== ', info);
-                    const arr = []
-                    info?.data?.map(c => {
-                        arr.push(c?.course)
-                    })
-                    setBacklogCourses(arr);
+                    // const arr = []
+                    // info?.data?.map(c => {
+                    //     arr.push(c?.course)
+                    // })
+                    setBacklogCourses(info?.data);
                     setIsLoadingBacklogCourse(false)
                 })
         }

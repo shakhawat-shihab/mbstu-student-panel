@@ -59,6 +59,7 @@ const CourseTeacher = () => {
 
 
 
+
     const history = useHistory();
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const Toast = Swal.mixin({
@@ -642,8 +643,11 @@ const CourseTeacher = () => {
                                                                 checked
                                                             />
                                                             <div className='text-center'>
-                                                                <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                                <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                                <div className='text-center'>
+                                                                    <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                                    {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                                    <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>
+                                                                </div>
                                                             </div>
                                                         </Form>
                                                     </div>
@@ -651,15 +655,20 @@ const CourseTeacher = () => {
                                                 </div>
                                                 :
                                                 <div className='mt-4'>
-                                                    <h3 className='my-5 text-center '>Applications</h3>
+                                                    <h3 className='my-5 text-center '>Students Applications</h3>
                                                     {
-                                                        proposals?.map(x => <Application
-                                                            // proposal={setProposalChange}
-                                                            key={x._id} applicationDetais={x}
-                                                        // handleAccept={handleAccept}
-                                                        // handleReject={handleReject}
-                                                        >
-                                                        </Application >)
+                                                        proposals?.length === 0 ?
+                                                            <div className=' d-flex justify-content-center align-items-center half-height' >
+                                                                <h5 className='text-center fs-2 text-danger my-4 fw-bold error-opacity' >You have no Student application</h5>
+                                                            </div>
+                                                            :
+                                                            proposals?.map(x => <Application
+                                                                // proposal={setProposalChange}
+                                                                key={x._id} applicationDetais={x}
+                                                            // handleAccept={handleAccept}
+                                                            // handleReject={handleReject}
+                                                            >
+                                                            </Application >)
                                                     }
                                                 </div>
                                         }

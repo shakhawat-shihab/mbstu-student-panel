@@ -157,7 +157,11 @@ const SecondMarkModal = (props) => {
                 });
         }
         else {
-            alert("Please Select a correct file !!!!");
+            // alert("Please Select a correct file !!!!");
+            Toast.fire({
+                icon: 'error',
+                title: "Please Select a correct File"
+            })
         }
 
 

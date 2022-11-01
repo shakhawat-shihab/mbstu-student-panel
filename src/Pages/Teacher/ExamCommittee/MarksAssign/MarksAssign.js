@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import Swal from 'sweetalert2';
 import useAuth from '../../../../Hooks/useAuth';
 import './MarksAssign.css';
+import MarksAssignCommitteeModal from './MarksAssignCommitteeModal';
 import MarksAssignModal from './MarksAssignModal';
 
 
@@ -26,6 +27,13 @@ const MarksAssign = () => {
     const [editExperimentMarks, setEditExperimentMarks] = useState(false);
     const [editPresentationMarks, setEditPresentationMarks] = useState(false);
     //const [courseCode]
+
+    const [showCommitteeModal, setShowCommitteeModal] = useState(false);
+    const [examCommitteeLab, setExamCommitteeLab] = useState(false);
+    const [examCommitteeProject, setExamCommitteeProject] = useState(false);
+    const [isSaving, setIsSaving] = useState(true);
+
+
     const { register, handleSubmit, reset, control, formState: { errors } } = useForm();
     const { dept, user } = useAuth();
     const email = user?.email;
@@ -86,7 +94,52 @@ const MarksAssign = () => {
                 })
         }
 
-    }, [courseId])
+    }, [courseId, isSaving])
+
+    //jubair
+
+    // const submitAllMarksExamCommittee = () => {
+
+    //     Swal.fire({
+    //         title: 'Do you want to Turn In the marks?',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Confirm',
+    //         confirmButtonColor: 'green',
+    //         icon: 'warning',
+    //         cancelButtonText: 'No, cancel!',
+    //         cancelButtonColor: 'red'
+
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             Swal.fire('Saved!', '', 'success')
+    //             fetch(`http://localhost:5000/api/v1/marks/turn-in/project-teacher/${courseId}`, {
+    //                 method: 'put',
+    //                 headers: {
+    //                     'Content-type': 'application/json',
+    //                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+    //                 },
+    //             })
+    //                 .then(res => res.json())
+    //                 .then(info => {
+    //                     console.log('info ', info)
+    //                     // setMarks(info.data);
+    //                     // setIsLoadingMarks(false);
+    //                     if (info.status === 'success') {
+    //                         Toast.fire({
+    //                             icon: 'success',
+    //                             title: info.message
+    //                         })
+    //                     }
+    //                     else {
+    //                         Toast.fire({
+    //                             icon: 'error',
+    //                             title: info.message
+    //                         })
+    //                     }
+    //                 })
+    //         }
+    //     })
+    // }
 
 
     // useEffect(() => {
@@ -291,7 +344,14 @@ const MarksAssign = () => {
             <div>
                 <div>
                     <MarksAssignModal
-                        course={course} courseName={courseName} courseCode={courseCode} credit={credit} semesterAllMarks={semesterAllMarks} showModal={showModal} setShowModal={setShowModal}
+                        marks={marks} course={course} courseName={courseName} courseCode={courseCode} credit={credit} semesterAllMarks={semesterAllMarks} showModal={showModal} setShowModal={setShowModal}
+                    />
+                </div>
+                <div>
+                    <MarksAssignCommitteeModal
+                        marks={marks} showCommitteeModal={showCommitteeModal} setShowCommitteeModal={setShowCommitteeModal}
+                        courseId={courseId} examCommitteeLab={examCommitteeLab} setExamCommitteeLab={setExamCommitteeLab}
+                        examCommitteeProject={examCommitteeProject} setExamCommitteeProject={setExamCommitteeProject} isSaving={isSaving} setIsSaving={setIsSaving}
                     />
                 </div>
                 <div>
@@ -305,53 +365,7 @@ const MarksAssign = () => {
                             </div>
                             :
                             <>
-                                {/* {
-                                    marks?.type === 'theory'
-                                    &&
-                                    <div className='container'>
-                                        <div className='container-fluid shadow-lg  rounded  my-5 ' >
-                                            <div className='p-4 '>
-                                                <div className='mb-5'>
-                                                    <h3 className='text-center mb-5' >Result</h3>
-                                                    <p><span className='fw-bold'>Course Name: </span>{courseName}</p>
-                                                    <p><span className='fw-bold'>Course Code: </span>{courseCode}</p>
-                                                    <p><span className='fw-bold'>Credit Hour: </span>{credit}</p>
-                                                </div>
-                                                <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
-                                                    <thead>
-                                                        <tr style={{ border: "1px solid black" }}>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance (30%)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Course Teacher </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Second Examiner </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Third Examiner </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Marks (70%)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total Marks (100%)</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {
-                                                            course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.thirtyPercent}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.course_teacher_marks}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.second_examiner_marks}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.third_examiner_marks}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.final_marks}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.total_marks}</td>
-                                                            </tr>)
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                            </div>
-                                            <div className='text-center my-4'>
-                                                <Button variant='success' className='me-2 mb-5' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                } */}
+
                                 {
                                     marks?.type === 'lab'
                                     &&
@@ -359,9 +373,9 @@ const MarksAssign = () => {
                                         <div className='container-fluid shadow-lg  rounded  my-5 ' >
                                             <div className='p-4 '>
                                                 <div className='mb-5'>
-                                                    <h3 className='text-center mb-5' >Result</h3>
-                                                    <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
-                                                    <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                    <h3 className='text-center mb-5' >Lab Experiment</h3>
+                                                    <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                                    <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode.toUpperCase()}</p>
                                                     <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                                 </div>
                                                 <Form
@@ -373,16 +387,16 @@ const MarksAssign = () => {
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                 {/* <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks (60%)</th> */}
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks (40%)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 marks)
                                                                     <br />
-                                                                    <span className='edit' onClick={() => { setEditExperimentMarks(true) }}>Edit</span>
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLab(true) }}>Edit</span>
                                                                 </th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
 
                                                             {
-                                                                marks?.studentsMarks?.map(x => <tr key={`${x?.s_id}_${courseCode}`} style={{ border: '1px solid black' }}>
+                                                                marks?.studentsMarks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
 
@@ -397,9 +411,10 @@ const MarksAssign = () => {
 
                                                         </tbody>
                                                     </Table>
-                                                    <div className='text-center my-4'>
-                                                        <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                        <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                    <div className='text-center'>
+                                                        <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                        {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                        {/* <Button variant='success' className='me-2' onClick={() => submitAllMarksExamCommittee()}>Submit Marks</Button> */}
                                                     </div>
                                                 </Form>
                                             </div>
@@ -413,9 +428,9 @@ const MarksAssign = () => {
                                         <div className='container-fluid shadow-lg rounded  my-5 ' >
                                             <div className='p-4 '>
                                                 <div className='mb-5'>
-                                                    <h3 className='text-center mb-5' >Result</h3>
-                                                    <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
-                                                    <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                    <h3 className='text-center mb-5' >Project Presentation</h3>
+                                                    <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                                    <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode.toUpperCase()}</p>
                                                     <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                                 </div>
                                                 <Form>
@@ -424,9 +439,9 @@ const MarksAssign = () => {
                                                             <tr style={{ border: '1px solid black' }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30%)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva <br />(30 marks)
                                                                     <br />
-                                                                    <span className='edit' onClick={() => { setEditPresentationMarks(true) }}>Edit</span>
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeProject(true) }}>Edit</span>
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -447,9 +462,10 @@ const MarksAssign = () => {
                                                             }
                                                         </tbody>
                                                     </Table>
-                                                    <div className='text-center my-4'>
-                                                        <Button variant='success' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
-                                                        <input as Button variant='primary' type="submit" value='Save' className='btn btn-primary' />
+                                                    <div className='text-center'>
+                                                        <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                        {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                        {/* <Button variant='success' className='me-2' onClick={() => submitAllMarksExamCommittee()}>Submit Marks</Button> */}
                                                     </div>
                                                 </Form>
                                             </div>

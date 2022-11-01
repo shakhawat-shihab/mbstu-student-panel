@@ -25,6 +25,8 @@ const MarkModal = (props) => {
 
     const [projectPerformance, setProjectPerformance] = useState();
 
+    const [showErrorModal, setShowErrorModal] = useState(true);
+
 
     const Toast = Swal.mixin({
         toast: true,
@@ -196,7 +198,7 @@ const MarkModal = (props) => {
             choice = "projectClassPerformance";
         }
 
-        if (fileUpload?.[0][`${choice}`]) {
+        if (fileUpload[0][`${choice}`]) {
             supObj.propertyName = choice;
             fileUpload?.map(x => {
                 const obj = {};
@@ -241,7 +243,12 @@ const MarkModal = (props) => {
         }
 
         else {
-            alert("Please Select a correct file !!!!");
+            // alert('Please select a correct file')
+            Toast.fire({
+                icon: 'error',
+                title: "Please Select a correct File"
+            })
+
         }
 
 

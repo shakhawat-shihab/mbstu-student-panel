@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
+// import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
+// import useAuth from '../../../Hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
@@ -28,6 +30,7 @@ const ThirdMarkModal = (props) => {
 
     const makeAllPropsFalse = () => {
         setThirdExaminerFinal(false);
+
     }
 
     const onSubmit = data => {
@@ -163,7 +166,11 @@ const ThirdMarkModal = (props) => {
         }
 
         else {
-            alert("Please Select a correct file !!!!");
+            // alert("Please Select a correct file !!!!");
+            Toast.fire({
+                icon: 'error',
+                title: "Please Select a correct File"
+            })
         }
 
 
