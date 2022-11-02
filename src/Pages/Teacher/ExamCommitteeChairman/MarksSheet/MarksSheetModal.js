@@ -6,9 +6,10 @@ import useAuth from '../../../../Hooks/useAuth';
 import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
 const MarksSheetModal = (props) => {
-    const { user, dept } = useAuth();
-    // const allInfo = props.allInfo;
-    const { showModal, setShowModal, course, courseName, courseCode, credit, semesterAllMarks } = props;
+    const { user } = useAuth();
+    const { showModal, setShowModal, courseTitle, courseCode, credit, processedMarks } = props;
+
+    // console.log("processed marks === ", processedMarks);
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
@@ -44,19 +45,19 @@ const MarksSheetModal = (props) => {
                             <h5 className='text-center'>Santosh,Tangail-1902</h5>
                         </div>
                         <div className='mt-3'>
-                            <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(dept)}</p>
+                            <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(user?.department)}</p>
                         </div>
                         <div className='container'>
                             <div className='my-4 ms-4'>
+                                <p><span className='fw-bold'>Course Title: </span>{courseTitle}</p>
                                 <p><span className='fw-bold'>Course Code: </span>{courseCode}</p>
-                                <p><span className='fw-bold'>Course Name: </span>{courseName}</p>
+
                                 <p><span className='fw-bold'>Credit Hour: </span>{credit}</p>
                                 {/* <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.displayName}</p> */}
                             </div>
                         </div>
                         {
-                            courseCode &&
-                            semesterAllMarks[`${courseCode}_type`] === 'theory'
+                            processedMarks.type === 'theory'
                             &&
                             <div className='container'>
                                 <div className='container rounded  my-5 ' >
@@ -66,25 +67,25 @@ const MarksSheetModal = (props) => {
                                                 <tr style={{ border: "1px solid black" }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance (30%)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance <br />(30 marks)</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Course Teacher </th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Second Examiner </th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Third Examiner </th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Marks (70%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total Marks (100%)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Marks <br />(70 marks)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total Marks <br /> (100 marks)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {
-                                                    course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
+                                                    processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                         <td style={{ border: "1px solid black" }}>{x?.thirtyPercent}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.course_teacher_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.second_examiner_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.third_examiner_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.final_marks}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.total_marks}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.theoryWritten}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.theorySecondExaminer}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.theoryThirdExaminer}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.theoryFinal}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.totalMarks}</td>
                                                     </tr>)
                                                 }
                                             </tbody>
@@ -94,8 +95,7 @@ const MarksSheetModal = (props) => {
                             </div>
                         }
                         {
-                            courseCode &&
-                            semesterAllMarks[`${courseCode}_type`] === 'lab'
+                            processedMarks.type === 'lab'
                             &&
                             <div className='container'>
                                 <div className='container-fluid rounded  my-5 ' >
@@ -105,17 +105,17 @@ const MarksSheetModal = (props) => {
                                                 <tr style={{ border: "1px solid black" }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks (60%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks (40%)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks <br /> (60 mars)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks <br /> (40 marks)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {
-                                                    course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.class_marks_lab}</td>
-                                                        <td title={x?.experiment_marks_lab_by} style={{ border: "1px solid black" }}>{x?.experiment_marks_lab}</td>
+                                                    processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.name}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.labClassMark}</td>
+                                                        <td title={x?.labExperimentBy} style={{ border: "1px solid black" }}>{x?.labExperiment}</td>
                                                     </tr>)
                                                 }
                                             </tbody>
@@ -125,8 +125,7 @@ const MarksSheetModal = (props) => {
                             </div>
                         }
                         {
-                            courseCode &&
-                            semesterAllMarks[`${courseCode}_type`] === 'project'
+                            processedMarks.type === 'project'
                             &&
                             <div className='container'>
                                 <div className='container-fluid rounded  my-5 ' >
@@ -136,17 +135,17 @@ const MarksSheetModal = (props) => {
                                                 <tr style={{ border: "1px solid black" }}>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70%)</th>
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30%)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance<br />(70 marks)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva<br /> (30 marks)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {
-                                                    course.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.s_id}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
-                                                        <td style={{ border: "1px solid black" }}>{x?.class_marks_project}</td>
-                                                        <td title={x?.presentation_marks_project_by} style={{ border: "1px solid black" }}>{x?.presentation_marks_project}</td>
+                                                    processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                                        <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.name}</td>
+                                                        <td style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
+                                                        <td title={x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>
                                                     </tr>)
                                                 }
                                             </tbody>
@@ -156,12 +155,13 @@ const MarksSheetModal = (props) => {
                             </div>
 
                         }
+                        <div className="me-5 w-25 float-end">
+                            <hr style={{ height: "3px", color: "black", bordr: "none" }} />
+                            <p className='text-center'>Signature of the Chairman</p>
+                        </div>
 
                     </div>
-                    <div className="ms-5 ps-3 w-25">
-                        <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                        <p className='text-center'>Signature of the Chairman</p>
-                    </div>
+
                     {/* <div className='container d-flex justify-content-between ms-2 pe-4'>
                         <div className="w-25">
                             <hr style={{ height: "3px", color: "black", bordr: "none" }} />

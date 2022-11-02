@@ -19,12 +19,12 @@ import ExamCommittee from '../../Teacher/ExamCommittee/ExamCommittee';
 import ApplyToSupervisor from '../../Students/ApplyToSupervisor/ApplyToSupervisor';
 import Projects from '../../Students/Projects/Projects';
 import Updateprofile from '../UpdateProfile/Updateprofile';
-import ApproveApplication from '../../DeptChairman/ApproveApplication/ApproveApplication';
-import ApplicationDetails from '../../DeptChairman/ApplicationDetails/ApplicationDetails';
 import ExamCommitteeChairman from '../../Teacher/ExamCommitteeChairman/ExamCommitteeChairman';
 import MarksSheet from '../../Teacher/ExamCommitteeChairman/MarksSheet/MarksSheet';
 import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
 import MarksAssign from '../../Teacher/ExamCommittee/MarksAssign/MarksAssign';
+import CourseApplication from '../../DeptChairman/CourseAppliaction/CourseApplication';
+import ApplicationDetails from '../../DeptChairman/CourseAppliaction/ApplicationDetails/ApplicationDetails';
 
 const Dashboard = () => {
     const { user, isLoading, isLoadingRole } = useAuth();
@@ -159,9 +159,9 @@ const Dashboard = () => {
                 <TeacherRoute path={`${path}/exam-committee`}>
                     <ExamCommittee></ExamCommittee>
                 </TeacherRoute>
-                <DeptChairmanRoute path={`${path}/exam-committee-chairman/:semesterId/result-sheet`}>
+                <TeacherRoute path={`${path}/exam-committee-chairman/:semesterId/result-sheet`}>
                     <ResultSheet></ResultSheet>
-                </DeptChairmanRoute>
+                </TeacherRoute>
                 <TeacherRoute path={`${path}/exam-committee-chairman/:semesterId`}>
                     <MarksSheet></MarksSheet>
                 </TeacherRoute>
@@ -188,11 +188,11 @@ const Dashboard = () => {
                 </DeptChairmanRoute>
 
                 {/* loading application testing (28-OcT) */}
-                <DeptChairmanRoute path={`${path}/approve-course-registration/:id`}>
+                <DeptChairmanRoute path={`${path}/approve-course-registration/:applicationId`}>
                     <ApplicationDetails></ApplicationDetails>
                 </DeptChairmanRoute>
                 <DeptChairmanRoute path={`${path}/approve-course-registration`}>
-                    <ApproveApplication></ApproveApplication>
+                    <CourseApplication></CourseApplication>
                 </DeptChairmanRoute>
 
 

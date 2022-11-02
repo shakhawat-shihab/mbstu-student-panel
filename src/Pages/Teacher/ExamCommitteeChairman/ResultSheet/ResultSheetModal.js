@@ -9,14 +9,17 @@ import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
 const ResultSheetModal = (props) => {
 
-    const { showModal, setShowModal, semester, totalCredit, studentResult } = props;
-    const { dept } = useAuth();
+    const { showModal, setShowModal, studentResult, processedResult, offeredCredit, semester, info, checkGpa } = props;
+    const { user } = useAuth();
+
+    // console.log("result semester == ", semester)
+    console.log('processed result ==== ', processedResult);
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
         // return false;
-        html2pdf().from(selected).save(`${checkSemesterName(semester?.semester_code)}_result.pdf`);
+        html2pdf().from(selected).save(`${info?.data?.semester?.name}_result.pdf`);
 
     }
     return (
@@ -33,7 +36,7 @@ const ResultSheetModal = (props) => {
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="example-custom-modal-styling-title ">
-                        <Button className='float-end me-5 download-pdf' variant="primary" onClick={handleDownload}>
+                        <Button className='float-end me-5 ms-2 download-pdf' variant="primary" onClick={handleDownload}>
                             <span className='text-white ms-2 float-end' >Download Pdf</span>
                             <FaDownload className='float-end mt-1 mb-2' ></FaDownload>
                         </Button>
@@ -44,10 +47,10 @@ const ResultSheetModal = (props) => {
                     <div id="selectedPortion">
                         <div className='container-fluid w-100'>
                             <h4 className='text-center mt-4 mb-4'>Notice</h4>
-                            <p style={{ fontSize: "1.2rem" }} className='mb-4'>It is notified that the results of {checkSemesterName(semester?.semester_code)} B.Sc (Engg.) Final Examination (session: {semester?.session}) Department of {checkDepartmentName(dept)} are provisionally published as follows.</p>
+                            <p style={{ fontSize: "1.2rem" }} className='mb-4'>It is notified that the results of {info?.data?.semester?.name} B.Sc (Engg.) Final Examination (session: {info?.data?.semester?.session}) Department of {checkDepartmentName(user?.department)} are provisionally published as follows.</p>
                             <p style={{ fontSize: "1.2rem" }}>The University reserves the right to correct or amend the results, if necessary.</p>
                         </div>
-                        <h5 className='text-center mb-1 mt-5 fw-bold'>{semester?.department?.toUpperCase()} {checkSemesterName(semester?.semester_code)} B.Sc(Engg.) Final Examination Result</h5>
+                        <h5 className='text-center mb-1 mt-5 fw-bold'>{user?.department?.toUpperCase()} {info?.data?.semester?.name} B.Sc(Engg.) Final Examination Result</h5>
                         <div className='container-fluid w-100 my-5 py-2'>
                             <Table responsive bordered className='text-center' >
                                 {/* <col width="11%" />
@@ -62,7 +65,7 @@ const ResultSheetModal = (props) => {
                                         <th style={{ border: "1px solid black" }}>Student Id</th>
                                         <th style={{ border: "1px solid black" }}>Name of the Candidates</th>
                                         <th style={{ border: "1px solid black" }}>
-                                            Credit earned (Out of {totalCredit} credits)
+                                            Credit earned (Out of {offeredCredit} credits)
 
                                         </th>
                                         <th style={{ border: "1px solid black" }}>
@@ -84,19 +87,19 @@ const ResultSheetModal = (props) => {
                                 <tbody>
                                     {
 
-                                        studentResult?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
-                                            <td style={{ border: "1px solid black" }}>{x.s_id.toUpperCase()}</td>
-                                            <td style={{ border: "1px solid black" }}>{x.displayName}</td>
-                                            <td style={{ border: "1px solid black" }}>{x.credit_earned}</td>
-                                            <td style={{ border: "1px solid black" }}>{x.credit_lost + ' '}
+                                        processedResult?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black" }}>{x.id.toUpperCase()}</td>
+                                            <td style={{ border: "1px solid black" }}>{x.name}</td>
+                                            <td style={{ border: "1px solid black" }}>{x.creditEarned}</td>
+                                            <td style={{ border: "1px solid black" }}>{x.creditLost + ' '}
                                                 (
                                                 {
-                                                    x?.credit_lost_array?.map(y => {
+                                                    x?.failedCourses?.map(y => {
                                                         return (<>
-                                                            <span>{y}</span>
+                                                            <span>{y.toUpperCase()}</span>
                                                             <span>
                                                                 {
-                                                                    y != x.credit_lost_array[x.credit_lost_array.length - 1]
+                                                                    y != x.failedCourses[x.failedCourses.length - 1]
                                                                     &&
                                                                     `, `
                                                                 }
@@ -107,8 +110,8 @@ const ResultSheetModal = (props) => {
                                                 }
                                                 )
                                             </td>
-                                            <td style={{ border: "1px solid black" }}>{x.gpa}</td>
-                                            <td style={{ border: "1px solid black" }}>{x.result}</td>
+                                            <td style={{ border: "1px solid black" }}>{x.cgpa}</td>
+                                            <td style={{ border: "1px solid black" }}>{checkGpa(x.cgpa)}</td>
                                             {
 
                                                 <td>{x.remarks && <span>{x.remarks}</span>}</td>

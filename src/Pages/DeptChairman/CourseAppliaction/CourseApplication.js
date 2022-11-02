@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 
-const ApproveApplication = () => {
+const CourseApplication = () => {
     const { url } = useRouteMatch();
     const [applications, setApplications] = useState();
     // const history = useHistory();
     // console.log('url ', url);
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/course-application/get-application-department', {
+        fetch('http://localhost:5000/api/v1/course-application/get-applications-department', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -66,4 +66,4 @@ const ApproveApplication = () => {
     );
 };
 
-export default ApproveApplication;
+export default CourseApplication;

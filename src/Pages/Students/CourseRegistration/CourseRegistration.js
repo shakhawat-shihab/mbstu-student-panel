@@ -38,14 +38,10 @@ const CourseRegistration = () => {
     const [semesterName, setSemesterName] = useState('');
     const [degree, setDegree] = useState('');
     const [semesterCode, setSemesterCode] = useState(-1);
-    // const [name, setName] = useState('');
-    // const [session, setSession] = useState('');
-    // const [hallName, setHallName] = useState('');
-    // const [hallId, setHallId] = useState('');
     const [isLoadingStudent, setIsLoadingStudent] = useState(true);
     const [creditError, setCreditError] = useState('');
     const [applications, setApplications] = useState([]);
-    const [regularCourseAppliedDone, setRegularCourseAppliedDone] = useState(false);
+    const [regularCourseNotApplied, setRegularCourseNotApplied] = useState(true);
 
     const Toast = Swal.mixin({
         toast: true,
@@ -72,8 +68,12 @@ const CourseRegistration = () => {
                 fetch(`http://localhost:5000/api/v1/course-application/total-credit-taken/${user?.profileId}`)
                     .then(res => res.json())
                     .then(info => {
-                        setPreviousApplicationCredit(info?.data)
+
+                        console.log('regular course appplied ', info)
+                        setPreviousApplicationCredit(info?.data?.totalCreditTaken)
+                        setRegularCourseNotApplied(info?.data?.foundRegularCourse)
                         setSemesterCode(result?.data?.semesterCode)
+
                         // console.log(result?.data?.semesterCode)
                         // setCredit(info?.data)
                     })
@@ -82,8 +82,8 @@ const CourseRegistration = () => {
 
     useEffect(() => {
         // if()
-        // console.log("fgsgd ", previousApplicationCredit, semesterCode)
-        if (previousApplicationCredit <= 0 && semesterCode !== -1) {
+        // console.log("fgsgd ", regularCourseNotApplied, semesterCode)
+        if (semesterCode !== -1 && regularCourseNotApplied === false) {
             fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode + 1}`, {
                 headers: {
                     'Content-type': 'application/json',

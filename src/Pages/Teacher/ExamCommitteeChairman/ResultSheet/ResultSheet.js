@@ -27,6 +27,8 @@ const ResultSheet = () => {
     const [totalCredit, setTotalCredit] = useState(0);
     const [studentResult, setStudentResult] = useState([]);
     // console.log('semesterId ', semesterId);
+
+    const [info, setInfo] = useState();
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -49,6 +51,7 @@ const ResultSheet = () => {
             .then(res => res.json())
             .then(info => {
                 console.log('semester and marks = ', info);
+                setInfo(info);
                 setSemesterInfo(info?.data?.semester)
                 setMarks(info?.data?.marks)
                 setProcessNewMarks(!processNewMark)
@@ -297,7 +300,8 @@ const ResultSheet = () => {
         <div>
             <div className='container shadow-lg w-75 my-5 py-2'>
                 <ResultSheetModal
-                    semester={semester} totalCredit={totalCredit} studentResult={studentResult} showModal={showModal} setShowModal={setShowModal}
+                    semester={semester} studentResult={studentResult} showModal={showModal} setShowModal={setShowModal}
+                    processedResult={processedResult} offeredCredit={offeredCredit} info={info} checkGpa={checkGpa}
                 />
                 <h4 className='text-center mt-4 mb-4'>Result</h4>
                 <Table responsive striped bordered hover>
@@ -354,7 +358,7 @@ const ResultSheet = () => {
                                                 {
                                                     x?.failedCourses?.map(y => {
                                                         return (<span key={y} >
-                                                            <span>{y}</span>
+                                                            <span>{y.toUpperCase()}</span>
                                                             <span>
 
                                                                 {
@@ -389,7 +393,7 @@ const ResultSheet = () => {
                     <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}> Generate PDF</Button>
                     <Button
                         onClick={() => { handleResultPublish() }}
-                        variant='primary'>
+                        variant='success'>
                         Publish Result</Button>
                 </div>
             </div>

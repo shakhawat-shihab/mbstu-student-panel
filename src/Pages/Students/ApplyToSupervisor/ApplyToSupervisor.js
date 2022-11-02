@@ -42,6 +42,7 @@ const ApplyToSupervisor = () => {
     })
 
     useEffect(() => {
+        setIsLoadingProposals(true)
         fetch(`http://localhost:5000/api/v1/project-application/my-proposal/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
@@ -58,6 +59,7 @@ const ApplyToSupervisor = () => {
     }, [courseId, state])
 
     useEffect(() => {
+        setIsLoadingAcceptedProposal(true)
         fetch(`http://localhost:5000/api/v1/project-application/check-any-accepted/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
@@ -167,6 +169,7 @@ const ApplyToSupervisor = () => {
                 </Nav>
             </div>
             {
+
                 (isLoadingProposals || isLoadingTeacher || isLoadingAcceptedProposal)
                     ?
                     <div className='text-center my-5 py-5 '>
@@ -176,6 +179,7 @@ const ApplyToSupervisor = () => {
                     </div>
                     :
                     <>
+
                         {
                             state === 1 ?
 
@@ -188,7 +192,7 @@ const ApplyToSupervisor = () => {
 
                                         :
                                         proposals.map(x =>
-                                            <Application key={x._id} applicationDetais={x}></Application>)
+                                            <Application key={x._id} applicationDetails={x}></Application>)
 
                                     }
                                 </div>

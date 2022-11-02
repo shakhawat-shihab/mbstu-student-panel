@@ -5,13 +5,13 @@ import { FcApproval } from "react-icons/fc"
 import { MdPendingActions } from "react-icons/md"
 
 const ApplicationDetails = () => {
-    const { id } = useParams();
-    const [applications, setApplications] = useState();
-    const [chairmanVerified, setChairmanVerified] = useState(false);
-    const [status, setStatus] = useState('pending');
+    const { applicationId } = useParams();
+
+    const [application, setApplication] = useState({});
+
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/course-application/get-application-department', {
+        fetch(`http://localhost:5000/api/v1/course-application/get-application-details/${applicationId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -19,32 +19,28 @@ const ApplicationDetails = () => {
         })
             .then(res => res.json())
             .then(info => {
-                console.log("appplication data === ", info);
-                setApplications(info.data);
+                console.log("appplication detils === ", info.data);
+                setApplication(info.data);
             })
-    }, [])
+    }, [applicationId])
 
-    const singleApplication = applications?.find(x => x._id === id);
-
-
-    //console.log("single application === ", singleApplication)
 
     const handleApprove = () => {
-        setStatus('successful');
+        //call api to approve an application
+
     }
+
 
     return (
         <div className='p-3'>
-            {/* <h2>{applicationId}</h2> */}
-
             <div className='container shadow-lg p-3'>
-                <h4 className='fw-bold text-center mb-5'>{singleApplication?.name}</h4>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold">Name: </span>{singleApplication?.applicantName}</p>
-                <p style={{ fontSize: "20px" }} className="text-uppercase"><span className="fw-bold">ID: </span>{singleApplication?.applicantId}</p>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold">Session: </span>{singleApplication?.applicantSession}</p>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold">Hall: </span>{singleApplication?.applicantHallName}</p> <br />
+                <h4 className='fw-bold text-center mb-5'>{application?.name}</h4>
+                <p style={{ fontSize: "20px" }}><span className="fw-bold">Name: </span>{application?.applicantName}</p>
+                <p style={{ fontSize: "20px" }} className="text-uppercase"><span className="fw-bold">ID: </span>{application?.applicantId}</p>
+                <p style={{ fontSize: "20px" }}><span className="fw-bold">Session: </span>{application?.applicantSession}</p>
+                <p style={{ fontSize: "20px" }}><span className="fw-bold">Hall: </span>{application?.applicantHallName}</p> <br />
                 {
-                    (singleApplication?.regularCourses && singleApplication?.regularCourses?.length !== 0)
+                    (application?.regularCourses && application?.regularCourses?.length !== 0)
                     &&
                     <div>
                         <h5 className="fw-bold">Regular Courses:</h5><br />
@@ -62,7 +58,7 @@ const ApplicationDetails = () => {
                             </thead>
                             <tbody>
                                 {
-                                    singleApplication?.regularCourses?.map(x => {
+                                    application?.regularCourses?.map(x => {
                                         return (
                                             <tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
                                                 <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{x?.courseCode}</td>
@@ -81,7 +77,7 @@ const ApplicationDetails = () => {
                 <br />
 
                 {
-                    (singleApplication?.backlogCourses && singleApplication?.backlogCourses?.length !== 0)
+                    (application?.backlogCourses && application?.backlogCourses?.length !== 0)
                     &&
                     <div>
                         <h5 className="fw-bold">Backlog Courses:</h5> <br />
@@ -99,7 +95,7 @@ const ApplicationDetails = () => {
                             </thead>
                             <tbody>
                                 {
-                                    singleApplication?.backlogCourses?.map(x => {
+                                    application?.backlogCourses?.map(x => {
                                         return (
                                             <tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
                                                 <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{x?.courseCode}</td>
@@ -118,7 +114,7 @@ const ApplicationDetails = () => {
                 <br />
 
                 {
-                    (singleApplication?.specialCourses && singleApplication?.specialCourses?.length !== 0)
+                    (application?.specialCourses && application?.specialCourses?.length !== 0)
                     &&
                     <div>
                         <h5 className="fw-bold">Special Courses:</h5>
@@ -136,7 +132,7 @@ const ApplicationDetails = () => {
                             </thead>
                             <tbody>
                                 {
-                                    singleApplication?.specialCourses?.map(x => {
+                                    application?.specialCourses?.map(x => {
                                         return (
                                             <tr key={`${x.courseCode}`} className='text-center' style={{ border: "1px solid black" }}>
                                                 <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{x?.courseCode}</td>
@@ -153,9 +149,10 @@ const ApplicationDetails = () => {
                 }
                 <br />
                 {
-                    status === 'pending' ?
-                        <h5 className='fw-bold'>Status: <span className="text-warning text-capitalize">{status} <MdPendingActions /></span>  </h5> :
-                        <h5 className='fw-bold'>Status: <span className="text-success text-capitalize">{status} <FcApproval /></span></h5>
+                    application?.status === 'pending' ?
+                        <h5 className='fw-bold'>Status: <span className="text-warning text-capitalize">{application?.status} <MdPendingActions /></span>  </h5>
+                        :
+                        <h5 className='fw-bold'>Status: <span className="text-success text-capitalize">{application?.status} <FcApproval /></span></h5>
 
                 }
                 <br />

@@ -15,24 +15,14 @@ const CourseTeacher = () => {
     // console.log('cours-----id ==== ', courseId);
     //console.log("semester-ID = ", semesterId);
     const { user } = useAuth();
-    const email = user?.email;
-    const displayName = user?.displayName;
+
     const [marks, setMarks] = useState({});
     const [isLoadingMarks, setIsLoadingMarks] = useState(true);
     const [isSaving, setIsSaving] = useState(true);
-    const [proposalChange, setProposalChange] = useState(false);
-    const [allInfo, setAllInfo] = useState({});
     const [proposals, setProposals] = useState([]);
-    const [editAttendance, setEditAttendance] = useState(false);
-    const [editCt1, setEditCt1] = useState(false);
-    const [editCt2, setEditCt2] = useState(false);
-    const [editCt3, setEditCt3] = useState(false);
-    const [editFinalMarks, setEditFinalMarks] = useState(false);
-    const [editLabAttendance, setEditLabAttendance] = useState(false);
-    const [editLabQuiz, setEditLabQuiz] = useState(false);
-    const [editLabReport, setEditLabReport] = useState(false);
-    const [editClassPerformance, setEditClassPerformance] = useState(false);
+    const [isLoadingProposals, setIsLoadingProposals] = useState(true);
     const [showModal, setShowModal] = useState(false);
+
     const [attendance, setAttendance] = useState(true);
     const [ct1, setCt1] = useState(true);
     const [ct2, setCt2] = useState(true);
@@ -42,7 +32,7 @@ const CourseTeacher = () => {
     const [labReport, setLabReport] = useState(true);
     const [labQuiz, setLabQuiz] = useState(true);
     const [classPerformanceProject, setClassPerformanceProject] = useState(true);
-    const [info, setInfo] = useState({})
+
 
     const [showMarkModal, setShowMarkModal] = useState(false);
     const [theoryAttendance, setTheoryAttendance] = useState(false);
@@ -54,8 +44,9 @@ const CourseTeacher = () => {
     const [lbAttendance, setLbAttendance] = useState(false);
     const [lbReport, setLbReport] = useState(false);
     const [lbQuiz, setLbQuiz] = useState(false);
-
     const [projectClassPerformance, setProjectClassPerformance] = useState(false);
+
+
 
 
 
@@ -92,42 +83,11 @@ const CourseTeacher = () => {
             })
     }, [courseId, state, isSaving])
 
-    // useEffect(() => {
-    //     console.log('proposalChange ', proposalChange);
-    //     fetch(`http://localhost:5000/proposal-view-teacher/${courseCode}/${email}`)
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             console.log("proposals ", data);
-    //             setProposals(data);
-    //         })
-    // }, [courseCode, email, proposalChange, state])
 
-
-    // const handleAccept = (proposal) => {
-    //     proposal.status = 'accepted';
-    //     console.log('a propodsal to add ', proposal);
-    //     fetch(`http://localhost:5000/proposal-evaluate/${semesterId}/${courseCode}/${email}`, {
-    //         method: 'put',
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify(proposal)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             console.log("data ", data);
-    //             if (data.modifiedCount) {
-    //                 setProposalChange(!proposalChange);
-    //                 Toast.fire({
-    //                     icon: 'success',
-    //                     title: 'Successfully Added'
-    //                 })
-    //             }
-    //         });
-    // }
 
     useEffect(() => {
-        if (marks?.type == 'project') {
+        if (marks?.type === 'project') {
+            setIsLoadingProposals(true)
             fetch(`http://localhost:5000/api/v1/project-application/proposal-for-teacher/${courseId}`, {
                 headers: {
                     'Content-type': 'application/json',
@@ -138,6 +98,7 @@ const CourseTeacher = () => {
                 .then(proposal => {
                     console.log("proposal ", proposal);
                     setProposals(proposal.data);
+                    setIsLoadingProposals(false)
                 })
         }
 
@@ -145,7 +106,6 @@ const CourseTeacher = () => {
 
 
     const submitAllMarksCourseTeacher = () => {
-
         Swal.fire({
             title: 'Do you want to Turn In the marks?',
             showCancelButton: true,
@@ -187,7 +147,7 @@ const CourseTeacher = () => {
         })
     }
 
-
+    console.log('state ', state)
     const onSubmit = data => {
         //setSubmitClick(!submitClick);
         // trimming all properties of data
@@ -204,30 +164,7 @@ const CourseTeacher = () => {
             }
         }
 
-        // fetch(`http://localhost:5000/add-marks/course-teacher/${semesterId}/${courseCode}`, {
-        //     method: 'put',
-        //     headers: {
-        //         'content-type': 'application/json'
-        //     },
-        //     body: JSON.stringify(data)
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         console.log("data ", data);
-        //         if (data.modifiedCount) {
-        //             Toast.fire({
-        //                 icon: 'success',
-        //                 title: 'Successfully updated marks'
-        //             })
-        //             history.push('/dashboard/courses-taken')
-        //         }
-        //         else if (data.matchedCount === 1) {
-        //             Toast.fire({
-        //                 icon: 'warning',
-        //                 title: 'Give some data then click assign'
-        //             })
-        //         }
-        //     });
+
     };
 
 
@@ -567,24 +504,37 @@ const CourseTeacher = () => {
                             {
                                 marks.type === 'project'
                                 &&
-                                <div className='container'>
-                                    <div className='mt-4' >
-                                        <Nav justify variant="pills" defaultActiveKey="1" >
-                                            <Nav.Item>
-                                                <Nav.Link onClick={() => { setState(1) }} eventKey="1" >Marks Assign</Nav.Link>
-                                            </Nav.Item>
-                                            <Nav.Item>
-                                                <Nav.Link onClick={() => { setState(2) }} eventKey="link-1" >Student Application</Nav.Link>
-                                            </Nav.Item>
-                                        </Nav>
-                                    </div>
+                                <div>
+                                    {
+                                        (isLoadingProposals || isLoadingMarks)
+                                            ?
+                                            <div className='text-center my-5 py-5 '>
+                                                <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </Spinner>
+                                            </div>
+                                            :
+                                            <div className='container'>
+                                                <div className='mt-4' >
+                                                    <Nav justify variant="pills" defaultActiveKey="1" >
+                                                        <Nav.Item>
+                                                            <Nav.Link onClick={() => { setState(1) }} eventKey="1" >Marks Assign</Nav.Link>
+                                                        </Nav.Item>
+                                                        <Nav.Item>
+                                                            <Nav.Link onClick={() => { setState(2) }} eventKey="link-1" >Student Application</Nav.Link>
+                                                        </Nav.Item>
+                                                    </Nav>
+                                                </div>
+                                            </div>
+                                    }
 
-                                    <div className=' ' >
+                                    {
 
-                                        {
-                                            state === 1
-                                                ?
-                                                <div className='container-fluid shadow-lg  rounded  my-5'>
+
+                                        state === 1
+                                            ?
+                                            <div className='container'>
+                                                <div className='container-fluid shadow-lg  rounded  my-5 mx-4'>
                                                     <div className='p-4'>
                                                         <div className=' '>
                                                             <h3 className='text-center mb-3' >Assign Marks</h3>
@@ -651,31 +601,34 @@ const CourseTeacher = () => {
                                                             </div>
                                                         </Form>
                                                     </div>
-
                                                 </div>
-                                                :
-                                                <div className='mt-4'>
-                                                    <h3 className='my-5 text-center '>Students Applications</h3>
-                                                    {
-                                                        proposals?.length === 0 ?
-                                                            <div className=' d-flex justify-content-center align-items-center half-height' >
-                                                                <h5 className='text-center fs-2 text-danger my-4 fw-bold error-opacity' >You have no Student application</h5>
-                                                            </div>
-                                                            :
-                                                            proposals?.map(x => <Application
-                                                                // proposal={setProposalChange}
-                                                                key={x._id} applicationDetais={x}
-                                                            // handleAccept={handleAccept}
-                                                            // handleReject={handleReject}
-                                                            >
-                                                            </Application >)
-                                                    }
-                                                </div>
-                                        }
+                                            </div>
 
-                                    </div>
+                                            :
+                                            <div className='mt-4'>
+                                                <h3 className='my-5 text-center '>Students Applications</h3>
+                                                {
+                                                    proposals?.length === 0 ?
+                                                        <div className=' d-flex justify-content-center align-items-center half-height' >
+                                                            <h5 className='text-center fs-2 text-danger my-4 fw-bold error-opacity' >You have no Student application</h5>
+                                                        </div>
+                                                        :
+                                                        proposals?.map(x => <Application
+                                                            // proposal={setProposalChange}
+                                                            key={x._id} applicationDetais={x}
+                                                        // handleAccept={handleAccept}
+                                                        // handleReject={handleReject}
+                                                        >
+                                                        </Application >)
+                                                }
+                                            </div>
+
+                                    }
                                 </div>
                             }
+
+
+
 
                             {
                                 Object.keys(errors).length ? <p style={visibile} className='text-danger ps-2 text-center' >*Don't put a feild empty, you can assign 0</p> : <p></p>

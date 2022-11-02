@@ -9,13 +9,13 @@ import Swal from 'sweetalert2';
 const Application = (props) => {
     //const { subject, teacher, students, status, description } = props?.details;
     const { user } = useAuth();
-    const { applicationDetais } = props;
-    // console.log('applicationDetais ', applicationDetais);
+    const { applicationDetails } = props;
+    // console.log('applicationDetails ', applicationDetails);
 
     // console.log("application props ==== ", props);
 
-    const [status, setStatus] = useState('pending')
-    const proposalId = applicationDetais?._id;
+    // const [status, setStatus] = useState('pending')
+    const proposalId = applicationDetails?._id;
 
     const Toast = Swal.mixin({
         toast: true,
@@ -30,8 +30,8 @@ const Application = (props) => {
     })
 
     const handleAccept = () => {
-        setStatus('accepted');
-        applicationDetais.status = status;
+        // setStatus('accepted');
+        // applicationDetails.status = status;
         Swal.fire({
             title: 'Do you want to accept the proposal?',
             showCancelButton: true,
@@ -41,49 +41,48 @@ const Application = (props) => {
             cancelButtonText: 'No, cancel!',
             cancelButtonColor: 'red'
 
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire('Saved!', '', 'success')
-                fetch(`http://localhost:5000/api/v1/project-application/approve-proposal/${proposalId}`, {
-                    method: 'put',
-                    headers: {
-                        'Content-type': 'application/json',
-                        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
-                    },
-                    body: JSON.stringify(applicationDetais)
-                })
-                    .then(res => res.json())
-                    .then(info => {
-                        console.log('info ', info)
-                        // setMarks(info.data);
-                        // setIsLoadingMarks(false);
-                        if (info.status === 'success') {
-                            Toast.fire({
-                                icon: 'success',
-                                title: info.message
-                            })
-                        }
-                        else {
-                            Toast.fire({
-                                icon: 'error',
-                                title: info.message
-                            })
-                        }
-                    })
-            }
         })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    // Swal.fire('Saved!', '', 'success')
+                    fetch(`http://localhost:5000/api/v1/project-application/approve-proposal/${proposalId}`, {
+                        method: 'put',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+                        },
+                        body: JSON.stringify(applicationDetails)
+                    })
+                        .then(res => res.json())
+                        .then(info => {
+                            console.log('info ', info)
+                            if (info.status === 'success') {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: info.message
+                                })
+                            }
+                            else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: info.message
+                                })
+                            }
+                        })
+                }
+            })
     }
 
     return (
         <div className=' mb-3 border border border-3 rounded  rounded px-5 py-3'>
-            {/* <p>{applicationDetais.status}</p> */}
+            {/* <p>{applicationDetails.status}</p> */}
             {
                 user?.isStudent &&
                 <div>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Title: </span>{applicationDetais?.courseTitle}</p>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Code: </span>{applicationDetais?.courseCode.toUpperCase()}</p>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Project Title: </span>{applicationDetais?.projectApplicationTitle}</p>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Supervisor: </span>{applicationDetais?.teacher?.name}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Title: </span>{applicationDetails?.courseTitle}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Code: </span>{applicationDetails?.courseCode.toUpperCase()}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Project Title: </span>{applicationDetails?.projectApplicationTitle}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Supervisor: </span>{applicationDetails?.teacher?.name}</p>
 
                     <br />
 
@@ -93,13 +92,13 @@ const Application = (props) => {
                                 <h2 className="accordion-header" id="headingOne">
                                     <button className="accordion-button fs-5" type="button" data-bs-toggle="collapse"
                                         data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                        {applicationDetais?.projectApplicationTitle}
+                                        {applicationDetails?.projectApplicationTitle}
                                     </button>
                                 </h2>
                                 <div id="collapseOne" className="accordion-collapse collapse show "
                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div className="accordion-body text-black-50 ">
-                                        {applicationDetais?.projectApplicationDescription}
+                                        {applicationDetails?.projectApplicationDescription}
                                     </div>
                                 </div>
                             </div>
@@ -110,41 +109,41 @@ const Application = (props) => {
 
                     <p className='my-3 ' style={{ fontSize: "20px" }}>
                         {
-                            applicationDetais?.status === "denied" &&
+                            applicationDetails?.status === "denied" &&
                             <>
                                 <span className='text-capitalize '>
                                     <span className="fw-bold">Status: </span>
-                                    <span className='text-danger'>{applicationDetais?.status}</span>
+                                    <span className='text-danger'>{applicationDetails?.status}</span>
                                     <MdCancel className=' ms-1 fs-3 text-danger '></MdCancel>
                                 </span>
                             </>
                         }
                         {
-                            applicationDetais?.status === "pending" &&
+                            applicationDetails?.status === "pending" &&
                             <>
                                 <span className='text-capitalize '>
                                     <span className="fw-bold">Status: </span>
-                                    <span className='text-warning'>{applicationDetais?.status}</span>
+                                    <span className='text-warning'>{applicationDetails?.status}</span>
                                     <MdPendingActions className=' ms-1 fs-2 text-warning '></MdPendingActions>
                                 </span>
                             </>
                         }
                         {
-                            applicationDetais?.status === "accepted" &&
+                            applicationDetails?.status === "accepted" &&
                             <>
                                 <span className='text-capitalize '>
                                     <span className="fw-bold">Status: </span>
-                                    <span className='text-success'>{applicationDetais?.status}</span>
+                                    <span className='text-success'>{applicationDetails?.status}</span>
                                     <FcApproval className=' ms-1 fs-2 text-success '></FcApproval>
                                 </span>
                             </>
                         }
                         {
-                            applicationDetais?.status === "discontinued" &&
+                            applicationDetails?.status === "discontinued" &&
                             <>
                                 <span className='text-capitalize '>
                                     <span className="fw-bold">Status: </span>
-                                    <span className='text-danger'>{applicationDetais?.status}</span>
+                                    <span className='text-danger'>{applicationDetails?.status}</span>
                                     <AiOutlineDisconnect className=' ms-1 fs-2 text-warning ' />
                                 </span>
                             </>
@@ -157,10 +156,10 @@ const Application = (props) => {
 
             {user?.isTeacher &&
                 <div>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Title: </span>{applicationDetais?.courseTitle}</p>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Code: </span>{applicationDetais?.courseCode.toUpperCase()}</p>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Project Title: </span>{applicationDetais?.projectApplicationTitle}</p>
-                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Supervisor: </span>{applicationDetais?.teacher?.name}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Title: </span>{applicationDetails?.courseTitle}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Course Code: </span>{applicationDetails?.courseCode.toUpperCase()}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Project Title: </span>{applicationDetails?.projectApplicationTitle}</p>
+                    <p className='mb-2' style={{ fontSize: "20px" }}><span className='fw-bold'>Supervisor: </span>{applicationDetails?.teacher?.name}</p>
 
                     <br />
 
@@ -202,7 +201,7 @@ const Application = (props) => {
                 user?.isTeacher &&
                 <div className='mt-5 mb-3 text-center'>
                     {
-                        applicationDetais?.status === 'pending' &&
+                        applicationDetails?.status === 'pending' &&
                         <>
                             <Button variant='success' onClick={() => {
                                 //  handleAdd(props?.details)
