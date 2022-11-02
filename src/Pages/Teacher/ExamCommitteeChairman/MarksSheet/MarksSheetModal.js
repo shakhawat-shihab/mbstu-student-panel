@@ -7,7 +7,7 @@ import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
 const MarksSheetModal = (props) => {
     const { user } = useAuth();
-    const { showModal, setShowModal, courseTitle, courseCode, credit, processedMarks } = props;
+    const { showModal, setShowModal, processedMarks } = props;
 
     // console.log("processed marks === ", processedMarks);
 
@@ -15,7 +15,7 @@ const MarksSheetModal = (props) => {
         const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
         // return false;
-        html2pdf().from(selected).save(`${courseCode}_marks.pdf`);
+        html2pdf().from(selected).save(`${processedMarks?.courseCode}_marks.pdf`);
 
     }
     return (
@@ -49,10 +49,10 @@ const MarksSheetModal = (props) => {
                         </div>
                         <div className='container'>
                             <div className='my-4 ms-4'>
-                                <p><span className='fw-bold'>Course Title: </span>{courseTitle}</p>
-                                <p><span className='fw-bold'>Course Code: </span>{courseCode}</p>
+                                <p><span className='fw-bold'>Course Title: </span>{processedMarks?.courseTitle}</p>
+                                <p><span className='fw-bold'>Course Code: </span>{processedMarks?.courseCode}</p>
 
-                                <p><span className='fw-bold'>Credit Hour: </span>{credit}</p>
+                                <p><span className='fw-bold'>Credit Hour: </span>{processedMarks?.credit}</p>
                                 {/* <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.displayName}</p> */}
                             </div>
                         </div>

@@ -90,6 +90,7 @@ const MarksSheet = () => {
             const obj = {}
             obj.id = marksOfSingleStudent.id;
             obj.name = marksOfSingleStudent?.studentProfileId?.firstName + ' ' + marksOfSingleStudent?.studentProfileId?.lastName;
+            obj.isPaid = marksOfSingleStudent?.isPaid;
             if (marks.type === 'theory') {
                 let cnt = 0;
                 let sum = 0;
@@ -154,148 +155,7 @@ const MarksSheet = () => {
     }, [processNewMark]);
 
 
-    // const onSubmit = (v) => {
-    //     // setCourseCodeChanging(!courseCodeChanging);
-    //     console.log(' on submit data == ', v);
-    //     // courses?.map(c => {
-    //     //     if (c.course_code === v) {
-    //     //         setCourseName(c.course_title)
-    //     //         console.log("yeee", c.credit);
-    //     //         setCredit(c.credit);
-    //     //     }
-    //     // })
-    //     // const courseObj = courses.find((obj) => {
-    //     //     return obj.course_code === v;
-    //     // });
-    //     // console.log('courseObj ', courseObj)
 
-
-    //     // const val = data.course_code;
-    //     //console.log("val ", v);
-    //     setCourseCode(v);
-    //     const marksOfSelectedCourse = semesterAllMarks[`${v}_marks`];
-    //     console.log('marksOfSelectedCourse ', marksOfSelectedCourse)
-    //     setCourse(marksOfSelectedCourse);
-    // }
-    // const handleResult = () => {
-    //     console.log("Handle result ", semesterAllMarks)
-    //     console.log("semester ", semester)
-    //     //console.log('students ', );
-    //     const dropped = [];
-    //     const students = [];
-    //     semester?.regular_students?.map(x => {
-    //         const student = {}
-    //         student.s_id = x.s_id;
-    //         const array = [];
-    //         let credit_earned = 0;
-    //         const obj = {}
-    //         courses.map(c => {
-    //             // if (c.type == 'theory') {
-    //             let { ct1, ct2, ct3, attendance, course_teacher_marks, second_examiner_marks, third_examiner_marks, final_marks, lab_attendance, lab_report, lab_quiz, class_marks_lab, class_marks_project, supervisor, presentation_marks_project, presentation_marks_project_by, experiment_marks_lab, experiment_marks_lab_by } = x[`${c.course_code}`];
-    //             let cnt = 0;
-    //             // i wass working here
-    //             const subObj = {}
-    //             subObj.course_code = c.course_code;
-    //             subObj.credit = c.credit;
-    //             if (c.type === 'theory') {
-    //                 let sum = 0;
-    //                 if (ct1 || ct1 == 0) {
-    //                     sum += parseInt(ct1);
-    //                     cnt++;
-    //                 }
-    //                 if (ct2 || ct2 == 0) {
-    //                     sum += parseInt(ct2);
-    //                     cnt++;
-    //                 }
-    //                 if (ct3 || ct3 == 0) {
-    //                     sum += parseInt(ct3);
-    //                     cnt++;
-    //                 }
-    //                 let avg = 0;
-    //                 cnt && (avg = sum / cnt);
-    //                 let thirtyPercent;
-    //                 attendance && (thirtyPercent = Math.round((avg + parseInt(attendance))));
-    //                 (!final_marks) && (final_marks = 0);
-    //                 (!thirtyPercent) && (thirtyPercent = 0);
-    //                 subObj.thirtyPercent = thirtyPercent;
-    //                 let total_marks = 0;
-    //                 ((final_marks || final_marks == 0) && (thirtyPercent || thirtyPercent == 0)) && (total_marks = parseInt(thirtyPercent) + parseInt(final_marks));
-    //                 subObj.final_marks = final_marks;
-    //                 subObj.total_marks = total_marks;
-    //                 if (total_marks > 40) {
-    //                     credit_earned += c.credit;
-    //                 }
-
-    //             }
-    //             //lab , sessional
-    //             else if (c.type === 'lab') {
-    //                 let total_marks = 0;
-    //                 (!class_marks_lab) && (class_marks_lab = 0);
-    //                 (!experiment_marks_lab) && (experiment_marks_lab = 0);
-    //                 subObj.class_marks_lab = class_marks_lab;
-    //                 subObj.experiment_marks_lab = experiment_marks_lab;
-    //                 //subObj.experiment_marks_lab_by = experiment_marks_lab_by;
-    //                 ((class_marks_lab || class_marks_lab == 0) && (experiment_marks_lab || experiment_marks_lab == 0)) && (total_marks = parseInt(class_marks_lab) + parseInt(experiment_marks_lab));
-    //                 subObj.total_marks = total_marks;
-    //                 if (total_marks > 40) {
-    //                     credit_earned += c.credit;
-    //                 }
-
-    //             }
-    //             //project
-    //             else if (c.type === 'project') {
-    //                 let total_marks = 0;
-    //                 (!class_marks_project) && (class_marks_project = 0);
-    //                 (!presentation_marks_project) && (presentation_marks_project = 0);
-    //                 subObj.supervisor = supervisor;
-    //                 subObj.class_marks_project = class_marks_project;
-    //                 subObj.presentation_marks_project = presentation_marks_project;
-    //                 // subObj.presentation_marks_project_by = presentation_marks_project_by;
-    //                 ((class_marks_project || class_marks_project == 0) && (presentation_marks_project || presentation_marks_project == 0)) && (total_marks = parseInt(class_marks_project) + parseInt(presentation_marks_project));
-    //                 subObj.total_marks = total_marks;
-    //                 if (total_marks > 40) {
-    //                     credit_earned += c.credit;
-    //                 }
-    //             }
-    //             //console.log(` ${x.s_id} ${c.course_code} `, subObj)
-    //             // }
-    //             //array.push(subObj)
-    //             obj[`${c.course_code}`] = subObj;
-    //         })
-    //         if (credit_earned < 2) {
-    //             dropped.push(x?.s_id);
-    //         }
-    //         // else {
-    //         console.log(' x.semester_code ', semester?.semester_code)
-    //         //type ! = backlog hole,,,,,,,
-    //         student.semester_code = parseInt(semester?.semester_code) + 1;
-    //         student.marks = obj;
-    //         students.push(student);
-    //         // }
-    //     })
-    //     console.log('students ', students);
-
-    //     fetch(`http://localhost:5000/publish-result-object`, {
-    //         method: 'put',
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify(students)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             console.log("data ==", data);
-    //             if (data.nModified) {
-    //                 Toast.fire({
-    //                     icon: 'success',
-    //                     title: 'Successfully updated Result'
-    //                 })
-    //             }
-    //         });
-    // }
-    // console.log('course ', course)
-    // console.log('semmeester = ', semester);
-    // console.log('credit = ', credit);
 
     return (
         <div className='px-2 py-4 my-3 shadow-lg w-75 mx-auto rounded'>
@@ -318,11 +178,11 @@ const MarksSheet = () => {
             </div>
 
             <div >
-                {/* <div>
+                <div>
                     <MarksSheetModal
-                        course={course} courseName={semesterAllMarks[`${courseCode}_title`]} courseCode={courseCode} credit={semesterAllMarks[`${courseCode}_credit`]} semesterAllMarks={semesterAllMarks} showModal={showModal} setShowModal={setShowModal}
+                        processedMarks={processedMarks} setShowModal={setShowModal} showModal={showModal}
                     />
-                </div> */}
+                </div>
                 <div>
                     {
                         isLoadingMarks
