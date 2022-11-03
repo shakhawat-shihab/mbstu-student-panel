@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../Hooks/useAuth';
+import Compressor from 'compressorjs';
 
 const UpdateProfile = () => {
     let field = [];
@@ -44,42 +45,54 @@ const UpdateProfile = () => {
         }
     }
 
+
+    //image compress
+    const handleCompressedUpload = (e) => {
+        const image = e.target.files[0];
+        new Compressor(image, {
+            quality: 0.4, // 0.6 can also be used, but its not recommended to go below.
+            success: (compressedResult) => {
+                // compressedResult has the compressed file.
+                // Use the compressed file to upload the images to your server.        
+                // console.log(compressedResult)
+                var file = new File([compressedResult], "image.jpg");
+                setSelectedFile(file)
+            },
+        });
+    };
+
+
     const onButtonClick = () => {
-
         inputFile.current.click();
-
     };
 
     const onSubmit = data => {
-        if (user?.isTeacher) {
-            data['field'] = field;
-        }
+        let formData = new FormData();    //formdata object
 
-        if (selectedFile)
-            data['image'] = selectedFile.name;
+        //append the values with key, value pair
+        formData.append('firstName', data.first_name);
+        const imageFile = selectedFile;
 
-        console.log(data);
+        formData.append('image', imageFile);
+        console.log('form data ===>> ', formData)
 
-        // ************ This part is not sure ********
 
-        // fetch('https://localhost:5000/profiles', {
-        //     method: 'POST',
-        //     body: data
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         if (data.insertedId) {
-        //             console.log('profile updated successfully')
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.error('Error:', error);
-        //     });
 
-        // ************ This part is not sure ********
+        fetch(`http://localhost:5000/api/v1/profile/update`, {
+            method: 'put',
+            headers: {
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+            body: formData,
+        })
+            .then(res => res.json())
+            .then(info => {
+                console.log('info after profile update', info)
 
-        field = [];
-        reset();
+                //show message in modal (generalize design) if success 
+
+            })
+
     }
     return (
         <div>
@@ -104,7 +117,11 @@ const UpdateProfile = () => {
                             </div>
                             <div className='text-center mb-4'>
 
-                                <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => setSelectedFile(e.target.files[0])} />
+                                <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => {
+                                    //setSelectedFile(e.target.files[0])
+                                    //console.log(e.target.files[0])
+                                    handleCompressedUpload(e)
+                                }} />
                                 <Button variant="primary" style={{ borderRadius: "30px" }} onClick={onButtonClick}>Upload photo</Button>
 
                             </div>
@@ -118,7 +135,7 @@ const UpdateProfile = () => {
 
                                 <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("first_name", { required: true })} className="w-100" />
                             </Form.Group>
-
+                            {/* 
                             <Form.Group className="mb-3">
                                 <Form.Label className='text-primary'>Last name: </Form.Label>
 
@@ -167,7 +184,7 @@ const UpdateProfile = () => {
                                         <option value="22">2021-22</option>
                                     </Form.Select>
                                 </Form.Group>
-                            }
+                            } */}
 
                             {
                                 user?.isTeacher &&
