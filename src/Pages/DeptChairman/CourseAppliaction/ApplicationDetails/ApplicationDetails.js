@@ -9,6 +9,8 @@ const ApplicationDetails = () => {
 
     const [application, setApplication] = useState({});
 
+    console.log("My application === ", application);
+
 
     useEffect(() => {
         fetch(`http://localhost:5000/api/v1/course-application/get-application-details/${applicationId}`, {
@@ -26,7 +28,11 @@ const ApplicationDetails = () => {
 
 
     const handleApprove = () => {
-        //call api to approve an application
+
+
+    }
+    const handleReject = () => {
+
 
     }
 
@@ -156,7 +162,11 @@ const ApplicationDetails = () => {
 
                 }
                 <br />
-                <Button type="button" className="btn btn-success" onClick={handleApprove}>Approve</Button>
+                {/* <Button type="button" className="btn btn-success" onClick={handleApprove}>Approve</Button> */}
+                <div className='text-center'>
+                    <Button variant='success' className='me-2' onClick={() => { handleApprove() }}>Approve</Button>
+                    <Button variant='danger' onClick={() => { handleReject() }} >Reject</Button>
+                </div>
             </div>
         </div>
     );

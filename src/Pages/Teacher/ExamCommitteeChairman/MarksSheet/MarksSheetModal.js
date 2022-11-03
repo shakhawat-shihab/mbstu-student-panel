@@ -7,15 +7,16 @@ import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
 const MarksSheetModal = (props) => {
     const { user } = useAuth();
-    const { showModal, setShowModal, processedMarks } = props;
+    // const allInfo = props.allInfo;
+    const { showModal, setShowModal, courseTitle, courseCode, credit, processedMarks, semesterInfo } = props;
 
-    // console.log("processed marks === ", processedMarks);
+    console.log("processed marks === ", processedMarks);
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
         // return false;
-        html2pdf().from(selected).save(`${processedMarks?.courseCode}_marks.pdf`);
+        html2pdf().from(selected).save(`${courseCode}_marks.pdf`);
 
     }
     return (
@@ -47,12 +48,15 @@ const MarksSheetModal = (props) => {
                         <div className='mt-3'>
                             <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(user?.department)}</p>
                         </div>
+                        <div>
+                            <h5 className='text-center mb-5 mt-5 fw-bold'>{semesterInfo?.department?.toUpperCase()} {semesterInfo?.name} {semesterInfo?.degree} Final Examination Result</h5>
+                        </div>
                         <div className='container'>
                             <div className='my-4 ms-4'>
-                                <p><span className='fw-bold'>Course Title: </span>{processedMarks?.courseTitle}</p>
-                                <p><span className='fw-bold'>Course Code: </span>{processedMarks?.courseCode}</p>
+                                <p><span className='fw-bold'>Course Title: </span>{courseTitle}</p>
+                                <p><span className='fw-bold'>Course Code: </span>{courseCode?.toUpperCase()}</p>
 
-                                <p><span className='fw-bold'>Credit Hour: </span>{processedMarks?.credit}</p>
+                                <p><span className='fw-bold'>Credit Hour: </span>{credit}</p>
                                 {/* <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.displayName}</p> */}
                             </div>
                         </div>
@@ -155,13 +159,12 @@ const MarksSheetModal = (props) => {
                             </div>
 
                         }
-                        <div className="me-5 w-25 float-end">
-                            <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                            <p className='text-center'>Signature of the Chairman</p>
-                        </div>
 
                     </div>
-
+                    <div className="me-5 w-25 float-end">
+                        <hr style={{ height: "3px", color: "black", bordr: "none" }} />
+                        <p className='text-center'>Signature of the Chairman</p>
+                    </div>
                     {/* <div className='container d-flex justify-content-between ms-2 pe-4'>
                         <div className="w-25">
                             <hr style={{ height: "3px", color: "black", bordr: "none" }} />

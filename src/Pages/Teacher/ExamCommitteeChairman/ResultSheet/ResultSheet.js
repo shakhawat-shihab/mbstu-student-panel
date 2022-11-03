@@ -180,8 +180,7 @@ const ResultSheet = () => {
                 objForResultCourse.type = x?.type;
                 objForResultCourse.semesterCode = semesterInfo?.semesterCode;
 
-                let totalMarks = 0
-
+                let totalMarks = 0;
                 if (x?.type === 'theory') {
                     let cnt = 0;
                     let sum = 0;
@@ -215,14 +214,12 @@ const ResultSheet = () => {
                     objForResultCourse.theorySeventy = theoryWritten;
                     objForResultCourse.theoryThirty = thirtyPercent;
                 }
-
                 else if (x?.type === 'lab') {
                     const { labAttendance = 0, labReport = 0, labQuiz = 0, labExperiment = 0 } = x;
                     totalMarks = parseInt(labAttendance + labQuiz + labReport + labExperiment)
                     objForResultCourse.labSixty = parseInt(labAttendance + labQuiz + labReport);
                     objForResultCourse.labFourty = labExperiment;
                 }
-
                 else if (x?.type === 'project') {
                     const { projectClassPerformance, projectPresentation } = x;
                     totalMarks = parseInt(projectClassPerformance + projectPresentation);
@@ -306,7 +303,7 @@ const ResultSheet = () => {
                     semester={semester} studentResult={studentResult} showModal={showModal} setShowModal={setShowModal}
                     processedResult={processedResult} offeredCredit={offeredCredit} info={info} checkGpa={checkGpa}
                 />
-                <h4 className='text-center mt-4 mb-4'>Result</h4>
+                <h5 className='text-center mb-5 mt-4 fw-bold'>{info?.data?.semester?.department?.toUpperCase()} {info?.data?.semester?.name} {info?.data?.semester?.degree} Final Examination Result</h5>
                 <Table responsive striped bordered hover>
                     <col width="11%" />
                     <col width="30%" />

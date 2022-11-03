@@ -7,6 +7,7 @@ import checkDepartmentNameFromIdCode from '../../../Functions/IdCodeToDeptName';
 import useAuth from '../../../Hooks/useAuth';
 import Application from '../Application/Application';
 import './ApplyToSupervisor.css'
+
 const ApplyToSupervisor = () => {
     const { courseId } = useParams();
     const { user } = useAuth();
@@ -183,7 +184,7 @@ const ApplyToSupervisor = () => {
                         {
                             state === 1 ?
 
-                                <div className='container my-4 py-3 w-100'>
+                                <div className='container my-4 py-3 w-100' style={{ border: "0.2px solid gray" }}>
                                     {/* <h4 className='text-center text-primary mb-4'>My Applications</h4> */}
                                     {proposals.length === 0 ?
                                         <div className=' d-flex justify-content-center align-items-center half-height' >

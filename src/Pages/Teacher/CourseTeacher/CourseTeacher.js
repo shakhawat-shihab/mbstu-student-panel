@@ -6,9 +6,9 @@ import Swal from 'sweetalert2';
 import useAuth from '../../../Hooks/useAuth';
 import Application from '../../Students/Application/Application';
 import './CourseTeacher.css';
-
 import CourseTeacherMarksModal from './CourseTeacherMarksModal';
 import MarkModal from './MarkModal';
+
 const CourseTeacher = () => {
     const [state, setState] = useState(1);
     const { courseId } = useParams();
@@ -147,7 +147,7 @@ const CourseTeacher = () => {
         })
     }
 
-    console.log('state ', state)
+    // console.log('state ', state)
     const onSubmit = data => {
         //setSubmitClick(!submitClick);
         // trimming all properties of data
@@ -516,7 +516,7 @@ const CourseTeacher = () => {
                                             :
                                             <div className='container'>
                                                 <div className='mt-4' >
-                                                    <Nav justify variant="pills" defaultActiveKey="1" >
+                                                    <Nav justify variant="pills" defaultActiveKey="1">
                                                         <Nav.Item>
                                                             <Nav.Link onClick={() => { setState(1) }} eventKey="1" >Marks Assign</Nav.Link>
                                                         </Nav.Item>
@@ -605,7 +605,7 @@ const CourseTeacher = () => {
                                             </div>
 
                                             :
-                                            <div className='mt-4'>
+                                            <div className='container mt-5' style={{ border: "0.2px solid gray" }}>
                                                 <h3 className='my-5 text-center '>Students Applications</h3>
                                                 {
                                                     proposals?.length === 0 ?
@@ -615,7 +615,7 @@ const CourseTeacher = () => {
                                                         :
                                                         proposals?.map(x => <Application
                                                             // proposal={setProposalChange}
-                                                            key={x._id} applicationDetais={x}
+                                                            key={x._id} applicationDetails={x}
                                                         // handleAccept={handleAccept}
                                                         // handleReject={handleReject}
                                                         >
