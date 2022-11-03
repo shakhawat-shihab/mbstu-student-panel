@@ -3,6 +3,10 @@
     border-width: 0px
 }
 
+.half-height {
+    height: 50vh
+}
+
 .design {
     background-color: white;
     border-width: 1px

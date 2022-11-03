@@ -10,25 +10,25 @@ import ResultSheetModal from './ResultSheetModal';
 const ResultSheet = () => {
     const { semesterId } = useParams();
     const [semesterInfo, setSemesterInfo] = useState({});
-    const [courseId, setCourseId] = useState('');
+    // const [courseId, setCourseId] = useState('');
     const [marks, setMarks] = useState([]);
     const [processedResult, setProcessedResult] = useState([]);
     const [processNewMark, setProcessNewMarks] = useState(true);
     const [offeredCredit, setOfferedCredit] = useState(0);
     const [publishResultData, setPublishResultData] = useState({});
     const [studentsProfilesIds, setStudentsProfilesIds] = useState([]);
-    const [courses, setCourses] = useState([]);
-    const { history } = useHistory();
-    const { user } = useAuth();
+    // const [courses, setCourses] = useState([]);
+    // const { history } = useHistory();
+    // const { user } = useAuth();
     const [showModal, setShowModal] = useState(false);
-    const email = user?.email;
-    const [semester, setSemester] = useState({});
+    // const email = user?.email;
+    // const [semester, setSemester] = useState({});
 
-    const [totalCredit, setTotalCredit] = useState(0);
-    const [studentResult, setStudentResult] = useState([]);
+    // const [totalCredit, setTotalCredit] = useState(0);
+    // const [studentResult, setStudentResult] = useState([]);
     // console.log('semesterId ', semesterId);
 
-    const [info, setInfo] = useState();
+    // const [info, setInfo] = useState();
     const Toast = Swal.mixin({
         toast: true,
         position: 'bottom-end',
@@ -51,7 +51,7 @@ const ResultSheet = () => {
             .then(res => res.json())
             .then(info => {
                 console.log('semester and marks = ', info);
-                setInfo(info);
+                // setInfo(info);
                 setSemesterInfo(info?.data?.semester)
                 setMarks(info?.data?.marks)
                 setProcessNewMarks(!processNewMark)
@@ -244,12 +244,13 @@ const ResultSheet = () => {
                 objForResultCourses[`${x?.courseCode}`] = objForResultCourse;
 
             })
+            objForResultCourses[`creditEarned`] = creditEarned;
             objForResultStudents[`${marksOfSingleStudent?._id?.id}`] = objForResultCourses;
 
             let CGPA = 0;
             creditEarned && (CGPA = sumOfGPA / creditEarned);
 
-            if (creditEarned < 2) {
+            if (creditEarned == 0) {
                 supObj.remarks = 'Not Promoted'
             }
             else {
@@ -277,6 +278,8 @@ const ResultSheet = () => {
         // console.log('marks ==  ', marks)
         // console.log('publishResultData ==  ', publishResultData);
         const resultToPublish = {}
+        resultToPublish.semesterId = semesterId;
+        resultToPublish.semesterCode = semesterInfo.semesterCode;
         resultToPublish.students = publishResultData;
         resultToPublish.profileIdarray = studentsProfilesIds;
 
@@ -292,6 +295,12 @@ const ResultSheet = () => {
             .then(res => res.json())
             .then(info => {
                 console.log("info after result publish ", info);
+                if (info.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: info.message
+                    })
+                }
             });
     }
 
@@ -300,10 +309,11 @@ const ResultSheet = () => {
         <div>
             <div className='container shadow-lg w-75 my-5 py-2'>
                 <ResultSheetModal
-                    semester={semester} studentResult={studentResult} showModal={showModal} setShowModal={setShowModal}
-                    processedResult={processedResult} offeredCredit={offeredCredit} info={info} checkGpa={checkGpa}
+                    showModal={showModal} setShowModal={setShowModal}
+                    processedResult={processedResult} offeredCredit={offeredCredit} info={semesterInfo} checkGpa={checkGpa}
                 />
-                <h5 className='text-center mb-5 mt-4 fw-bold'>{info?.data?.semester?.department?.toUpperCase()} {info?.data?.semester?.name} {info?.data?.semester?.degree} Final Examination Result</h5>
+                <h5 className='text-center mb-5 mt-4 fw-bold'>{semesterInfo.department?.toUpperCase()} {semesterInfo?.name} {semesterInfo.degree} Final Examination Result</h5>
+                {/* <h4>{semesterInfo.semesterCode}</h4> */}
                 <Table responsive striped bordered hover>
                     <col width="11%" />
                     <col width="30%" />
@@ -378,9 +388,9 @@ const ResultSheet = () => {
                                     <td style={{ border: "1px solid black" }}>{x.cgpa}</td>
                                     <td style={{ border: "1px solid black" }}>{checkGpa(x.cgpa)}</td>
                                     {
-                                        (x.totalCreditTaken >= offeredCredit)
+                                        (x.totalCreditTaken === offeredCredit)
                                         &&
-                                        <td style={{ border: "1px solid black" }}>{x.remarks && <span>{x.remarks}</span>}</td>
+                                        <td style={{ border: "1px solid black" }}>{x?.remarks}</td>
                                     }
                                 </tr>
                             )

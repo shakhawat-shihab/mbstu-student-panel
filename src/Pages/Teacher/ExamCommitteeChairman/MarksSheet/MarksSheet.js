@@ -108,6 +108,7 @@ const MarksSheet = () => {
             const obj = {}
             obj.id = marksOfSingleStudent.id;
             obj.name = marksOfSingleStudent?.studentProfileId?.firstName + ' ' + marksOfSingleStudent?.studentProfileId?.lastName;
+            obj.isPaid = marksOfSingleStudent?.isPaid;
             if (marks.type === 'theory') {
                 let cnt = 0;
                 let sum = 0;

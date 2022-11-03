@@ -1,3 +1,7 @@
 .input-color-inherit {
     background-color: inherit;
 }
+
+.half-height {
+    height: 50vh
+}

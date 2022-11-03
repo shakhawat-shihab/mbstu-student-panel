@@ -92,24 +92,32 @@ const ResultSheetModal = (props) => {
                                             <td style={{ border: "0.5px solid black" }}>{x.id.toUpperCase()}</td>
                                             <td style={{ border: "0.5px solid black" }}>{x.name}</td>
                                             <td style={{ border: "0.5px solid black" }}>{x.creditEarned}</td>
-                                            <td style={{ border: "0.5px solid black" }}>{x.creditLost + ' '}
-                                                (
+                                            <td style={{ border: "0.5px solid black" }}>
                                                 {
-                                                    x?.failedCourses?.map(y => {
-                                                        return (<>
-                                                            <span>{y.toUpperCase()}</span>
-                                                            <span>
-                                                                {
-                                                                    y != x.failedCourses[x.failedCourses.length - 1]
-                                                                    &&
-                                                                    `, `
-                                                                }
-                                                            </span>
-                                                        </>)
+                                                    x?.creditLost !== 0
+                                                    &&
+                                                    <>
+                                                        {x.creditLost + ' '}
+                                                        (
+                                                        {
+                                                            x?.failedCourses?.map(y => {
+                                                                return (<span key={y} >
+                                                                    <span>{y.toUpperCase()}</span>
+                                                                    <span>
 
-                                                    })
+                                                                        {
+                                                                            y !== x?.failedCourses[x?.failedCourses.length - 1]
+                                                                            &&
+                                                                            `, `
+                                                                        }
+
+                                                                    </span>
+                                                                </span>)
+                                                            })
+                                                        }
+                                                        )
+                                                    </>
                                                 }
-                                                )
                                             </td>
                                             <td style={{ border: "0.5px solid black" }}>{x.cgpa}</td>
                                             <td style={{ border: "0.5px solid black" }}>{checkGpa(x.cgpa)}</td>
