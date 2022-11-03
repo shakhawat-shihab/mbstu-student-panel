@@ -13,14 +13,14 @@ const ResultSheetModal = (props) => {
     const { user } = useAuth();
 
     // console.log("result semester == ", semester)
-    console.log('processed result ==== ', processedResult);
-    console.log("infoooo === ", info);
+    // console.log('processed result ==== ', processedResult);
+    // console.log("infoooo === ", info);
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
         // return false;
-        html2pdf().from(selected).save(`${info?.data?.semester?.name}_result.pdf`);
+        html2pdf().from(selected).save(`${info?.name}_result.pdf`);
 
     }
     return (
@@ -48,10 +48,10 @@ const ResultSheetModal = (props) => {
                     <div id="selectedPortion" className='px-5 py-2 my-5'>
                         <div className='container-fluid w-100'>
                             <h4 className='text-center mt-4 mb-4 fw-bold'><u>Notice</u></h4>
-                            <p style={{ fontSize: "1rem" }} className='mb-4'>It is notified that the results of {info?.data?.semester?.name} B.Sc (Engg.) Final Examination (session: {info?.data?.semester?.session}) Department of {checkDepartmentName(user?.department)} are provisionally published as follows.</p>
+                            <p style={{ fontSize: "1rem" }} className='mb-4'>It is notified that the results of {info?.name} B.Sc (Engg.) Final Examination (session: {info?.session}) Department of {checkDepartmentName(user?.department)} are provisionally published as follows.</p>
                             <p style={{ fontSize: "1rem" }}>The University reserves the right to correct or amend the results, if necessary.</p>
                         </div>
-                        <h5 className='text-center mb-1 mt-5 fw-bold'>{user?.department?.toUpperCase()} {info?.data?.semester?.name} B.Sc(Engg.) Final Examination Result</h5>
+                        <h5 className='text-center mb-1 mt-5 fw-bold'>{user?.department?.toUpperCase()} {info?.name} B.Sc(Engg.) Final Examination Result</h5>
                         <div className='container-fluid w-100 my-5 py-2'>
                             <Table responsive bordered className='text-center' >
                                 <col width="11%" />
