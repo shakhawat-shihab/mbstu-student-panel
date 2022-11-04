@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 
-const CourseApplication = () => {
+const ChairmanCourseRegistration = () => {
     const { url } = useRouteMatch();
     const [applications, setApplications] = useState();
     // const history = useHistory();
@@ -66,4 +66,4 @@ const CourseApplication = () => {
     );
 };
 
-export default CourseApplication;
+export default ChairmanCourseRegistration;

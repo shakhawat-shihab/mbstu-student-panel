@@ -8,9 +8,9 @@ import checkDepartmentNameFromIdCode from '../../../Functions/IdCodeToDeptName';
 import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
 // import Application from '../Application/Application';
-import BacklogCourseRegistration from './BacklogCourseRegistration/BacklogCourseRegistration';
-import './CourseRegistration.css'
-const CourseRegistration = () => {
+// import BacklogCourseRegistration from './BacklogCourseRegistration/BacklogCourseRegistration';
+import './CourseRegistrationForm.css'
+const CourseRegistrationForm = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const history = useHistory()
     const { user } = useAuth();
@@ -449,4 +449,4 @@ const CourseRegistration = () => {
     );
 };
 
-export default CourseRegistration;
+export default CourseRegistrationForm;

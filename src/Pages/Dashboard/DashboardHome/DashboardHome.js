@@ -1,47 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import { MdEdit } from "react-icons/md";
-import { AiFillCheckSquare } from "react-icons/ai"
 import { Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import './DashboardHome.css';
 
+import studentImage from '../../../images/student.png';
+import teacherImage from '../../../images/teacher.png';
+import userImage from '../../../images/user.png';
+
 const DashboardHome = () => {
 
-    const { user, student, teacher } = useAuth();
+    const { user } = useAuth();
+
+    const [profile, setProfile] = useState()
 
     const history = useHistory();
-    const id = "CE17050"
-    const name = "Jubair Ahmed Khan";
-    const email = "jubair.mbstu@gmail.com";
-    const phone = "01601293123";
-    const address = "9/A, Mohammadi Road, Sontek, Jatrabari, Dhaka-1236";
-    const hall = "JAMH";
-    const session = "2016-17";
-    const designation = "Assistant Professor";
-    const field = ['Artificial Intelligence', 'Machine Learning', 'Image Processing', 'Natural Language Processing'];
+    // const id = "CE17050"
+    // const name = "Jubair Ahmed Khan";
+    // const email = "jubair.mbstu@gmail.com";
+    // const phone = "01601293123";
+    // const address = "9/A, Mohammadi Road, Sontek, Jatrabari, Dhaka-1236";
+    // const hall = "JAMH";
+    // const session = "2016-17";
+    // const designation = "Assistant Professor";
+    // const field = ['Artificial Intelligence', 'Machine Learning', 'Image Processing', 'Natural Language Processing'];
 
-    //console.log(user);
-    ///console.log(student);
-    //console.log(teacher);
+    console.log("useeer === ", user);
 
-    let userPhoto = "https://i.ibb.co/FmK44jt/blank-user.png";
+    let userPhoto = userImage;
 
-
-
-    if (user?.isStudent) {
-        // userPhoto = "https://i.ibb.co/6HBxzwW/student.png";
-        userPhoto = "https://i.ibb.co/QJn9RVQ/student.png";
-        // const { first_name, last_name, email, phone, address, hall, session } = student;
-
-    }
+    if (user?.isStudent)
+        userPhoto = studentImage;
 
     if (user?.isTeacher)
-        // userPhoto = "https://i.ibb.co/ScpX2fD/teacher.png";
-        userPhoto = "https://i.ibb.co/WFx7JDb/teacher.png";
+        userPhoto = teacherImage;
 
-    if (user?.imageURL)
-        userPhoto = user?.photoURL;
+
     // const { first_name, last_name, email, phone, address, designation, field } = teacher;
 
     // const email = 'lubnaju@yahoo.com';
@@ -55,6 +50,23 @@ const DashboardHome = () => {
     //             // seTakenCourses(data);
     //         })
     // }, [])
+
+    useEffect(() => {
+        //console.log('email ', email);
+        fetch('http://localhost:5000/api/v1/profile', {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+        })
+            .then(res => res.json())
+            .then(info => {
+                setProfile(info?.data)
+                // console.log('my-profile === ', info);
+                // console.log('email', email);
+                // seTakenCourses(data);
+            })
+    }, [])
 
     const handleEdit = () => {
         history.push('/dashboard/profile');
@@ -83,7 +95,7 @@ const DashboardHome = () => {
                         <div className='mb-3 text-center'>
 
                             <>
-                                <img src={userPhoto} alt="img of user" style={{ borderRadius: "50%" }} className="img-fluid mx-auto" width="150px" />
+                                <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%" }} className="img-fluid mx-auto" width="150px" />
                             </>
 
                         </div>
@@ -94,125 +106,89 @@ const DashboardHome = () => {
                     </div>
                     <div className='col mt-2 ms-3 mb-4 py-2'>
                         {
-                            student &&
-                            <div className=''>
+                            user?.isStudent &&
+                            <div>
                                 <h6 className='text-muted'>Student ID:</h6>
-                                <p>{id}</p>
+                                <p>{profile?.id?.toUpperCase()}</p>
                             </div>
                         }
 
                         <div>
                             <h6 className='text-muted'>Full name:</h6>
                             {
-                                name ?
-                                    <>
-                                        <p>{name}</p>
-                                    </>
-                                    :
-                                    <>
-                                        <p>{user?.displayName}</p>
-                                    </>
+                                <p>{profile?.firstName + " " + profile?.lastName}</p>
                             }
                         </div>
 
 
                         <div>
                             <h6 className='text-muted'>Email Address:</h6>
-                            {
-                                email ?
-                                    <>
-                                        <p>{email}</p>
-                                    </>
-                                    :
-                                    <>
-                                        <p>{user?.email}</p>
-                                    </>
-                            }
-
-                        </div>
-
-
-                        <div>
-                            <h6 className='text-muted'>Phone:</h6>
-                            {
-                                phone &&
-                                <>
-                                    <p>{phone}</p>
-                                </>
-                            }
-
-                        </div>
-
-                        <div>
-                            <h6 className='text-muted'>Address:</h6>
-                            {
-                                address &&
-                                <>
-                                    <p>{address}</p>
-                                </>
-                            }
-
+                            <p>{profile?.email}</p>
                         </div>
 
                         {
-                            student &&
+                            profile?.address &&
                             <div>
-                                <h6 className='text-muted'>Hall:</h6>
-                                {
-                                    hall &&
-                                    <>
-                                        <p>{hall}</p>
-                                    </>
-                                }
-
+                                <h6 className='text-muted'>Address:</h6>
+                                <p>{profile?.address}</p>
                             </div>
                         }
 
+                        {
+                            profile?.contactNumber &&
+                            <div>
+                                <h6 className='text-muted'>Phone:</h6>
+                                <p>{profile?.contactNumber}</p>
+                            </div>
+
+                        }
 
                         {
-                            student &&
+                            user?.isStudent &&
                             <div>
                                 <h6 className='text-muted'>Session:</h6>
-                                {
-                                    session &&
-                                    <>
-                                        <p>{session}</p>
-                                    </>
-                                }
-
+                                <p>{profile?.session}</p>
                             </div>
                         }
 
                         {
-                            teacher &&
+                            user?.isStudent &&
                             <div>
-                                <h6 className='text-muted'>Designation:</h6>
-                                {
-                                    designation &&
-                                    <>
-                                        <p>{designation}</p>
-                                    </>
-                                }
-
+                                <h6 className='text-muted'>Hall:</h6>
+                                <p>{user?.hall?.name}</p>
                             </div>
                         }
 
                         {
-                            teacher &&
-                            <div>
-                                <h6 className='text-muted'>Field of interest:</h6>
-                                {
-                                    field &&
-                                    <>
-                                        <div className='row row-cols-lg-4 row-cols-md-3 row-cols-sm-1'>
-                                            {
-                                                field.map(x => <div><span className='text-success me-2'><AiFillCheckSquare></AiFillCheckSquare></span>{x}</div>)
-                                            }
-                                        </div>
-                                    </>
-                                }
+                            // user?.isTeacher &&
+                            // <div>
+                            //     <h6 className='text-muted'>Designation:</h6>
+                            //     {
+                            //         designation &&
+                            //         <>
+                            //             <p>{designation}</p>
+                            //         </>
+                            //     }
 
-                            </div>
+                            // </div>
+                        }
+
+                        {
+                            // user?.isTeacher &&
+                            // <div>
+                            //     <h6 className='text-muted'>Field of interest:</h6>
+                            //     {
+                            //         field &&
+                            //         <>
+                            //             <div className='row row-cols-lg-4 row-cols-md-3 row-cols-sm-1'>
+                            //                 {
+                            //                     field.map(x => <div><span className='text-success me-2'><AiFillCheckSquare></AiFillCheckSquare></span>{x}</div>)
+                            //                 }
+                            //             </div>
+                            //         </>
+                            //     }
+
+                            // </div>
                         }
                     </div>
                 </div>

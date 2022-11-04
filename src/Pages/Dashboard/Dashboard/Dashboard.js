@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, ListGroup, Offcanvas } from 'react-bootstrap';
 import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
-import CourseRegistration from '../../Students/CourseRegistration/CourseRegistration';
 import StudentRoute from '../../LogIn/LogIn/StudentRoute/StudentRoute';
 import TeacherRoute from '../../LogIn/LogIn/TeacherRoute/TeacherRoute';
 import DashboardHome from '../DashboardHome/DashboardHome';
@@ -23,10 +22,14 @@ import ExamCommitteeChairman from '../../Teacher/ExamCommitteeChairman/ExamCommi
 import MarksSheet from '../../Teacher/ExamCommitteeChairman/MarksSheet/MarksSheet';
 import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
 import MarksAssign from '../../Teacher/ExamCommittee/MarksAssign/MarksAssign';
-import CourseApplication from '../../DeptChairman/CourseAppliaction/CourseApplication';
 import ApplicationDetails from '../../DeptChairman/CourseAppliaction/ApplicationDetails/ApplicationDetails';
-import StudentProjectApplication from '../../Students/StudentProjectApplication/StudentProjectApplication';
-import StudentCourseApplication from '../../Students/StudentCourseApplication/StudentCourseApplication';
+import HallProvostRoute from '../../LogIn/LogIn/HallProvostRoute/HallProvostRoute';
+import AcademicCommitteeCourseRegistration from '../../AcademicCommittee/AcademicCommitteeCourseRegistration';
+import StudentCourseRegistration from '../../Students/StudentCourseRegistration/StudentCourseRegistration';
+import ChairmanCourseRegistration from '../../DeptChairman/CourseAppliaction/ChairmanCourseRegistration';
+import HallProvostCourseRegistration from '../../HallProvost/HallProvostCourseRegistration';
+import CourseRegistrationForm from '../../Students/CourseRegistrationForm/CourseRegistrationForm';
+
 
 const Dashboard = () => {
     const { user, isLoading, isLoadingRole } = useAuth();
@@ -72,19 +75,8 @@ const Dashboard = () => {
                                             <Link to={`${url}/project`}> Apply to Supervisor (S)</Link>
                                         </ListGroup.Item>
                                         <ListGroup.Item action >
-                                            <Link to={`${url}/course-application`}>Course Application (S)</Link>
+                                            <Link to={`${url}/course-registration-view`}>Course Applications (S)</Link>
                                         </ListGroup.Item>
-
-
-                                        {/* the below portion is added here just for testing purpose */}
-                                        {/* <ListGroup.Item action >
-                                            <Link to={`${url}/create-course`}>Create Course (C) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/create-semester`}> Create Semester (C) </Link>
-                                        </ListGroup.Item> */}
-
-
                                     </>
                                 }
                                 {
@@ -113,10 +105,24 @@ const Dashboard = () => {
                                         <ListGroup.Item action >
                                             <Link to={`${url}/create-course`}>Create Course (C) </Link>
                                         </ListGroup.Item>
-
-                                        {/* loading application testing (28-OcT) */}
                                         <ListGroup.Item action >
-                                            <Link to={`${url}/approve-course-registration`}>Approve Application (C) </Link>
+                                            <Link to={`${url}/approve-course-registration-dept`}>Approve Application (C) </Link>
+                                        </ListGroup.Item>
+                                    </>
+                                }
+                                {
+                                    user?.isHallProvost &&
+                                    <>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/approve-course-registration-hall`}> Approve Application (HP) </Link>
+                                        </ListGroup.Item>
+                                    </>
+                                }
+                                {
+                                    user?.isAcademicCommittee &&
+                                    <>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/approve-course-registration-academic`}> Approve Application (AC) </Link>
                                         </ListGroup.Item>
                                     </>
                                 }
@@ -135,10 +141,10 @@ const Dashboard = () => {
 
                 {/* student Routes */}
                 <StudentRoute path={`${path}/course-registration`}>
-                    <CourseRegistration></CourseRegistration>
+                    <CourseRegistrationForm></CourseRegistrationForm>
                 </StudentRoute>
-                <StudentRoute path={`${path}/course-application`}>
-                    <StudentCourseApplication></StudentCourseApplication>
+                <StudentRoute path={`${path}/course-registration-view`}>
+                    <StudentCourseRegistration></StudentCourseRegistration>
                 </StudentRoute>
                 <StudentRoute path={`${path}/project/apply-supervisor/:courseId`}>
                     <ApplyToSupervisor></ApplyToSupervisor>
@@ -179,12 +185,6 @@ const Dashboard = () => {
 
 
                 {/* department chairman Routes */}
-                {/* <DeptChairmanRoute path={`${path}/running-semesters/:semesterId/result-sheet`}>
-                    <ResultSheet></ResultSheet>
-                </DeptChairmanRoute>
-                <DeptChairmanRoute path={`${path}/running-semesters/:semesterId`}>
-                    <SemesterChairman></SemesterChairman>
-                </DeptChairmanRoute> */}
                 <DeptChairmanRoute path={`${path}/create-course`}>
                     <CreateCourse></CreateCourse>
                 </DeptChairmanRoute>
@@ -194,14 +194,24 @@ const Dashboard = () => {
                 <DeptChairmanRoute path={`${path}/add-teacher`}>
                     <AddTeacher></AddTeacher>
                 </DeptChairmanRoute>
-
-                {/* loading application testing (28-OcT) */}
-                <DeptChairmanRoute path={`${path}/approve-course-registration/:applicationId`}>
+                <DeptChairmanRoute path={`${path}/approve-course-registration-dept/:applicationId`}>
                     <ApplicationDetails></ApplicationDetails>
                 </DeptChairmanRoute>
-                <DeptChairmanRoute path={`${path}/approve-course-registration`}>
-                    <CourseApplication></CourseApplication>
+                <DeptChairmanRoute path={`${path}/approve-course-registration-dept`}>
+                    <ChairmanCourseRegistration></ChairmanCourseRegistration>
                 </DeptChairmanRoute>
+
+
+                {/* hall provost Routes */}
+                <HallProvostRoute path={`${path}/approve-course-registration-hall`}>
+                    <HallProvostCourseRegistration></HallProvostCourseRegistration>
+                </HallProvostRoute>
+
+
+                {/* academic committee Routes */}
+                <HallProvostRoute path={`${path}/approve-course-registration-academic`}>
+                    <AcademicCommitteeCourseRegistration></AcademicCommitteeCourseRegistration>
+                </HallProvostRoute>
 
 
 
