@@ -221,7 +221,7 @@ const CourseRegistration = () => {
                             (regularCourses == null && backlogCourses?.length == 0)
                                 ?
                                 <div className=' d-flex justify-content-center align-items-center half-height' >
-                                    <h5 className='text-center fs-2 text-danger fw-bold error-opacity' >Sorry, There is no running semester for you</h5>
+                                    <h5 className='text-center fs-2 text-secondary fw-bold error-opacity' >Sorry, There is no running semester for you</h5>
                                 </div>
                                 :
                                 <>

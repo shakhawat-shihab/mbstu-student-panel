@@ -4,13 +4,13 @@ import { useForm } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import useAuth from '../../../Hooks/useAuth';
-import Application from '../../Students/Application/Application';
+import TeacherProjectApplication from '../TeacherProjectApplication/TeacherProjectApplication';
 import './CourseTeacher.css';
 import CourseTeacherMarksModal from './CourseTeacherMarksModal';
 import MarkModal from './MarkModal';
 
 const CourseTeacher = () => {
-    const [state, setState] = useState(1);
+    const [state, setState] = useState('1');
     const { courseId } = useParams();
     // console.log('cours-----id ==== ', courseId);
     //console.log("semester-ID = ", semesterId);
@@ -20,6 +20,7 @@ const CourseTeacher = () => {
     const [isLoadingMarks, setIsLoadingMarks] = useState(true);
     const [isSaving, setIsSaving] = useState(true);
     const [proposals, setProposals] = useState([]);
+    const [proposalState, setProposalState] = useState(true);
     const [isLoadingProposals, setIsLoadingProposals] = useState(true);
     const [showModal, setShowModal] = useState(false);
 
@@ -86,8 +87,10 @@ const CourseTeacher = () => {
 
 
     useEffect(() => {
+        console.log(courseId, marks, proposalState)
         if (marks?.type === 'project') {
             setIsLoadingProposals(true)
+            console.log('state ', state);
             fetch(`http://localhost:5000/api/v1/project-application/proposal-for-teacher/${courseId}`, {
                 headers: {
                     'Content-type': 'application/json',
@@ -96,13 +99,13 @@ const CourseTeacher = () => {
             })
                 .then(res => res.json())
                 .then(proposal => {
-                    console.log("proposal ", proposal);
+                    console.log("proposal =====> ", proposal);
                     setProposals(proposal.data);
                     setIsLoadingProposals(false)
                 })
         }
 
-    }, [courseId, state, marks])
+    }, [courseId, marks, proposalState])
 
 
     const submitAllMarksCourseTeacher = () => {
@@ -225,7 +228,7 @@ const CourseTeacher = () => {
                                             <div className=' '>
                                                 <h3 className='text-center mb-3' >Assign Marks</h3>
                                                 <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode?.toUpperCase()}</p>
                                                 <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                             </div>
                                             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -390,7 +393,7 @@ const CourseTeacher = () => {
                                             <div className=' '>
                                                 <h3 className='text-center mb-3' >Assign Marks</h3>
                                                 <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode?.toUpperCase()}</p>
                                                 <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                             </div>
                                             <Form onSubmit={handleSubmit(onSubmit)}>
@@ -518,10 +521,10 @@ const CourseTeacher = () => {
                                                 <div className='mt-4' >
                                                     <Nav justify variant="pills" defaultActiveKey="1">
                                                         <Nav.Item>
-                                                            <Nav.Link onClick={() => { setState(1) }} eventKey="1" >Marks Assign</Nav.Link>
+                                                            <Nav.Link onClick={() => { setState('1') }} eventKey="1" >Marks Assign</Nav.Link>
                                                         </Nav.Item>
                                                         <Nav.Item>
-                                                            <Nav.Link onClick={() => { setState(2) }} eventKey="link-1" >Student Application</Nav.Link>
+                                                            <Nav.Link onClick={() => { setState('2') }} eventKey="2" >Student Application</Nav.Link>
                                                         </Nav.Item>
                                                     </Nav>
                                                 </div>
@@ -529,9 +532,12 @@ const CourseTeacher = () => {
                                     }
 
                                     {
+                                        console.log('inside state    e2r     ', state)
+                                    }
+                                    {
 
 
-                                        state === 1
+                                        state == '1'
                                             ?
                                             <div className='container'>
                                                 <div className='container-fluid shadow-lg  rounded  my-5 mx-4'>
@@ -539,7 +545,7 @@ const CourseTeacher = () => {
                                                         <div className=' '>
                                                             <h3 className='text-center mb-3' >Assign Marks</h3>
                                                             <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode?.toUpperCase()}</p>
                                                             <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                                         </div>
 
@@ -603,23 +609,25 @@ const CourseTeacher = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
                                             :
-                                            <div className='container mt-5' style={{ border: "0.2px solid gray" }}>
-                                                <h3 className='my-5 text-center '>Students Applications</h3>
+
+
+                                            < div >
+
                                                 {
-                                                    proposals?.length === 0 ?
+                                                    proposals?.length === 0
+                                                        ?
                                                         <div className=' d-flex justify-content-center align-items-center half-height' >
-                                                            <h5 className='text-center fs-2 text-danger my-4 fw-bold error-opacity' >You have no Student application</h5>
+                                                            <h5 className='text-center fs-2 text-secondary my-4 fw-bold error-opacity' >You have no Student application</h5>
                                                         </div>
                                                         :
-                                                        proposals?.map(x => <Application
-                                                            // proposal={setProposalChange}
-                                                            key={x._id} applicationDetails={x}
-                                                        // handleAccept={handleAccept}
-                                                        // handleReject={handleReject}
-                                                        >
-                                                        </Application >)
+                                                        <div className='container my-5 py-3' style={{ borderRight: "0.2px solid gray", borderLeft: "0.2px solid gray" }}>
+                                                            <h3 className='mb-5 pb-5 text-center '>Students Applications</h3>
+                                                            {
+                                                                proposals?.map(x => <TeacherProjectApplication setProposalState={setProposalState} proposalState={proposalState} key={x._id} applicationDetails={x}>
+                                                                </TeacherProjectApplication >)
+                                                            }
+                                                        </div>
                                                 }
                                             </div>
 

@@ -25,6 +25,8 @@ import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultS
 import MarksAssign from '../../Teacher/ExamCommittee/MarksAssign/MarksAssign';
 import CourseApplication from '../../DeptChairman/CourseAppliaction/CourseApplication';
 import ApplicationDetails from '../../DeptChairman/CourseAppliaction/ApplicationDetails/ApplicationDetails';
+import StudentProjectApplication from '../../Students/StudentProjectApplication/StudentProjectApplication';
+import StudentCourseApplication from '../../Students/StudentCourseApplication/StudentCourseApplication';
 
 const Dashboard = () => {
     const { user, isLoading, isLoadingRole } = useAuth();
@@ -68,6 +70,9 @@ const Dashboard = () => {
                                         </ListGroup.Item>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/project`}> Apply to Supervisor (S)</Link>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/course-application`}>Course Application (S)</Link>
                                         </ListGroup.Item>
 
 
@@ -131,6 +136,9 @@ const Dashboard = () => {
                 {/* student Routes */}
                 <StudentRoute path={`${path}/course-registration`}>
                     <CourseRegistration></CourseRegistration>
+                </StudentRoute>
+                <StudentRoute path={`${path}/course-application`}>
+                    <StudentCourseApplication></StudentCourseApplication>
                 </StudentRoute>
                 <StudentRoute path={`${path}/project/apply-supervisor/:courseId`}>
                     <ApplyToSupervisor></ApplyToSupervisor>

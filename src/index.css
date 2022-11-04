@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.half-height {
+  height: 50vh
+}
+
+.error-opacity {
+  opacity: 0.85;
+}

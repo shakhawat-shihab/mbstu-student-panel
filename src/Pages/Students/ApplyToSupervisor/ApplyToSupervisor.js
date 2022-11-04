@@ -5,7 +5,8 @@ import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import checkDepartmentNameFromIdCode from '../../../Functions/IdCodeToDeptName';
 import useAuth from '../../../Hooks/useAuth';
-import Application from '../Application/Application';
+import StudentProjectApplication from '../StudentProjectApplication/StudentProjectApplication';
+// import Application from '../StudentProjectApplication/StudentProjectApplication';
 import './ApplyToSupervisor.css'
 
 const ApplyToSupervisor = () => {
@@ -184,16 +185,16 @@ const ApplyToSupervisor = () => {
                         {
                             state === 1 ?
 
-                                <div className='container my-4 py-3 w-100' style={{ border: "0.2px solid gray" }}>
-                                    {/* <h4 className='text-center text-primary mb-4'>My Applications</h4> */}
+                                <div className='container my-5 py-3 w-100' style={{ borderRight: "0.2px solid gray", borderLeft: "0.2px solid gray" }}>
+                                    <h3 className='text-center mb-5 pb-5'>My Project Application</h3>
                                     {proposals.length === 0 ?
                                         <div className=' d-flex justify-content-center align-items-center half-height' >
-                                            <h5 className='text-center fs-2 text-danger my-4 fw-bold error-opacity' >You have no Project application</h5>
+                                            <h5 className='text-center fs-2 text-secondary my-4 fw-bold error-opacity' >You have no Project application</h5>
                                         </div>
 
                                         :
                                         proposals.map(x =>
-                                            <Application key={x._id} applicationDetails={x}></Application>)
+                                            <StudentProjectApplication key={x._id} applicationDetails={x}></StudentProjectApplication>)
 
                                     }
                                 </div>
