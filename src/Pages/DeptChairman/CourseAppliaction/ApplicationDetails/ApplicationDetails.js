@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import Swal from 'sweetalert2';
 // import { FcApproval } from "react-icons/fc"
 // import { MdPendingActions } from "react-icons/md"
 
 const ApplicationDetails = () => {
     const { applicationId } = useParams();
-
+    const history = useHistory();
     const [application, setApplication] = useState({});
-
     const [comment, setComment] = useState();
 
-    console.log("My application === ", application);
+    // console.log("My application === ", application);
 
     const Toast = Swal.mixin({
         toast: true,
@@ -82,6 +82,7 @@ const ApplicationDetails = () => {
                         icon: 'success',
                         title: data.message
                     })
+                    history.replace('/dashboard/approve-course-registration-dept')
                 }
                 else {
                     Toast.fire({
