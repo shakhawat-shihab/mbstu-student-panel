@@ -76,7 +76,7 @@ const CreateSemester = () => {
         console.log("on Submit Data ", data);
 
         let semester = {
-            session: data.session,
+            // session: data.session,
             semesterCode: parseInt(data.semesterCode),
             name: data.name,
             isRunning: true
@@ -185,7 +185,7 @@ const CreateSemester = () => {
                     </Form.Select>
                     <span style={errors.semester ? visibile : invisibile} className='text-danger ps-2 ' >* Chose Semester</span>
                 </Form.Group>
-                <Form.Group className="mb-1 w-100 mx-auto">
+                {/* <Form.Group className="mb-1 w-100 mx-auto">
                     <Form.Label className='text-primary'>Session:</Form.Label>
                     <br></br>
                     <Form.Select {...register("session", { required: true })}>
@@ -199,7 +199,7 @@ const CreateSemester = () => {
                         <option value="2021-22">2021-22</option>
                     </Form.Select>
                     <span style={errors.session ? visibile : invisibile} className='text-danger ps-2' >* Chose Session</span>
-                </Form.Group>
+                </Form.Group> */}
                 <Form.Group className="mb-1 w-100 mx-auto">
                     <Form.Label className='text-primary'>Degree: </Form.Label>
                     <br></br>

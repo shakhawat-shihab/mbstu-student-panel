@@ -221,7 +221,7 @@ const ResultSheet = () => {
                     objForResultCourse.labFourty = labExperiment;
                 }
                 else if (x?.type === 'project') {
-                    const { projectClassPerformance, projectPresentation } = x;
+                    const { projectClassPerformance = 0, projectPresentation = 0 } = x;
                     totalMarks = parseInt(projectClassPerformance + projectPresentation);
                     objForResultCourse.projectSeventy = projectClassPerformance;
                     objForResultCourse.projectThirty = projectPresentation;

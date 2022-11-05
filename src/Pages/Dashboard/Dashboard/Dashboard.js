@@ -29,6 +29,7 @@ import StudentCourseRegistration from '../../Students/StudentCourseRegistration/
 import ChairmanCourseRegistration from '../../DeptChairman/CourseAppliaction/ChairmanCourseRegistration';
 import HallProvostCourseRegistration from '../../HallProvost/HallProvostCourseRegistration';
 import CourseRegistrationForm from '../../Students/CourseRegistrationForm/CourseRegistrationForm';
+import ViewResult from '../../Students/ViewResult/ViewResult';
 
 
 const Dashboard = () => {
@@ -77,6 +78,10 @@ const Dashboard = () => {
                                         <ListGroup.Item action >
                                             <Link to={`${url}/course-registration-view`}>Course Applications (S)</Link>
                                         </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/view-result`}>My  Result (S)</Link>
+                                        </ListGroup.Item>
+
                                     </>
                                 }
                                 {
@@ -152,6 +157,9 @@ const Dashboard = () => {
                 <StudentRoute path={`${path}/project`}>
                     <Projects></Projects>
                 </StudentRoute>
+                <StudentRoute path={`${path}/view-result`}>
+                    <ViewResult></ViewResult>
+                </StudentRoute>
 
 
                 {/* teacher Routes */}
@@ -203,17 +211,17 @@ const Dashboard = () => {
 
 
                 {/* hall provost Routes */}
+
                 <HallProvostRoute path={`${path}/approve-course-registration-hall`}>
                     <HallProvostCourseRegistration></HallProvostCourseRegistration>
                 </HallProvostRoute>
 
 
                 {/* academic committee Routes */}
+
                 <HallProvostRoute path={`${path}/approve-course-registration-academic`}>
                     <AcademicCommitteeCourseRegistration></AcademicCommitteeCourseRegistration>
                 </HallProvostRoute>
-
-
 
 
             </Switch>

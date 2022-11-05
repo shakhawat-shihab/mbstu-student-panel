@@ -119,6 +119,7 @@ const ApplicationDetails = () => {
                         icon: 'success',
                         title: data.message
                     })
+                    history.replace('/dashboard/approve-course-registration-dept')
                 }
                 else {
                     Toast.fire({
