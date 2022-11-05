@@ -3,12 +3,9 @@ import { Form, Spinner, Table } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
-// import checkHallName from '../../../Functions/HallCodeToHaLLName';
 import checkDepartmentNameFromIdCode from '../../../Functions/IdCodeToDeptName';
 import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
-// import Application from '../Application/Application';
-// import BacklogCourseRegistration from './BacklogCourseRegistration/BacklogCourseRegistration';
 import './CourseRegistrationForm.css'
 const CourseRegistrationForm = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -52,10 +49,20 @@ const CourseRegistrationForm = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/student-result/get-semester-code/${user?.profileId}`)
+        fetch(`http://localhost:5000/api/v1/student-result/get-semester-code`, {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            }
+        })
             .then(res => res.json())
             .then(result => {
-                fetch(`http://localhost:5000/api/v1/course-application/total-credit-taken/${user?.profileId}`)
+                fetch(`http://localhost:5000/api/v1/course-application/total-credit-taken`, {
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+                    }
+                })
                     .then(res => res.json())
                     .then(info => {
 
@@ -164,6 +171,14 @@ const CourseRegistrationForm = () => {
         application.regularCourses = regular;
         application.backlogCourses = backlog;
 
+        if (regular?.length === 0 && backlog?.length === 0) {
+            Toast.fire({
+                icon: 'error',
+                title: 'Select some course!'
+            })
+            return;
+        }
+
 
         data.regularCourses = regularCourses.map(c => c._id)
         console.log('form to push ', application);
@@ -172,7 +187,8 @@ const CourseRegistrationForm = () => {
             fetch('http://localhost:5000/api/v1/course-application/create', {
                 method: 'post',
                 headers: {
-                    'content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
                 },
                 body: JSON.stringify(application)
             })
@@ -189,7 +205,7 @@ const CourseRegistrationForm = () => {
                     }
                     else {
                         Toast.fire({
-                            icon: 'success',
+                            icon: 'error',
                             title: 'Registration failed.'
                         })
                     }

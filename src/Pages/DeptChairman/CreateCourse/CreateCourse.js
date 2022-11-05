@@ -102,7 +102,8 @@ const CreateCourse = () => {
         fetch('http://localhost:5000/api/v1/course/create', {
             method: 'post',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
             },
             body: JSON.stringify(course)
         })

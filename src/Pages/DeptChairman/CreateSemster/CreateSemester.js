@@ -57,7 +57,12 @@ const CreateSemester = () => {
     }, [])
     useEffect(() => {
         if (semester != '') {
-            fetch(`http://localhost:5000/api/v1/course/${semester}`)
+            fetch(`http://localhost:5000/api/v1/course/${semester}`, {
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+                },
+            })
                 .then(res => res.json())
                 .then(info => {
                     // console.log("courses of selected semester ", info.data);
@@ -134,7 +139,8 @@ const CreateSemester = () => {
         fetch('http://localhost:5000/api/v1/semester', {
             method: 'post',
             headers: {
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
             },
             body: JSON.stringify(semester)
         })
