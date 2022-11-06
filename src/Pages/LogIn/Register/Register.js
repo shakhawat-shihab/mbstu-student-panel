@@ -11,8 +11,7 @@ import useAuth from '../../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 // import { getAuth, updateProfile } from 'firebase/auth';
 import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
-// import useM from '../../../api/apiAuth';
-import apiAuth from '../../../api/apiAuth';
+import logoSrc from '../../../images/login-logo.png'
 import useMongoose from '../../../Hooks/useMongoose';
 // import { register } from '../../../api/apiAuth';
 const Register = () => {
@@ -33,7 +32,7 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [visibleConfirmPassword, setVisibleConfirmPassword] = useState(false);
     const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
-    const logoSrc = "https://i.ibb.co/fFWMnnd/login-logo.png";
+    // const logoSrc = "https://i.ibb.co/fFWMnnd/login-logo.png";
     const { user } = useAuth();
     const history = useHistory();
     if (user.email) {

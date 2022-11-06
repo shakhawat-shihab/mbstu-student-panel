@@ -22,14 +22,19 @@ import ExamCommitteeChairman from '../../Teacher/ExamCommitteeChairman/ExamCommi
 import MarksSheet from '../../Teacher/ExamCommitteeChairman/MarksSheet/MarksSheet';
 import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
 import MarksAssign from '../../Teacher/ExamCommittee/MarksAssign/MarksAssign';
-import ApplicationDetails from '../../DeptChairman/CourseAppliaction/ApplicationDetails/ApplicationDetails';
+// import ApplicationDetails from '../../DeptChairman/CourseAppliaction/ApplicationDetails/ApplicationDetails';
 import HallProvostRoute from '../../LogIn/LogIn/HallProvostRoute/HallProvostRoute';
-import AcademicCommitteeCourseRegistration from '../../AcademicCommittee/AcademicCommitteeCourseRegistration';
-import StudentCourseRegistration from '../../Students/StudentCourseRegistration/StudentCourseRegistration';
-import ChairmanCourseRegistration from '../../DeptChairman/CourseAppliaction/ChairmanCourseRegistration';
-import HallProvostCourseRegistration from '../../HallProvost/HallProvostCourseRegistration';
 import CourseRegistrationForm from '../../Students/CourseRegistrationForm/CourseRegistrationForm';
 import ViewResult from '../../Students/ViewResult/ViewResult';
+import HallProvostCourseRegistration from '../../HallProvost/HallProvostCourseRegistration/HallProvostCourseRegistration';
+import AcademicCommitteeCourseRegistration from '../../AcademicCommittee/AcademicCommitteeCourseRegistration/AcademicCommitteeCourseRegistration';
+import DeptChairmanCourseRegistration from '../../DeptChairman/DeptChairmanCourseRegistration/DeptChairmanCourseRegistration';
+import StudentCourseRegistration from '../../Students/StudentCourseRegistration/StudentCourseRegistration';
+import DeptChairmanCourseRegistrationDetails from '../../DeptChairman/DeptChairmanCourseRegistration/DeptChairmanCourseRegistrationDetails/DeptChairmanCourseRegistrationDetails';
+import HallProvostCourseRegistrationDetails from '../../HallProvost/HallProvostCourseRegistration/HallProvostCourseRegistrationDetails.js/HallProvostCourseRegistrationDetails';
+import AcademicCommitteeRoute from '../../LogIn/LogIn/AcadedmicCommitteeRoute/AcademicCommitteeRoute';
+import AcademicCommitteeCourseRegistrationDetails from '../../AcademicCommittee/AcademicCommitteeCourseRegistration/AcademicCommitteeCourseRegistrationDetails/AcademicCommitteeCourseRegistrationDetails';
+import StudentCourseRegistrationDetails from '../../Students/StudentCourseRegistration/StudentCourseRegistrationDetails/StudentCourseRegistrationDetails';
 
 
 const Dashboard = () => {
@@ -148,6 +153,9 @@ const Dashboard = () => {
                 <StudentRoute path={`${path}/course-registration`}>
                     <CourseRegistrationForm></CourseRegistrationForm>
                 </StudentRoute>
+                <StudentRoute path={`${path}/course-registration-view/:applicationId`}>
+                    <StudentCourseRegistrationDetails></StudentCourseRegistrationDetails>
+                </StudentRoute>
                 <StudentRoute path={`${path}/course-registration-view`}>
                     <StudentCourseRegistration></StudentCourseRegistration>
                 </StudentRoute>
@@ -203,25 +211,29 @@ const Dashboard = () => {
                     <AddTeacher></AddTeacher>
                 </DeptChairmanRoute>
                 <DeptChairmanRoute path={`${path}/approve-course-registration-dept/:applicationId`}>
-                    <ApplicationDetails></ApplicationDetails>
+                    <DeptChairmanCourseRegistrationDetails></DeptChairmanCourseRegistrationDetails>
                 </DeptChairmanRoute>
                 <DeptChairmanRoute path={`${path}/approve-course-registration-dept`}>
-                    <ChairmanCourseRegistration></ChairmanCourseRegistration>
+                    <DeptChairmanCourseRegistration></DeptChairmanCourseRegistration>
                 </DeptChairmanRoute>
 
 
                 {/* hall provost Routes */}
-
+                <HallProvostRoute path={`${path}/approve-course-registration-hall/:applicationId`}>
+                    <HallProvostCourseRegistrationDetails></HallProvostCourseRegistrationDetails>
+                </HallProvostRoute>
                 <HallProvostRoute path={`${path}/approve-course-registration-hall`}>
                     <HallProvostCourseRegistration></HallProvostCourseRegistration>
                 </HallProvostRoute>
 
 
                 {/* academic committee Routes */}
-
-                <HallProvostRoute path={`${path}/approve-course-registration-academic`}>
+                <AcademicCommitteeRoute path={`${path}/approve-course-registration-academic/:applicationId`}>
+                    <AcademicCommitteeCourseRegistrationDetails></AcademicCommitteeCourseRegistrationDetails>
+                </AcademicCommitteeRoute>
+                <AcademicCommitteeRoute path={`${path}/approve-course-registration-academic`}>
                     <AcademicCommitteeCourseRegistration></AcademicCommitteeCourseRegistration>
-                </HallProvostRoute>
+                </AcademicCommitteeRoute>
 
 
             </Switch>

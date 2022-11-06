@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
-// import { FcApproval } from "react-icons/fc"
-// import { MdPendingActions } from "react-icons/md"
 
-const ApplicationDetails = () => {
+const HallProvostCourseRegistrationDetails = () => {
     const { applicationId } = useParams();
     const history = useHistory();
     const [application, setApplication] = useState({});
@@ -41,32 +38,21 @@ const ApplicationDetails = () => {
             })
     }, [applicationId])
 
+    console.log("hall-application == ", application);
+
 
     const handleApprove = () => {
 
         const approvedApplication = {};
         approvedApplication.applicationId = application?._id;
-        approvedApplication.chairmanMessage = comment;
-        approvedApplication.studentProfileId = application?.applicantProfileId;
-        approvedApplication.id = application?.applicantId;
+        approvedApplication.HallMessage = comment;
         approvedApplication.department = application?.department;
+        approvedApplication.applicantHallId = application?.applicantHallId;
 
-        const regularCourses = [];
-        const backlogCourses = [];
-
-        if (application?.regularCourses?.length !== 0) {
-            application?.regularCourses?.map(x => regularCourses.push(x?._id));
-        }
-        if (application?.backlogCourses?.length !== 0) {
-            application?.backlogCourses?.map(x => backlogCourses.push(x?._id));
-        }
-
-        approvedApplication.regularCourses = regularCourses;
-        approvedApplication.backlogCourses = backlogCourses;
 
         console.log("Application to push === ", approvedApplication);
 
-        fetch('http://localhost:5000/api/v1/course-application/approve-application-by-dept-chairman', {
+        fetch('http://localhost:5000/api/v1/course-application/approve-application-by-hall', {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -82,7 +68,7 @@ const ApplicationDetails = () => {
                         icon: 'success',
                         title: data.message
                     })
-                    history.replace('/dashboard/approve-course-registration-dept')
+                    history.replace('/dashboard/approve-course-registration-hall')
                 }
                 else {
                     Toast.fire({
@@ -99,11 +85,13 @@ const ApplicationDetails = () => {
         const deniedApplication = {};
 
         deniedApplication.applicationId = application?._id;
-        deniedApplication.chairmanMessage = comment;
-        deniedApplication.studentProfileId = application?.applicantProfileId;
+        deniedApplication.HallMessage = comment;
         deniedApplication.department = application?.department;
+        deniedApplication.applicantHallId = application?.applicantHallId;
 
-        fetch('http://localhost:5000/api/v1/course-application/deny-application-by-dept-chairman', {
+        console.log("Application to push === ", deniedApplication);
+
+        fetch('http://localhost:5000/api/v1/course-application/deny-application-by-hall', {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -119,7 +107,7 @@ const ApplicationDetails = () => {
                         icon: 'success',
                         title: data.message
                     })
-                    history.replace('/dashboard/approve-course-registration-dept')
+                    history.replace('/dashboard/approve-course-registration-hall')
                 }
                 else {
                     Toast.fire({
@@ -277,4 +265,4 @@ const ApplicationDetails = () => {
     );
 };
 
-export default ApplicationDetails;
+export default HallProvostCourseRegistrationDetails;

@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Spinner } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 
-const StudentCourseRegistration = () => {
+const HallProvostCourseRegistration = () => {
     const { url } = useRouteMatch();
     const [applications, setApplications] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/course-application/get-my-applications', {
+        fetch('http://localhost:5000/api/v1/course-application/get-applications-hall', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -16,9 +16,7 @@ const StudentCourseRegistration = () => {
         })
             .then(res => res.json())
             .then(info => {
-
-                console.log("sudenttttttt === ", info);
-                setApplications(info?.data);
+                setApplications(info.data);
                 setIsLoading(false);
             })
     }, [])
@@ -42,7 +40,7 @@ const StudentCourseRegistration = () => {
                             <h5 className='text-center fs-2 text-secondary my-4 fw-bold error-opacity' >You have no Course application</h5>
                         </div> :
                         <div>
-                            <h2 className="text-center my-5">My Applications</h2>
+                            <h2 className="text-center my-5">Students Applications</h2>
 
                             <div className='row container mx-auto my-3'>
                                 {
@@ -84,4 +82,4 @@ const StudentCourseRegistration = () => {
     );
 };
 
-export default StudentCourseRegistration;
+export default HallProvostCourseRegistration;

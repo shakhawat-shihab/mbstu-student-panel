@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Spinner } from 'react-bootstrap';
 import { Link, useRouteMatch } from 'react-router-dom';
 
-const StudentCourseRegistration = () => {
+const AcademicCommitteeCourseRegistration = () => {
     const { url } = useRouteMatch();
     const [applications, setApplications] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/course-application/get-my-applications', {
+        fetch('http://localhost:5000/api/v1/course-application/get-applications-academic', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -16,9 +16,7 @@ const StudentCourseRegistration = () => {
         })
             .then(res => res.json())
             .then(info => {
-
-                console.log("sudenttttttt === ", info);
-                setApplications(info?.data);
+                setApplications(info.data);
                 setIsLoading(false);
             })
     }, [])
@@ -42,14 +40,14 @@ const StudentCourseRegistration = () => {
                             <h5 className='text-center fs-2 text-secondary my-4 fw-bold error-opacity' >You have no Course application</h5>
                         </div> :
                         <div>
-                            <h2 className="text-center my-5">My Applications</h2>
+                            <h2 className="text-center my-5">Students Applications</h2>
 
                             <div className='row container mx-auto my-3'>
                                 {
                                     applications?.map(x => {
                                         return (
                                             <div className='col-lg-3 col-md-4 col-sm-12' key={x?._id}>
-                                                <Card style={{ border: "1px solid black" }} className="mb-3">
+                                                <Card style={{ backgroundColor: "#DEF5E5" }} className="mb-3 shadow-sm">
                                                     {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                                                     <Card.Body>
                                                         <Card.Title>{x?.name}</Card.Title> <br />
@@ -84,4 +82,4 @@ const StudentCourseRegistration = () => {
     );
 };
 
-export default StudentCourseRegistration;
+export default AcademicCommitteeCourseRegistration;

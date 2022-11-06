@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import { MdEdit } from "react-icons/md";
-import { Button } from 'react-bootstrap';
+import { Button, Spinner } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import './DashboardHome.css';
 
@@ -14,6 +14,8 @@ const DashboardHome = () => {
     const { user } = useAuth();
 
     const [profile, setProfile] = useState()
+
+    const [isLoading, setIsLoading] = useState(true);
 
     const history = useHistory();
     // const id = "CE17050"
@@ -62,6 +64,7 @@ const DashboardHome = () => {
             .then(res => res.json())
             .then(info => {
                 setProfile(info?.data)
+                setIsLoading(false);
                 // console.log('my-profile === ', info);
                 // console.log('email', email);
                 // seTakenCourses(data);
@@ -88,111 +91,120 @@ const DashboardHome = () => {
             <div className='mx-3'>
                 <hr className='w-100' />
             </div>
+            {
+                isLoading ?
+                    <div className='text-center my-5 py-5 '>
+                        <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
+                    </div> :
+                    <div className='container mb-5'>
+                        <div className='row container d-flex justify-content-center align-items-center'>
+                            <div className='col-sm-12 col-md-2 col-lg-2 mt-5 mb-2'>
+                                <div className='mb-3 text-center'>
 
-            <div className='container'>
-                <div className='row container'>
-                    <div className='col-sm-12 col-md-2 col-lg-2 mt-5 mb-2'>
-                        <div className='mb-3 text-center'>
+                                    <>
+                                        <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "150px", height: "150px" }} className="border border-3 border-lg img-fluid mx-auto" />
+                                    </>
 
-                            <>
-                                <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%" }} className="img-fluid mx-auto" width="150px" />
-                            </>
+                                </div>
+                                <div className='text-center'>
+                                    <Button style={{ borderRadius: "30px" }} className="px-3" onClick={handleEdit}>Edit Profile</Button>
+                                </div>
 
+                            </div>
+                            <div className='col mt-2 ms-5 mb-4 py-2'>
+                                {
+                                    user?.isStudent &&
+                                    <div>
+                                        <h6 className='text-muted'>Student ID:</h6>
+                                        <p>{profile?.id?.toUpperCase()}</p>
+                                    </div>
+                                }
+
+                                <div>
+                                    <h6 className='text-muted'>Full name:</h6>
+                                    {
+                                        <p>{profile?.firstName + " " + profile?.lastName}</p>
+                                    }
+                                </div>
+
+
+                                <div>
+                                    <h6 className='text-muted'>Email Address:</h6>
+                                    <p>{profile?.email}</p>
+                                </div>
+
+                                {
+                                    profile?.address &&
+                                    <div>
+                                        <h6 className='text-muted'>Address:</h6>
+                                        <p>{profile?.address}</p>
+                                    </div>
+                                }
+
+                                {
+                                    profile?.contactNumber &&
+                                    <div>
+                                        <h6 className='text-muted'>Phone:</h6>
+                                        <p>{profile?.contactNumber}</p>
+                                    </div>
+
+                                }
+
+                                {
+                                    user?.isStudent &&
+                                    <div>
+                                        <h6 className='text-muted'>Session:</h6>
+                                        <p>{profile?.session}</p>
+                                    </div>
+                                }
+
+                                {
+                                    user?.isStudent &&
+                                    <div>
+                                        <h6 className='text-muted'>Hall:</h6>
+                                        <p>{user?.hall?.name}</p>
+                                    </div>
+                                }
+
+                                {
+                                    // user?.isTeacher &&
+                                    // <div>
+                                    //     <h6 className='text-muted'>Designation:</h6>
+                                    //     {
+                                    //         designation &&
+                                    //         <>
+                                    //             <p>{designation}</p>
+                                    //         </>
+                                    //     }
+
+                                    // </div>
+                                }
+
+                                {
+                                    // user?.isTeacher &&
+                                    // <div>
+                                    //     <h6 className='text-muted'>Field of interest:</h6>
+                                    //     {
+                                    //         field &&
+                                    //         <>
+                                    //             <div className='row row-cols-lg-4 row-cols-md-3 row-cols-sm-1'>
+                                    //                 {
+                                    //                     field.map(x => <div><span className='text-success me-2'><AiFillCheckSquare></AiFillCheckSquare></span>{x}</div>)
+                                    //                 }
+                                    //             </div>
+                                    //         </>
+                                    //     }
+
+                                    // </div>
+                                }
+                            </div>
                         </div>
-                        <div className='text-center'>
-                            <Button style={{ borderRadius: "30px" }} className="px-3" onClick={handleEdit}>Edit Profile</Button>
-                        </div>
-
                     </div>
-                    <div className='col mt-2 ms-3 mb-4 py-2'>
-                        {
-                            user?.isStudent &&
-                            <div>
-                                <h6 className='text-muted'>Student ID:</h6>
-                                <p>{profile?.id?.toUpperCase()}</p>
-                            </div>
-                        }
-
-                        <div>
-                            <h6 className='text-muted'>Full name:</h6>
-                            {
-                                <p>{profile?.firstName + " " + profile?.lastName}</p>
-                            }
-                        </div>
+            }
 
 
-                        <div>
-                            <h6 className='text-muted'>Email Address:</h6>
-                            <p>{profile?.email}</p>
-                        </div>
-
-                        {
-                            profile?.address &&
-                            <div>
-                                <h6 className='text-muted'>Address:</h6>
-                                <p>{profile?.address}</p>
-                            </div>
-                        }
-
-                        {
-                            profile?.contactNumber &&
-                            <div>
-                                <h6 className='text-muted'>Phone:</h6>
-                                <p>{profile?.contactNumber}</p>
-                            </div>
-
-                        }
-
-                        {
-                            user?.isStudent &&
-                            <div>
-                                <h6 className='text-muted'>Session:</h6>
-                                <p>{profile?.session}</p>
-                            </div>
-                        }
-
-                        {
-                            user?.isStudent &&
-                            <div>
-                                <h6 className='text-muted'>Hall:</h6>
-                                <p>{user?.hall?.name}</p>
-                            </div>
-                        }
-
-                        {
-                            // user?.isTeacher &&
-                            // <div>
-                            //     <h6 className='text-muted'>Designation:</h6>
-                            //     {
-                            //         designation &&
-                            //         <>
-                            //             <p>{designation}</p>
-                            //         </>
-                            //     }
-
-                            // </div>
-                        }
-
-                        {
-                            // user?.isTeacher &&
-                            // <div>
-                            //     <h6 className='text-muted'>Field of interest:</h6>
-                            //     {
-                            //         field &&
-                            //         <>
-                            //             <div className='row row-cols-lg-4 row-cols-md-3 row-cols-sm-1'>
-                            //                 {
-                            //                     field.map(x => <div><span className='text-success me-2'><AiFillCheckSquare></AiFillCheckSquare></span>{x}</div>)
-                            //                 }
-                            //             </div>
-                            //         </>
-                            //     }
-
-                            // </div>
-                        }
-                    </div>
-                </div>
-            </div>
 
         </div>
     );

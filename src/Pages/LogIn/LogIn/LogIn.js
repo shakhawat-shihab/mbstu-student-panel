@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { NavLink, Redirect, useHistory, useLocation } from 'react-router-dom';
-
+import logoSrc from '../../../images/login-logo.png'
 import { BiShow, BiHide } from "react-icons/bi";
-
 import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
 import useAuth from '../../../Hooks/useAuth';
 import Swal from 'sweetalert2';
@@ -93,7 +92,6 @@ const Login = () => {
         setEmailErrorMessage("You have entered an invalid email address!")
     }
 
-    const logoSrc = "https://i.ibb.co/fFWMnnd/login-logo.png";
     return (
 
         <div>

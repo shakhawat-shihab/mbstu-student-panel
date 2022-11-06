@@ -13,6 +13,7 @@ const Home = () => {
             {/* <Header></Header> */}
             {/* <Banner></Banner> */}
             <NavigationBar></NavigationBar>
+            {/* <h2>hi {process.env.REACT_APP_KEY}</h2> */}
             {/* <NavigBar></NavigBar> */}
             <Slider></Slider>
             <br></br>

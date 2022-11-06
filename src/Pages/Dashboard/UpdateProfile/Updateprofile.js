@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Modal, Spinner } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import useAuth from '../../../Hooks/useAuth';
 import Compressor from 'compressorjs';
@@ -12,16 +12,19 @@ import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const UpdateProfile = () => {
-    let field = [];
+
     const { user } = useAuth();
     const history = useHistory();
-    console.log("update profile user === ", user)
+    // console.log("update profile user === ", user)
 
     const [selectedFile, setSelectedFile] = useState("");
     const inputFile = useRef(null);
 
     const [profile, setProfile] = useState();
     const [imageSrc, setImageSrc] = useState();
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
 
     const Toast = Swal.mixin({
         toast: true,
@@ -59,6 +62,7 @@ const UpdateProfile = () => {
             .then(res => res.json())
             .then(info => {
                 setProfile(info?.data)
+                setIsLoading(false);
                 // console.log('my-profile === ', info);
                 // console.log('email', email);
                 // seTakenCourses(data);
@@ -110,9 +114,9 @@ const UpdateProfile = () => {
         const imageFile = selectedFile;
 
         formData.append('image', imageFile);
-        console.log('form data ===>> ', formData)
+        // console.log('form data ===>> ', formData)
 
-
+        setShowModal(true);
 
         fetch(`http://localhost:5000/api/v1/profile/update`, {
             method: 'put',
@@ -124,6 +128,7 @@ const UpdateProfile = () => {
             .then(res => res.json())
             .then(info => {
                 console.log('info after profile update', info)
+                setShowModal(false);
                 if (info?.status === 'success') {
                     Toast.fire({
                         icon: 'success',
@@ -154,191 +159,216 @@ const UpdateProfile = () => {
             <div className='mx-3'>
                 <hr className='w-100' />
             </div>
-            <div className='container'>
-                <Form onSubmit={handleSubmit(onSubmit)}>
-                    <div className='row container'>
-                        <div className='col-sm-12 col-md-2 col-lg-2 mt-5 mb-2 pt-5'>
-                            <div className='mb-3 text-center'>
-
-                                <>
-                                    <img src={imageSrc ? imageSrc : profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "150px", height: "150px" }} className="img-fluid mx-auto" />
-                                </>
-
-                            </div>
-                            <div className='text-center mb-4'>
-
-                                <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => {
-                                    //setSelectedFile(e.target.files[0])
-                                    //console.log(e.target.files[0])
-                                    handleCompressedUpload(e)
-                                }} />
-                                <Button variant="primary" style={{ borderRadius: "30px" }} onClick={onButtonClick}>Upload photo</Button>
-
-                            </div>
-
-                        </div>
-
-                        <div className='col mt-2 ms-4 mb-4 py-2'>
-
-                            <Form.Group className="mb-3">
-                                <Form.Label className='text-primary'>First name: </Form.Label>
-
-                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("first_name", { required: true })} className="w-100" />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3">
-                                <Form.Label className='text-primary'>Last name: </Form.Label>
-
-                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("last_name", { required: true })} className="w-100" />
-                            </Form.Group>
-
-
-                            <Form.Group className="mb-3">
-                                <Form.Label className='text-primary'>Phone:</Form.Label>
-
-                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("contact_number", { required: true })} className="w-100" />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3">
-                                <Form.Label className='text-primary'>Address: </Form.Label>
-
-                                <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("address", { required: true })} className="w-100" />
-                            </Form.Group>
-
-                            {
-                                // user?.isStudent &&
-                                // <Form.Group className="mb-3">
-                                //     <Form.Label className='text-primary'>Hall: </Form.Label>
-                                //     <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("hall", { required: true })} className="w-100" />
-                                // </Form.Group>
-                            }
-
-                            {
-                                // user?.isStudent &&
-                                // <Form.Group className="mb-3">
-                                //     <Form.Label className='text-primary'>Session:</Form.Label>
-
-                                //     <Form.Select {...register("session", { required: true })}>
-                                //         <option value="">Select</option>
-                                //         <option value="16">2015-16</option>
-                                //         <option value="17">2016-17</option>
-                                //         <option value="18">2017-18</option>
-                                //         <option value="19">2018-19</option>
-                                //         <option value="20">2019-20</option>
-                                //         <option value="21">2020-21</option>
-                                //         <option value="22">2021-22</option>
-                                //     </Form.Select>
-                                // </Form.Group>
-                            }
-
-                            {
-                                // user?.isTeacher &&
-                                // <Form.Group className="mb-3">
-                                //     <Form.Label className='text-primary'>Designation: </Form.Label>
-                                //     <Form.Control type="text" {...register("designation", { required: true })} className="w-100" />
-                                // </Form.Group>
-                            }
-
-                            {
-                                // user?.isTeacher &&
-                                // <Form.Group className="mb-3">
-                                //     <Form.Label className='text-primary'>Field of Interest:</Form.Label>
-                                //     <br></br>
-                                //     <div className='row row-cols-lg-4 row-cols-md-3 row-cols-sm-1'>
-                                //         <div>
-                                //             <input
-                                //                 name="Machine Learning"
-                                //                 type="checkbox"
-                                //                 value="Machine Learning"
-                                //                 onChange={handleCheck}
-
-                                //             /> Machine Learning
-                                //         </div>
-
-                                //         {/* <br></br> */}
-                                //         <div>
-                                //             <input
-                                //                 name="Artificial Intelligence"
-                                //                 type="checkbox"
-                                //                 value="Artificial Intelligence"
-                                //                 onChange={handleCheck}
-
-                                //             /> Artificial Intelligence
-                                //         </div>
-                                //         {/* <br></br> */}
-                                //         <div>
-                                //             <input
-                                //                 name="Image Processing"
-                                //                 type="checkbox"
-                                //                 value="Image Processing"
-                                //                 onChange={handleCheck}
-
-                                //             /> Image Processing
-                                //         </div>
-
-                                //         <div>
-                                //             <input
-                                //                 name="IoT"
-                                //                 type="checkbox"
-                                //                 value="IoT"
-                                //                 onChange={handleCheck}
-
-                                //             /> IoT
-                                //         </div>
-                                //         <div>
-                                //             <input
-                                //                 name="Natural Language Processing"
-                                //                 type="checkbox"
-                                //                 value="Natural Language Processing"
-                                //                 onChange={handleCheck}
-                                //             /> Natural Language Processing
-                                //         </div>
-                                //         <div>
-                                //             <input
-                                //                 name="VLSI Design"
-                                //                 type="checkbox"
-                                //                 value="VLSI Design"
-                                //                 onChange={handleCheck}
-                                //             /> VLSI Design
-                                //         </div>
-                                //         <div>
-                                //             <input
-                                //                 name="Data Mining"
-                                //                 type="checkbox"
-                                //                 value="Data Mining"
-                                //                 onChange={handleCheck}
-                                //             /> Data Mining
-                                //         </div>
-                                //         <div>
-                                //             <input
-                                //                 name="Deep Learning"
-                                //                 type="checkbox"
-                                //                 value="Deep Learning"
-                                //                 onChange={handleCheck}
-                                //             /> Deep Learning
-                                //         </div>
-                                //         <div>
-                                //             <input
-                                //                 name="Bioinformatics"
-                                //                 type="checkbox"
-                                //                 value="Bioinformatics"
-                                //                 onChange={handleCheck}
-                                //             /> Bioinformatics
-                                //         </div>
-                                //     </div>
-                                // </Form.Group>
-                            }
-                            <div className='text-center my-5 pe-3 pt-4'>
-                                <input className="btn btn-primary" type="submit" value='Save changes' />
-                            </div>
-
-                        </div>
+            {
+                isLoading
+                    ?
+                    <div className='text-center my-5 py-5 '>
+                        <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                        </Spinner>
                     </div>
-                </Form>
+                    :
+
+                    <div className='container'>
+                        <div>
+                            <Modal
+                                show={showModal}
+                                backdrop="static"
+                                keyboard={false}
+                                centered
+                            >
+                                <Modal.Body className='d-flex justify-content-center align-items-center' style={{ fontsize: "30px" }}>
+                                    <p>Saving ....</p>
+                                </Modal.Body>
+
+                            </Modal>
+                        </div>
+                        <Form onSubmit={handleSubmit(onSubmit)}>
+                            <div className='row container d-flex justify-content-center align-items-center'>
+                                <div className='col-sm-12 col-md-2 col-lg-2'>
+                                    <div className='text-center mb-4'>
+
+                                        <>
+                                            <img src={imageSrc ? imageSrc : profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "150px", height: "150px" }} className="border border-3 border-lg img-fluid mx-auto" />
+                                        </>
+
+                                    </div>
+                                    <div className='text-center'>
+
+                                        <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} onChange={(e) => {
+                                            //setSelectedFile(e.target.files[0])
+                                            //console.log(e.target.files[0])
+                                            handleCompressedUpload(e)
+                                        }} />
+                                        <Button variant="primary" style={{ borderRadius: "30px" }} onClick={onButtonClick}>Upload photo</Button>
+
+                                    </div>
+
+                                </div>
+
+                                <div className='col mt-5 pt-2 ms-4 '>
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className='text-primary'>First name: </Form.Label>
+
+                                        <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("first_name", { required: true })} className="w-100" defaultValue={profile?.firstName} min="3" max="100" />
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className='text-primary'>Last name: </Form.Label>
+
+                                        <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("last_name", { required: true })} className="w-100" defaultValue={profile?.lastName} min="3" max="100" />
+                                    </Form.Group>
+
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className='text-primary'>Phone:</Form.Label>
+
+                                        <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("contact_number", { required: false })} className="w-100" defaultValue={profile?.contactNumber ? profile?.contactNumber : ""} />
+                                    </Form.Group>
+
+                                    <Form.Group className="mb-3">
+                                        <Form.Label className='text-primary'>Address: </Form.Label>
+
+                                        <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("address", { required: false })} className="w-100" defaultValue={profile?.address ? profile?.address : ""} />
+                                    </Form.Group>
+
+                                    {
+                                        // user?.isStudent &&
+                                        // <Form.Group className="mb-3">
+                                        //     <Form.Label className='text-primary'>Hall: </Form.Label>
+                                        //     <Form.Control type="text" style={{ paddingLeft: "10px" }} {...register("hall", { required: true })} className="w-100" />
+                                        // </Form.Group>
+                                    }
+
+                                    {
+                                        // user?.isStudent &&
+                                        // <Form.Group className="mb-3">
+                                        //     <Form.Label className='text-primary'>Session:</Form.Label>
+
+                                        //     <Form.Select {...register("session", { required: true })}>
+                                        //         <option value="">Select</option>
+                                        //         <option value="16">2015-16</option>
+                                        //         <option value="17">2016-17</option>
+                                        //         <option value="18">2017-18</option>
+                                        //         <option value="19">2018-19</option>
+                                        //         <option value="20">2019-20</option>
+                                        //         <option value="21">2020-21</option>
+                                        //         <option value="22">2021-22</option>
+                                        //     </Form.Select>
+                                        // </Form.Group>
+                                    }
+
+                                    {
+                                        // user?.isTeacher &&
+                                        // <Form.Group className="mb-3">
+                                        //     <Form.Label className='text-primary'>Designation: </Form.Label>
+                                        //     <Form.Control type="text" {...register("designation", { required: true })} className="w-100" />
+                                        // </Form.Group>
+                                    }
+
+                                    {
+                                        // user?.isTeacher &&
+                                        // <Form.Group className="mb-3">
+                                        //     <Form.Label className='text-primary'>Field of Interest:</Form.Label>
+                                        //     <br></br>
+                                        //     <div className='row row-cols-lg-4 row-cols-md-3 row-cols-sm-1'>
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Machine Learning"
+                                        //                 type="checkbox"
+                                        //                 value="Machine Learning"
+                                        //                 onChange={handleCheck}
+
+                                        //             /> Machine Learning
+                                        //         </div>
+
+                                        //         {/* <br></br> */}
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Artificial Intelligence"
+                                        //                 type="checkbox"
+                                        //                 value="Artificial Intelligence"
+                                        //                 onChange={handleCheck}
+
+                                        //             /> Artificial Intelligence
+                                        //         </div>
+                                        //         {/* <br></br> */}
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Image Processing"
+                                        //                 type="checkbox"
+                                        //                 value="Image Processing"
+                                        //                 onChange={handleCheck}
+
+                                        //             /> Image Processing
+                                        //         </div>
+
+                                        //         <div>
+                                        //             <input
+                                        //                 name="IoT"
+                                        //                 type="checkbox"
+                                        //                 value="IoT"
+                                        //                 onChange={handleCheck}
+
+                                        //             /> IoT
+                                        //         </div>
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Natural Language Processing"
+                                        //                 type="checkbox"
+                                        //                 value="Natural Language Processing"
+                                        //                 onChange={handleCheck}
+                                        //             /> Natural Language Processing
+                                        //         </div>
+                                        //         <div>
+                                        //             <input
+                                        //                 name="VLSI Design"
+                                        //                 type="checkbox"
+                                        //                 value="VLSI Design"
+                                        //                 onChange={handleCheck}
+                                        //             /> VLSI Design
+                                        //         </div>
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Data Mining"
+                                        //                 type="checkbox"
+                                        //                 value="Data Mining"
+                                        //                 onChange={handleCheck}
+                                        //             /> Data Mining
+                                        //         </div>
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Deep Learning"
+                                        //                 type="checkbox"
+                                        //                 value="Deep Learning"
+                                        //                 onChange={handleCheck}
+                                        //             /> Deep Learning
+                                        //         </div>
+                                        //         <div>
+                                        //             <input
+                                        //                 name="Bioinformatics"
+                                        //                 type="checkbox"
+                                        //                 value="Bioinformatics"
+                                        //                 onChange={handleCheck}
+                                        //             /> Bioinformatics
+                                        //         </div>
+                                        //     </div>
+                                        // </Form.Group>
+                                    }
+                                    <div className='text-center mt-2 mb-5 pe-3 pt-4'>
+                                        <input className="btn btn-primary" type="submit" value='Save changes' />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </Form>
 
 
 
-            </div>
+                    </div>
+            }
+
 
         </div>
     );
