@@ -29,17 +29,13 @@ const Payment = (props) => {
                             ?
                             <Elements stripe={stripePromise}>
                                 <CheckoutForm application={application} />
-                                {/* <p>sjkjd</p> */}
                             </Elements>
                             :
                             <p>Payment can't be processed now</p>
                     }
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => { setShow(false) }}>
-                        Close
-                    </Button>
-                </Modal.Footer>
+
+
             </Modal>
             <div className='text-center'>
                 <h2>Payment View</h2>

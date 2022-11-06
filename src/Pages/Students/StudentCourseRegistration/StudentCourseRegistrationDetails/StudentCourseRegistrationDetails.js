@@ -103,7 +103,7 @@ const StudentCourseRegistrationDetails = () => {
                             {
                                 applicationView === 4
                                 &&
-                                <Payment application={application}></Payment>
+                                <Payment application={application} setApplicationView={setApplicationView} ></Payment>
                             }
                             {
                                 applicationView === 5

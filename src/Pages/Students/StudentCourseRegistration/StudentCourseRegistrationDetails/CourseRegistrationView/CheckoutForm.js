@@ -6,6 +6,7 @@ import useAuth from '../../../../../Hooks/useAuth';
 
 const CheckoutForm = (props) => {
     const { applicantName, _id, amount } = props.application;
+    const setApplicationView = props.setApplicationView;
     const { user } = useAuth();
     const stripe = useStripe();
     const elements = useElements();
@@ -13,6 +14,7 @@ const CheckoutForm = (props) => {
     const [processing, setProcessing] = useState(false);
     const [success, setSuccess] = useState('');
     const [clientSecret, setClientSecret] = useState('');
+    console.log(props.application);
 
     useEffect(() => {
         fetch('http://localhost:5000/api/v1/payment/create-payment-intent', {
@@ -24,15 +26,16 @@ const CheckoutForm = (props) => {
             body: JSON.stringify({ price: 50 })
         })
             .then(res => res.json())
-            .then(data => {
+            .then(info => {
                 console.log('data === ',);
-                console.log('data === ', data);
-                setClientSecret(data.clientSecret);
+                console.log('info === ', info);
+                setClientSecret(info?.data);
             })
     }, [amount]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('submitting')
         if (!stripe || !elements) {
             // Stripe.js has not loaded yet. Make sure to disable
             // form submission until Stripe.js has loaded.
@@ -61,7 +64,7 @@ const CheckoutForm = (props) => {
             console.log('[PaymentMethod] ', paymentMethod);
             setError('');
         }
-
+        console.log('clientSecret ', clientSecret)
 
         const { paymentIntent, error: intentError } = await stripe.confirmCardPayment(
             clientSecret,
@@ -94,8 +97,8 @@ const CheckoutForm = (props) => {
                 last4: paymentMethod.card.last4,
                 transaction: paymentIntent.client_secret.split('_')[1]
             }
-            const url = `https://localhost:5000/api/v1/payment/create-payment`;
-            fetch(url, {
+            console.log('save to db ', payment)
+            fetch(`http://localhost:5000/api/v1/payment/create-payment`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json',
@@ -127,25 +130,11 @@ const CheckoutForm = (props) => {
                         },
                     }}
                 />
-                {/* < PaymentElement
-                    options={{
-                        style: {
-                            base: {
-                                fontSize: '16px',
-                                color: '#424770',
-                                '::placeholder': {
-                                    color: '#aab7c4',
-                                },
-                            },
-                            invalid: {
-                                color: '#9e2146',
-                            },
-                        },
-                    }}></PaymentElement> */}
+
                 {
                     processing
                         ?
-                        <Spinner></Spinner>
+                        <Spinner />
                         :
                         <button type="submit" disabled={!stripe || success}>
                             Pay ${amount}
