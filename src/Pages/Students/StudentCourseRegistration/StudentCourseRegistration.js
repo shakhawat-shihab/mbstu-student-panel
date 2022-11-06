@@ -17,7 +17,7 @@ const StudentCourseRegistration = () => {
             .then(res => res.json())
             .then(info => {
 
-                console.log("sudenttttttt === ", info);
+                // console.log("sudenttttttt === ", info);
                 setApplications(info?.data);
                 setIsLoading(false);
             })
