@@ -53,10 +53,11 @@ const StudentCourseRegistrationDetails = () => {
                     count++;
                     if (info?.data?.isHallVerified !== undefined) {
                         count++;
+                        if (info?.data?.isAcademicVerified !== undefined) {
+                            count++;
+                        }
                     }
-                    if (info?.data?.isAcademicVerified !== undefined) {
-                        count++;
-                    }
+
                 }
                 setCurrentState(count);
                 setApplicationView(count);
@@ -77,48 +78,57 @@ const StudentCourseRegistrationDetails = () => {
                         </Spinner>
                     </div>
                     :
-                    <div className='mb-5'>
-                        <div className='mb-5 py-5'>
-                            <StepProgress current={currentState} applicationView={applicationView}
-                                setApplicationView={setApplicationView}
-                            />
-                        </div>
+                    <>
+                        {
+                            application
+                                ?
+                                <div className='mb-5'>
+                                    <div className='mb-5 py-5'>
+                                        <StepProgress current={currentState} applicationView={applicationView}
+                                            setApplicationView={setApplicationView}
+                                        />
+                                    </div>
 
-                        <div className='mt-5'>
-                            {
-                                applicationView === 1
-                                &&
-                                <CourseView application={application}></CourseView>
-                            }
-                            {
-                                applicationView === 2
-                                &&
-                                <ChairmanView application={application}></ChairmanView>
-                            }
-                            {
-                                applicationView === 3
-                                &&
-                                <HallView application={application}></HallView>
-                            }
-                            {
-                                applicationView === 4
-                                &&
-                                <Payment application={application} setApplicationView={setApplicationView} ></Payment>
-                            }
-                            {
-                                applicationView === 5
-                                &&
-                                <Academic application={application}></Academic>
-                            }
-                            {
-                                applicationView === 6
-                                &&
-                                <AdmitCard application={application}></AdmitCard>
-                            }
+                                    <div className='mt-5'>
+                                        {
+                                            applicationView === 1
+                                            &&
+                                            <CourseView application={application}></CourseView>
+                                        }
+                                        {
+                                            applicationView === 2
+                                            &&
+                                            <ChairmanView application={application}></ChairmanView>
+                                        }
+                                        {
+                                            applicationView === 3
+                                            &&
+                                            <HallView application={application}></HallView>
+                                        }
+                                        {
+                                            applicationView === 4
+                                            &&
+                                            <Payment application={application} ></Payment>
+                                        }
+                                        {
+                                            applicationView === 5
+                                            &&
+                                            <Academic application={application}></Academic>
+                                        }
+                                        {
+                                            applicationView === 6
+                                            &&
+                                            <AdmitCard application={application}></AdmitCard>
+                                        }
 
-                        </div>
+                                    </div>
+                                </div>
+                                :
+                                <p>There is no such application</p>
 
-                    </div>
+                        }
+                    </>
+
             }
 
 

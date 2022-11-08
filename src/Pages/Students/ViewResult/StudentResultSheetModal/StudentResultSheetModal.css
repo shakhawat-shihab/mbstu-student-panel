@@ -1,0 +1,46 @@
+/* .td-border-right {
+    border-right: 0.0001px solid black;
+}
+
+table,
+td,
+th {
+    border: 1px solid rgb(220, 14, 14);
+
+} */
+
+table {
+    /* border-collapse: collapse; */
+    /* width: 100%; */
+}
+
+/* th,
+td {
+    padding: 5px 10px;
+    text-align: center;
+} */
+
+.fs-tbl {
+    font-size: 10px;
+}
+
+.fs-tbl>td,
+th {
+    padding: 0px 8px !important;
+}
+
+.fs-tbl-marks {
+    font-size: 11px;
+}
+
+.tbl-color {
+    border-color: rgba(31, 30, 30, 0.851) !important
+}
+
+.my-style {
+    border-color: rgba(253, 253, 255, 0.701) !important
+}
+
+tr {
+    border-bottom: none !important;
+}

@@ -8,6 +8,7 @@ const StudentCourseRegistration = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        setIsLoading(true);
         fetch('http://localhost:5000/api/v1/course-application/get-my-applications', {
             headers: {
                 'Content-type': 'application/json',

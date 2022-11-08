@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Spinner, Table } from 'react-bootstrap';
+import { Button, Form, Spinner, Table } from 'react-bootstrap';
 import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
-import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
+import StudentResultSheetModal from './StudentResultSheetModal/StudentResultSheetModal';
+// import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
+// import StudentResultSheetModal from '../StudentResultSheetModal/StudentResultSheetModal';
 
 const ViewResult = () => {
 
@@ -17,6 +19,11 @@ const ViewResult = () => {
     const [profile, setProfile] = useState([]);
 
     const [semesterNames, setSemesterNames] = useState([]);
+
+    const [showModal, setShowModal] = useState(false);
+    const [semesters, setSemesters] = useState([]);
+    const [processedSemester, setProcessedSemester] = useState({});
+
 
     const checkMarks = (marks) => {
         let grade_point, letter_grade;
@@ -121,8 +128,6 @@ const ViewResult = () => {
     }, [user])
 
 
-
-
     //for loading courses marks 
     useEffect(() => {
         // setIsLoadingResult(true);
@@ -134,7 +139,8 @@ const ViewResult = () => {
         })
             .then(res => res.json())
             .then(info => {
-                console.log('info  = ', info?.data);
+                // console.log('infoooooooo  = ', info);
+                setSemesters(info?.data?.semesterIds);
                 setSemesterCode(info?.data?.semesterCode);
                 setResult(info?.data?.coursesMarks);
                 setIsLoadingResult(false);
@@ -142,56 +148,78 @@ const ViewResult = () => {
 
     }, [user])
 
+    // console.log("resullslslls == ", result);
+
+
     //for processing marks
     useEffect(() => {
-        setIsProcessingResultOfASemester(true);
-        const supObj = {}
-        let creditOffered = 0;
-        let creditEarned = 0;
-        let sumOfGPA = 0;
-        // console.log('result ==> ', result)
-        // console.log('semesterCode ==> ', semesterCode)
-        const marksArray = [];
-        result.map(x => {
-            if (x.semesterCode == semesterCode) {
-                const obj = {}
-                obj.courseCode = x?.courseCode;
-                obj.courseTitle = x?.courseTitle;
-                obj.credit = x?.credit;
-                creditOffered += x?.credit;
-                let total = 0;
-                if (x.type === 'theory') {
-                    total = x?.theorySeventy + x?.theoryThirty;
-                }
-                else if (x.type === 'lab') {
-                    total = x?.labSixty + x?.labFourty;
-                }
-                else if (x.type === 'project') {
-                    total = x?.projectSeventy + x?.projectThirty;
-                }
+        if (semesters.length > 0) {
+            setIsProcessingResultOfASemester(true);
+            console.log('semester code change', semesters)
+            const supObj = {}
+            let creditOffered = 0;
+            let creditEarned = 0;
+            let sumOfGPA = 0;
+            // console.log('result ==> ', result)
+            // console.log('semesterCode ==> ', semesterCode)
+            const marksArray = [];
+            result.map(x => {
+                if (x.semesterCode == semesterCode) {
+                    const obj = {}
+                    obj.courseCode = x?.courseCode;
+                    obj.courseTitle = x?.courseTitle;
+                    obj.credit = x?.credit;
+                    creditOffered += x?.credit;
+                    let total = 0;
+                    if (x.type === 'theory') {
+                        total = x?.theorySeventy + x?.theoryThirty;
+                    }
+                    else if (x.type === 'lab') {
+                        total = x?.labSixty + x?.labFourty;
+                    }
+                    else if (x.type === 'project') {
+                        total = x?.projectSeventy + x?.projectThirty;
+                    }
 
-                if (total > 40) {
-                    creditEarned += x?.credit;
+                    if (total > 40) {
+                        creditEarned += x?.credit;
+                    }
+                    const gradeAndLetter = checkMarks(total);
+                    obj.totalMarks = total;
+                    obj.GP = gradeAndLetter.gp
+                    obj.LG = gradeAndLetter.lg
+                    sumOfGPA += gradeAndLetter.gp * x?.credit;
+                    // console.log('obj  ', obj)
+                    marksArray.push(obj);
                 }
-                const gradeAndLetter = checkMarks(total);
-                obj.totalMarks = total;
-                obj.GP = gradeAndLetter.gp
-                obj.LG = gradeAndLetter.lg
-                sumOfGPA += gradeAndLetter.gp * x?.credit;
-                // console.log('obj  ', obj)
-                marksArray.push(obj);
+            })
+            supObj.creditOffered = creditOffered;
+            supObj.creditEarned = creditEarned;
+            if (creditEarned > 0) {
+                supObj.GPA = (sumOfGPA / creditEarned).toFixed(2);
             }
-        })
-        supObj.creditOffered = creditOffered;
-        supObj.creditEarned = creditEarned;
-        supObj.GPA = (sumOfGPA / creditEarned).toFixed(2);
-        supObj.courses = marksArray;
-        supObj.semesterCode = semesterCode;
-        supObj.semesterName = checkSemesterName(semesterCode);
-        setResultOfASemester(supObj);
-        console.log('supObj  ', supObj)
-        setIsProcessingResultOfASemester(false);
-    }, [semesterCode, result])
+            else {
+                supObj.GPA = 0.00
+            }
+            supObj.courses = marksArray;
+            supObj.semesterCode = semesterCode;
+            supObj.semesterName = checkSemesterName(semesterCode);
+
+            const sem = semesters?.find(x => x?.semesterCode == semesterCode)
+            // console.log('sem ', sem)
+            supObj.degree = sem?.degree
+            supObj.createdAt = sem?.createdAt
+            supObj.department = sem?.department
+
+            setResultOfASemester(supObj);
+            console.log('supObj  ', supObj)
+
+            setIsProcessingResultOfASemester(false);
+            setProcessedSemester(sem);
+
+        }
+
+    }, [semesterCode, result, semesters])
 
 
     //load semester name 
@@ -204,11 +232,25 @@ const ViewResult = () => {
                 obj.value = checkSemesterName(i);
                 arrayOfSemesterName.push(obj)
             }
-            console.log('arrayOfSemesterName ', arrayOfSemesterName)
+            // arrayOfSemesterName.push({ key: 4334, value: 'erwrwrwtertert ' })
+            // console.log('arrayOfSemesterName ', arrayOfSemesterName)
             setSemesterNames(arrayOfSemesterName)
         }
 
     }, [isLoadingResult])
+
+    // const processedSemester = semesters?.find(x => x?.semesterCode === semesterCode)
+
+    const changingSemester = (e) => {
+        // console.log(e.target.value)
+        setSemesterCode(e.target.value);
+        // console.log('semesters ', semesters);
+        // const processedSemester = semesters?.find(x => x?.semesterCode == e.target.value)
+        // console.log('processedSemester ', processedSemester)
+    }
+
+
+    // console.log("Processseeedddd semeemseter === ", processedSemester);
 
     return (
         <>
@@ -221,62 +263,84 @@ const ViewResult = () => {
                         </Spinner>
                     </div>
                     :
-                    <div className='px-2 py-4 my-3 shadow-lg w-75 mx-auto rounded'>
-                        <div className=' my-4'>
-                            <Form >
-                                <Form.Group className="mb-1 w-100 mx-auto">
-                                    <Form.Label className='text-primary'>Select Semester:</Form.Label>
-                                    <br></br>
-                                    <Form.Select
-                                        onChange={(e) => {
-                                            setSemesterCode(e.target.value);
-                                        }}>
-                                        {
-                                            semesterNames?.map(s => {
-                                                return (
-                                                    <>
-                                                        {
-                                                            s.key === semesterCode
-                                                                ?
-                                                                <option key={s.key} selected value={s.key}>{s.value}</option>
-                                                                :
-                                                                <option key={s.key} value={s.key}>{s.value}</option>
-                                                        }
-
-                                                    </>
-                                                )
-                                            })
-                                        }
-                                    </Form.Select>
-                                </Form.Group>
-                            </Form>
-                        </div>
+                    <div>
                         <div>
-                            <Table responsive striped bordered hover>
-                                <thead>
-                                    <tr style={{ border: "1px solid black" }}>
-                                        <th style={{ border: "1px solid black" }}>Course Code</th>
-                                        <th style={{ border: "1px solid black" }}>Course Title</th>
-                                        <th style={{ border: "1px solid black" }}>Credit Hour(s) </th>
-                                        <th style={{ border: "1px solid black" }}> LG </th>
-                                        <th style={{ border: "1px solid black" }}>GP</th>
-                                        <th style={{ border: "1px solid black" }}> GPA</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        resultOfASemester?.courses?.map(x => (
-                                            <tr key={x?.courseCode} style={{ border: "1px solid black" }}>
-                                                <td style={{ border: "1px solid black" }}>{x?.courseCode.toUpperCase()}</td>
-                                                <td style={{ border: "1px solid black" }}>{x?.courseTitle}</td>
-                                                <td style={{ border: "1px solid black" }}>{x.credit}</td>
-                                                <td style={{ border: "1px solid black" }}>{x.LG}</td>
-                                                <td style={{ border: "1px solid black" }}>{x.GP}</td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </Table>
+                            <StudentResultSheetModal showModal={showModal}
+                                setShowModal={setShowModal}
+                                resultOfASemester={resultOfASemester}
+                                // processedSemester={processedSemester}
+                                profile={profile}
+
+                            />
+                        </div>
+                        <div className='px-2 py-4 my-3 shadow-lg w-75 mx-auto rounded'>
+                            <div className=' my-4'>
+                                <Form >
+                                    <Form.Group className="mb-1 w-100 mx-auto">
+                                        <Form.Label className='text-primary'>Select Semester:</Form.Label>
+                                        <br></br>
+                                        <Form.Select
+                                            onChange={(e) => changingSemester(e)}>
+                                            {
+                                                semesterNames?.map(s => {
+                                                    return (
+                                                        <>
+                                                            {
+                                                                s.key === semesterCode
+                                                                    ?
+                                                                    <option key={s.key} selected value={s.key}>{s.value}</option>
+                                                                    :
+                                                                    <option key={s.key} value={s.key}>{s.value}</option>
+                                                            }
+
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Form>
+                            </div>
+                            <div>
+                                <Table responsive bordered hover>
+                                    <thead>
+                                        <tr style={{ border: "1px solid black" }}>
+                                            <th style={{ border: "1px solid black" }}>Course Code</th>
+                                            <th style={{ border: "1px solid black" }}>Course Title</th>
+                                            <th style={{ border: "1px solid black" }}>Credit Hour(s) </th>
+                                            <th style={{ border: "1px solid black" }}> LG </th>
+                                            <th style={{ border: "1px solid black" }}>GP</th>
+                                            <th style={{ border: "1px solid black" }}> GPA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            resultOfASemester?.courses?.map(x => (
+                                                <tr key={x?.courseCode} style={{ border: "1px solid black" }}>
+                                                    <td style={{ border: "1px solid black" }}>{x?.courseCode.toUpperCase()}</td>
+                                                    <td style={{ border: "1px solid black" }}>{x?.courseTitle}</td>
+                                                    <td style={{ border: "1px solid black" }}>{x.credit}</td>
+                                                    <td style={{ border: "1px solid black" }}>{x.LG}</td>
+                                                    <td style={{ border: "1px solid black" }}>{x.GP}</td>
+                                                    {
+                                                        resultOfASemester?.courses?.indexOf(x) === 0 &&
+                                                        <td rowspan={`${resultOfASemester?.courses?.length}`} >{resultOfASemester?.GPA}</td>
+                                                    }
+                                                </tr>
+                                            )
+                                            )
+                                        }
+
+
+                                    </tbody>
+                                </Table>
+                            </div>
+
+
+                            <div className='text-center my-3'>
+                                <Button variant='primary' className='me-2' onClick={() => { setShowModal(true) }}>Generate Pdf</Button>
+
+                            </div>
                         </div>
                     </div>
 
