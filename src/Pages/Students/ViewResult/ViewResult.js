@@ -14,15 +14,12 @@ const ViewResult = () => {
     const [isProcessingResultOfASemester, setIsProcessingResultOfASemester] = useState(true);
     const [resultOfASemester, setResultOfASemester] = useState({});
     const [semesterCode, setSemesterCode] = useState(-1);
-
     const [isLoadingProfile, setIsLoadingProfile] = useState(true);
     const [profile, setProfile] = useState([]);
-
     const [semesterNames, setSemesterNames] = useState([]);
-
     const [showModal, setShowModal] = useState(false);
     const [semesters, setSemesters] = useState([]);
-    const [processedSemester, setProcessedSemester] = useState({});
+    const [CGPA, setCGPA] = useState(0);
 
 
     const checkMarks = (marks) => {
@@ -157,31 +154,31 @@ const ViewResult = () => {
             setIsProcessingResultOfASemester(true);
             console.log('semester code change', semesters)
             const supObj = {}
+            let totalCreditEarned = 0;
+            let totalGPMulCredit = 0;
             let creditOffered = 0;
             let creditEarned = 0;
             let sumOfGPA = 0;
-            // console.log('result ==> ', result)
-            // console.log('semesterCode ==> ', semesterCode)
             const marksArray = [];
             result.map(x => {
+
+                let total = 0;
+                if (x.type === 'theory') {
+                    total = x?.theorySeventy + x?.theoryThirty;
+                }
+                else if (x.type === 'lab') {
+                    total = x?.labSixty + x?.labFourty;
+                }
+                else if (x.type === 'project') {
+                    total = x?.projectSeventy + x?.projectThirty;
+                }
                 if (x.semesterCode == semesterCode) {
                     const obj = {}
                     obj.courseCode = x?.courseCode;
                     obj.courseTitle = x?.courseTitle;
                     obj.credit = x?.credit;
                     creditOffered += x?.credit;
-                    let total = 0;
-                    if (x.type === 'theory') {
-                        total = x?.theorySeventy + x?.theoryThirty;
-                    }
-                    else if (x.type === 'lab') {
-                        total = x?.labSixty + x?.labFourty;
-                    }
-                    else if (x.type === 'project') {
-                        total = x?.projectSeventy + x?.projectThirty;
-                    }
-
-                    if (total > 40) {
+                    if (total >= 40) {
                         creditEarned += x?.credit;
                     }
                     const gradeAndLetter = checkMarks(total);
@@ -192,6 +189,12 @@ const ViewResult = () => {
                     // console.log('obj  ', obj)
                     marksArray.push(obj);
                 }
+                const gradeAndLetter = checkMarks(total);
+                if (total >= 40) {
+                    totalCreditEarned += x?.credit;
+                }
+                totalGPMulCredit += gradeAndLetter.gp * x?.credit;
+
             })
             supObj.creditOffered = creditOffered;
             supObj.creditEarned = creditEarned;
@@ -201,6 +204,8 @@ const ViewResult = () => {
             else {
                 supObj.GPA = 0.00
             }
+
+
             supObj.courses = marksArray;
             supObj.semesterCode = semesterCode;
             supObj.semesterName = checkSemesterName(semesterCode);
@@ -209,14 +214,24 @@ const ViewResult = () => {
             // console.log('sem ', sem)
             supObj.degree = sem?.degree
             supObj.createdAt = sem?.createdAt
+            supObj.resultPublishDate = sem?.resultPublishDate;
+            supObj.examFinishDate = sem?.examFinishDate;
             supObj.department = sem?.department
-
             setResultOfASemester(supObj);
             console.log('supObj  ', supObj)
-
             setIsProcessingResultOfASemester(false);
-            setProcessedSemester(sem);
+            // setProcessedSemester(sem);
 
+
+            //calculate total cgpa
+            let Cumlative_GPA = 0;
+            if (totalCreditEarned > 0) {
+                Cumlative_GPA = (totalGPMulCredit / totalCreditEarned).toFixed(2);
+            }
+            else {
+                Cumlative_GPA = 0.00
+            }
+            setCGPA(Cumlative_GPA)
         }
 
     }, [semesterCode, result, semesters])
@@ -266,6 +281,7 @@ const ViewResult = () => {
                     <div>
                         <div>
                             <StudentResultSheetModal showModal={showModal}
+                                CGPA={CGPA}
                                 setShowModal={setShowModal}
                                 resultOfASemester={resultOfASemester}
                                 // processedSemester={processedSemester}

@@ -12,10 +12,9 @@ import SpecialPage from './Pages/SpecialPage/SpecialPage';
 import Register from './Pages/LogIn/Register/Register';
 import Dashboard from './Pages/Dashboard/Dashboard/Dashboard';
 import Header from './Pages/Shared/Header/Header';
-import initializeFirebase from './Pages/LogIn/Firebase/firebase.init';
+// import initializeFirebase from './Pages/LogIn/Firebase/firebase.init';
 // import NavigationBar from './Pages/Shared/Navigationbar/NavigationBar';
-
-initializeFirebase();
+// initializeFirebase();
 function App() {
   // const a = React.version;
   return (

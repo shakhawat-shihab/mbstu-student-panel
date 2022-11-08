@@ -53,11 +53,13 @@ const StudentCourseRegistrationDetails = () => {
                     count++;
                     if (info?.data?.isHallVerified !== undefined) {
                         count++;
-                        if (info?.data?.isAcademicVerified !== undefined) {
+                        if (info?.data?.isPaid !== undefined) {
                             count++;
+                            if (info?.data?.isAcademicVerified !== undefined) {
+                                count++;
+                            }
                         }
                     }
-
                 }
                 setCurrentState(count);
                 setApplicationView(count);
@@ -90,7 +92,48 @@ const StudentCourseRegistrationDetails = () => {
                                     </div>
 
                                     <div className='mt-5'>
-                                        {
+                                        <>
+                                            {
+                                                application?.isHallVerified && !application?.isPaid
+                                                    ?
+                                                    <Payment application={application} ></Payment>
+                                                    :
+                                                    <>
+                                                        {
+                                                            applicationView === 1
+                                                            &&
+                                                            <CourseView application={application}></CourseView>
+                                                        }
+                                                        {
+                                                            applicationView === 2
+                                                            &&
+                                                            <ChairmanView application={application}></ChairmanView>
+                                                        }
+                                                        {
+                                                            applicationView === 3
+                                                            &&
+                                                            <HallView application={application}></HallView>
+                                                        }
+                                                        {
+                                                            applicationView === 4
+                                                            &&
+                                                            <Payment application={application} ></Payment>
+                                                        }
+                                                        {
+                                                            applicationView === 5
+                                                            &&
+                                                            <Academic application={application}></Academic>
+                                                        }
+                                                        {
+                                                            applicationView === 6
+                                                            &&
+                                                            <AdmitCard application={application}></AdmitCard>
+                                                        }
+                                                    </>
+                                            }
+
+                                        </>
+                                        {/* {
                                             applicationView === 1
                                             &&
                                             <CourseView application={application}></CourseView>
@@ -119,7 +162,7 @@ const StudentCourseRegistrationDetails = () => {
                                             applicationView === 6
                                             &&
                                             <AdmitCard application={application}></AdmitCard>
-                                        }
+                                        } */}
 
                                     </div>
                                 </div>

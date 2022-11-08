@@ -7,7 +7,7 @@ const AcademicCommitteeCourseRegistrationDetails = () => {
     const { applicationId } = useParams();
     const history = useHistory();
     const [application, setApplication] = useState({});
-    const [comment, setComment] = useState();
+    const [comment, setComment] = useState('');
 
     const Toast = Swal.mixin({
         toast: true,
@@ -94,7 +94,7 @@ const AcademicCommitteeCourseRegistrationDetails = () => {
         const deniedApplication = {};
 
         deniedApplication.applicationId = application?._id;
-        deniedApplication.academicCommitteeMessage = comment;
+        deniedApplication.academicCommitteeMessage = comment.trim() || 'rejected';
         deniedApplication.studentProfileId = application?.applicantProfileId;
         deniedApplication.department = application?.department;
 

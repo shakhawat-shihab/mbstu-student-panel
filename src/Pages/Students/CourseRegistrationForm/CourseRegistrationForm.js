@@ -149,7 +149,7 @@ const CourseRegistrationForm = () => {
 
         // data.name ? (application.name = data.name) : (application.name = "Backlog Exam")
 
-        if (previousApplicationCredit > 0) {
+        if (regularCourses.length == 0) {
             application.name = "Backlog Exam"
         }
         else {

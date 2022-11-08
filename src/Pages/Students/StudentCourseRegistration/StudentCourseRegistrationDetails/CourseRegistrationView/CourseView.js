@@ -1,25 +1,39 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FcApproval } from 'react-icons/fc';
-import { MdPendingActions } from 'react-icons/md';
+import { MdPendingActions, MdCancel } from 'react-icons/md';
 
 const CourseView = (props) => {
-    const status = 'success';
     const { application } = props;
     return (
         <div>
 
-            <div className='container shadow-lg p-3 my-4'>
-                <h3 className='fw-bold text-center mb-5'>{application?.name}</h3>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold">Name: </span>{application?.applicantName}</p>
-                <p style={{ fontSize: "20px" }} className="text-uppercase"><span className="fw-bold">ID: </span>{application?.applicantId}</p>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold">Session: </span>{application?.applicantSession}</p>
-                <p style={{ fontSize: "20px" }}><span className="fw-bold">Hall: </span>{application?.applicantHallName}</p> <br />
+            <div className='container shadow-lg py-4 px-5 my-4 rounded'>
+                <h2 className='text-center mb-5 fw-bold' style={{ color: "#3C3FED" }}>Student View</h2>
+                <div className='mt-3 d-flex justify-content-between'>
+                    <h3 className='fw-bold text-center mb-1'>{application?.name}</h3>
+                    {
+
+                        application?.status !== 'pending'
+                            ?
+                            <h5 className='fw-bold float-end text-capitalize'>{application?.status}<span className="text-danger fs-1"> <MdCancel /></span></h5>
+                            :
+                            <h5 className='fw-bold float-end text-capitalize'>{application?.status}<span className="text-warning fs-1"> <MdPendingActions /></span></h5>
+                    }
+                </div>
+
+                <div className='d-flex flex-column'>
+                    <span style={{ fontSize: "20px" }}><span className="fw-bold">Name: </span>{application?.applicantName}</span>
+                    <span style={{ fontSize: "20px" }} className="text-uppercase"><span className="fw-bold">ID: </span>{application?.applicantId}</span>
+                    <span style={{ fontSize: "20px" }}><span className="fw-bold">Session: </span>{application?.applicantSession}</span>
+                    <span style={{ fontSize: "20px" }}><span className="fw-bold">Hall: </span>{application?.applicantHallName}</span>
+                </div>
+
+
                 {
                     (application?.regularCourses && application?.regularCourses?.length !== 0)
                     &&
-                    <div>
-                        <h5 className="fw-bold">Regular Courses:</h5><br />
+                    <div className='mt-4'>
+                        <h5 className="fw-bold">Regular Courses:</h5>
                         <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
                             <col width="15%" />
                             <col width="40%" />
@@ -55,8 +69,8 @@ const CourseView = (props) => {
                 {
                     (application?.backlogCourses && application?.backlogCourses?.length !== 0)
                     &&
-                    <div>
-                        <h5 className="fw-bold">Backlog Courses:</h5> <br />
+                    <div className=''>
+                        <h5 className="fw-bold">Backlog Courses:</h5>
                         <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
                             <col width="15%" />
                             <col width="40%" />
@@ -123,18 +137,6 @@ const CourseView = (props) => {
                         </Table>
                     </div>
                 }
-
-                <div className='my-3'>
-                    {
-
-                        application?.status === 'pending' ?
-                            <h5 className='fw-bold'>Status: <span className="text-warning text-capitalize">{application?.status} <MdPendingActions /></span>  </h5>
-                            :
-                            <h5 className='fw-bold'>Status: <span className="text-success text-capitalize">{application?.status} <FcApproval /></span></h5>
-
-                    }
-                </div>
-
 
             </div>
         </div>

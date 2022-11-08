@@ -34,13 +34,24 @@ th {
 }
 
 .tbl-color {
-    border-color: rgba(31, 30, 30, 0.851) !important
+    /* border-color: rgba(247, 10, 10, 0.851) !important */
 }
 
 .my-style {
-    border-color: rgba(253, 253, 255, 0.701) !important
+    border-color: rgb(15, 15, 225) !important
 }
 
-tr {
-    border-bottom: none !important;
+.tbl-brdr-style {
+    --bs-border-width: 1px;
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+    /* border: 1px solid rgb(28, 28, 28); */
+}
+
+.bb-0 {
+    border-bottom-width: 0px !important;
+
+}
+
+.brght {
+    border-right: 1px solid #dee2e6;
 }

@@ -7,7 +7,7 @@ const HallProvostCourseRegistrationDetails = () => {
     const { applicationId } = useParams();
     const history = useHistory();
     const [application, setApplication] = useState({});
-    const [comment, setComment] = useState();
+    const [comment, setComment] = useState('');
 
     // console.log("My application === ", application);
 
@@ -45,7 +45,7 @@ const HallProvostCourseRegistrationDetails = () => {
 
         const approvedApplication = {};
         approvedApplication.applicationId = application?._id;
-        approvedApplication.HallMessage = comment;
+        approvedApplication.hallMessage = comment;
         approvedApplication.department = application?.department;
         approvedApplication.applicantHallId = application?.applicantHallId;
 
@@ -85,7 +85,7 @@ const HallProvostCourseRegistrationDetails = () => {
         const deniedApplication = {};
 
         deniedApplication.applicationId = application?._id;
-        deniedApplication.HallMessage = comment;
+        deniedApplication.hallMessage = comment.trim() || 'rejected';
         deniedApplication.department = application?.department;
         deniedApplication.applicantHallId = application?.applicantHallId;
 

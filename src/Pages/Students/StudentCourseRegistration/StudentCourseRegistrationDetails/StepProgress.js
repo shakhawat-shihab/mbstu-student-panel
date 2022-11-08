@@ -29,10 +29,10 @@ const StepProgress = (props) => {
 
     return (
         <div className='container mb-5'>
-            <h4 className='text-center'>Course Application Status</h4>
+            <h2 className='text-center fw-bold my-4'>Course Application Status</h2>
             <div>
                 {/* <input type="range" min="0" max="100" onChange={(e) => { console.log(e.target.value) }} /> */}
-                <Form.Label >Slide it to view </Form.Label>
+
                 <Form.Range defaultValue={(applicationView - 1) * 20}
                     onChange={(e) => {
                         console.log(e.target.value)
@@ -55,6 +55,7 @@ const StepProgress = (props) => {
                             setApplicationView(6)
                         }
                     }} />
+                <Form.Label >*Slide it to view different stage of your application</Form.Label>
             </div>
             <div className='my-5 '>
                 <Stepper step={step}>

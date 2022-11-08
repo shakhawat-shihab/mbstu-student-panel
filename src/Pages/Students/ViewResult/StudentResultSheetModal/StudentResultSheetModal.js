@@ -11,13 +11,26 @@ import checkFacultyame from '../../../../Functions/DeptCodeToFacultyName';
 
 const StudentResultSheetModal = (props) => {
     const { showModal, setShowModal, resultOfASemester, processedSemester, profile } = props;
-    const { GPA, courses, creditEarned, creditOffered, semesterName, degree, department } = resultOfASemester;
+    const { GPA, courses, creditEarned, creditOffered, semesterName, degree, department, resultPublishDate, examFinishDate, createdAt } = resultOfASemester;
     // const { degree, department, examFinishDate, resultPublishDate, session, updatedAt } = processedSemester;
 
-    const res = processedSemester?.updatedAt?.split('-') || '';
+    const createdAtFormat = new Date(createdAt);
+    const resultPublishDateFormat = new Date(resultPublishDate);
+    const todayDateFormat = new Date()
+
 
 
     const leng = resultOfASemester?.courses?.length;
+
+    let mid = 0;
+    if (leng % 2 == 0) {
+        mid = leng / 2;
+    }
+    else {
+        mid = parseInt(leng / 2);
+    }
+
+    console.log(mid, leng)
     // console.log("after-split == ", res);
 
     const handleDownload = () => {
@@ -101,7 +114,7 @@ const StudentResultSheetModal = (props) => {
                                     </div>
                                     <span className='fw-bold text-center'>Mawlana Bhashani Science and Technology University, Tangail, Bangladesh</span>
                                     <span className='text-center fw-bold'>Grade Sheet For</span>
-                                    <span className='text-center'>{semesterName} {degree} Final Examination - {res[0]}</span>
+                                    <span className='text-center'>{semesterName} {degree} Final Examination - {createdAtFormat.getFullYear()}</span>
                                     <div className='d-flex mt-4 flex-column mx-auto w-75'>
                                         {/* <div> */}
                                         <span className='mb-1'><span className='fw-bold '>Department: </span>{checkDepartmentName(department)}</span>
@@ -196,7 +209,7 @@ const StudentResultSheetModal = (props) => {
                             </div>
                         </div>
                         <div className='mt-3 w-75 mx-auto' >
-                            <Table className='tbl-color'  >
+                            <Table className='tbl-color '   >
                                 {/* <col width="10%" />
                                 <col width="60%" />
                                 <col width="10%" />
@@ -205,41 +218,42 @@ const StudentResultSheetModal = (props) => {
                                 <col width="5%" /> */}
                                 <thead>
                                     <tr className='fs-tbl'>
-                                        <th >Course Code</th>
-                                        <th >Course Title</th>
-                                        <th >Credit Hour(s) </th>
-                                        <th > LG </th>
-                                        <th >GP</th>
-                                        <th > GPA</th>
+                                        <th className='tbl-brdr-style py-2'  >Course Code</th>
+                                        <th className='tbl-brdr-style py-2' >Course Title</th>
+                                        <th className='tbl-brdr-style py-2' >Credit Hour(s) </th>
+                                        <th className='tbl-brdr-style py-2'  > LG </th>
+                                        <th className='tbl-brdr-style py-2'  >GP</th>
+                                        <th className='tbl-brdr-style py-2'  > GPA</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
                                         // const size= resultOfASemester?.courses?.length
                                         resultOfASemester?.courses?.map(x => {
-                                            console.log(resultOfASemester?.courses?.indexOf(x))
+                                            // console.log(resultOfASemester?.courses?.indexOf(x))
+                                            const t = resultOfASemester?.courses?.indexOf(x)
                                             return (
                                                 <tr key={x?.courseCode} className='fs-tbl-marks'>
-                                                    <td className='border border-1' >{x?.courseCode.toUpperCase()}</td>
-                                                    <td className='border border-1' >{x?.courseTitle}</td>
-                                                    <td className='border border-1' >{x.credit}</td>
-                                                    <td className='border border-1' >{x.LG}</td>
-                                                    <td className='border border-1' >{x.GP}</td>
-                                                    {/* <td className='border border-bottom-0 border-top-0'>777</td> */}
+                                                    <td className='tbl-brdr-style' >{x?.courseCode.toUpperCase()}</td>
+                                                    <td className='tbl-brdr-style' >{x?.courseTitle}</td>
+                                                    <td className='tbl-brdr-style' >{x.credit}</td>
+                                                    <td className='tbl-brdr-style' >{x.LG}</td>
+                                                    <td className='tbl-brdr-style' >{x.GP}</td>
+
                                                     {
 
 
                                                         <td className={
-                                                            ' ' + (resultOfASemester?.courses?.indexOf(x) == 0) && + ' my-style '
+
+                                                            // t == 0 ? ' bb-0 ' : (t == leng - 1 ? ' ' : ' ')
+                                                            t != leng - 1 ? ' bb-0  brght ' : ' brght '
                                                             // +
-                                                            // (resultOfASemester?.courses?.indexOf(x) == leng - 1) && +' my-style'
+                                                            // (t == leng - 1) ? ' g ' : ' h ')
                                                         }
-
-
                                                         >
                                                             {
-                                                                (resultOfASemester?.courses?.indexOf(x) == leng / 2) &&
-                                                                77
+                                                                (t === mid) &&
+                                                                GPA
                                                             }
                                                         </td>
 
@@ -312,13 +326,13 @@ const StudentResultSheetModal = (props) => {
                         </div>
                         <div className='row row-cols-lg-3 mt-5 ' style={{ fontSize: "12px" }}>
                             <div className='d-flex flex-column'>
-                                <span><span className='fw-bold'>Date of Publications: </span></span>
-                                <span><span className='fw-bold'>Date of Issue: </span></span>
+                                <span><span className='fw-bold'>Date of Publications: {resultPublishDateFormat.toLocaleDateString()} </span></span>
+                                <span><span className='fw-bold'>Date of Issue: {todayDateFormat.toLocaleDateString()} </span></span>
                             </div>
                             <div className='d-flex flex-column'>
                                 <span><span className='fw-bold'>Credits Offered: </span>{creditOffered}</span>
                                 <span><span className='fw-bold'>Credits Earned: </span>{creditEarned}</span>
-                                <span><span className='fw-bold'>CGPA: </span></span>
+                                <span><span className='fw-bold'>CGPA: </span>{props?.CGPA}  </span>
                                 <span><span className='fw-bold'>Remarks: </span></span>
                             </div>
                             <div className="ms-5 ps-3 mt-4 w-25">
@@ -332,7 +346,7 @@ const StudentResultSheetModal = (props) => {
                 </Modal.Body>
             </Modal>
 
-        </div>
+        </div >
     );
 };
 

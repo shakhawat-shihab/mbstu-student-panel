@@ -10,7 +10,7 @@ const DeptChairmanCourseRegistrationDetails = () => {
     const { applicationId } = useParams();
     const history = useHistory();
     const [application, setApplication] = useState({});
-    const [comment, setComment] = useState();
+    const [comment, setComment] = useState('');
 
     // console.log("My application === ", application);
 
@@ -95,11 +95,9 @@ const DeptChairmanCourseRegistrationDetails = () => {
 
     }
     const handleReject = () => {
-
         const deniedApplication = {};
-
         deniedApplication.applicationId = application?._id;
-        deniedApplication.chairmanMessage = comment;
+        deniedApplication.chairmanMessage = comment.trim() || 'rejected';
         deniedApplication.studentProfileId = application?.applicantProfileId;
         deniedApplication.department = application?.department;
 
@@ -119,6 +117,7 @@ const DeptChairmanCourseRegistrationDetails = () => {
                         icon: 'success',
                         title: data.message
                     })
+                    history.replace('/dashboard/approve-course-registration-dept')
                 }
                 else {
                     Toast.fire({
