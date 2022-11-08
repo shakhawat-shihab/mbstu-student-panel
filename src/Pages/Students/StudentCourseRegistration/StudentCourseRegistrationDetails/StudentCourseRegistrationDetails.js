@@ -17,7 +17,7 @@ const StudentCourseRegistrationDetails = () => {
     const [application, setApplication] = useState({});
     const [isLoadingApplication, setIsLoadingApplication] = useState(true);
     const [currentState, setCurrentState] = useState(1);
-
+    const [sliding, setSliding] = useState(false);
 
     const history = useHistory();
 
@@ -52,7 +52,7 @@ const StudentCourseRegistrationDetails = () => {
                 if (info?.data?.isChairmanVerified !== undefined) {
                     count++;
                     if (info?.data?.isHallVerified !== undefined) {
-                        count++;
+                        count += 1;
                         if (info?.data?.isPaid !== undefined) {
                             count++;
                             if (info?.data?.isAcademicVerified !== undefined) {
@@ -88,13 +88,14 @@ const StudentCourseRegistrationDetails = () => {
                                     <div className='mb-5 py-5'>
                                         <StepProgress current={currentState} applicationView={applicationView}
                                             setApplicationView={setApplicationView}
+                                            setSliding={setSliding}
                                         />
                                     </div>
 
                                     <div className='mt-5'>
                                         <>
                                             {
-                                                application?.isHallVerified && !application?.isPaid
+                                                application?.isHallVerified && !sliding
                                                     ?
                                                     <Payment application={application} ></Payment>
                                                     :
@@ -113,6 +114,7 @@ const StudentCourseRegistrationDetails = () => {
                                                             applicationView === 3
                                                             &&
                                                             <HallView application={application}></HallView>
+                                                            // <Payment application={application} ></Payment>
                                                         }
                                                         {
                                                             applicationView === 4

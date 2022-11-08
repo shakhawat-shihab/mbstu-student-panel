@@ -155,7 +155,7 @@ const HallView = (props) => {
                     :
 
                     <div className=' d-flex justify-content-center align-items-center half-height' >
-                        <h5 className='text-center fs-2 text-secondary my-4 fw-bold error-opacity' >Hall-Provost has not approved application yet</h5>
+                        <h5 className='text-center fs-2 text-secondary my-4 fw-bold error-opacity' >Hall Provost has not approved this application yet</h5>
                     </div>
             }
 

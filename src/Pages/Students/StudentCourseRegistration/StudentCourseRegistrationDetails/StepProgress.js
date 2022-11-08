@@ -12,7 +12,7 @@ import {
 
 
 const StepProgress = (props) => {
-    const { current, applicationView, setApplicationView } = props;
+    let { current, applicationView, setApplicationView, setSliding } = props;
     console.log('current ', current)
     console.log('application view ', applicationView)
     // (m,n)  => m means current step
@@ -26,6 +26,9 @@ const StepProgress = (props) => {
     //     { label: "Controller Approval" },
     //     { label: "Admit Issue" }
     // ]
+    if (applicationView === 3) {
+        applicationView++;
+    }
 
     return (
         <div className='container mb-5'>
@@ -36,6 +39,7 @@ const StepProgress = (props) => {
                 <Form.Range defaultValue={(applicationView - 1) * 20}
                     onChange={(e) => {
                         console.log(e.target.value)
+                        setSliding(true);
                         if (e.target.value >= 0 && e.target.value <= 12) {
                             setApplicationView(1)
                         }
