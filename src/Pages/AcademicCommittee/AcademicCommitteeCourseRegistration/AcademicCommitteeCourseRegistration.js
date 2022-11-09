@@ -47,7 +47,7 @@ const AcademicCommitteeCourseRegistration = () => {
                                     applications?.map(x => {
                                         return (
                                             <div className='col-lg-3 col-md-4 col-sm-12' key={x?._id}>
-                                                <Card style={{ backgroundColor: "#DEF5E5" }} className="mb-3 shadow-sm">
+                                                <Card className="mb-3 shadow-sm">
                                                     {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
                                                     <Card.Body>
                                                         <Card.Title>{x?.name}</Card.Title> <br />

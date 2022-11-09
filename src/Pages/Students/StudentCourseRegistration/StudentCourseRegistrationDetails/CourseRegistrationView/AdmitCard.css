@@ -1,0 +1,13 @@
+ol {
+
+    columns: 4;
+
+    -webkit-columns: 4;
+
+    -moz-columns: 4;
+
+    margin-left: 8px;
+
+    padding: 5px;
+
+}
