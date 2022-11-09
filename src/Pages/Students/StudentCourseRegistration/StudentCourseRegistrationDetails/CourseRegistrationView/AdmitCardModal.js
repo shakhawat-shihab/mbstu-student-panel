@@ -76,9 +76,9 @@ const AdmitCardModal = (props) => {
                                     <img src={mbstuLogo} alt="mbstu" style={{ width: "100px" }} />
                                 </div>
                                 <div className="col-lg-9 ps-4 mt-2 font-style-work-sans">
-                                    <h3 className='fw-bold'>Mawlana Bhashani Science and Technology University</h3>
+                                    <h4 className='fw-bold text-center'>Mawlana Bhashani Science and Technology University</h4>
                                     <p className='text-center'>Santosh, Tangail</p>
-                                    <h3 className='text-center mb-3'>Admit Card</h3>
+                                    <h3 className='text-center mb-3 fw-bold'>Admit Card</h3>
                                     <h5 className='text-center'>{name} {degree} Final Examination</h5>
                                 </div>
                                 <div className='col-lg-2'>

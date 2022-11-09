@@ -39,7 +39,7 @@ const AdmitCard = (props) => {
                 <AdmitCardModal application={application} showModal={showModal} setShowModal={setShowModal} />
             </div>
 
-            <div className='container shadow-lg  py-5 px-5 my-4'>
+            <div className='container shadow-lg  py-5 px-5 my-4 rounded'>
 
                 <h2 className='text-center mb-5' style={{ color: "#3C3FED" }}>Admit Card</h2>
 
@@ -48,14 +48,14 @@ const AdmitCard = (props) => {
                         <div className='col-lg-1 mt-2'>
                             <img src={mbstuLogo} alt="mbstu" style={{ width: "100px" }} />
                         </div>
-                        <div className="col-lg-8 ps-4 mt-2 font-style-work-sans">
-                            <h3 className='fw-bold' style={{ wordSpacing: "6px" }}>Mawlana Bhashani Science and Technology University</h3>
+                        <div className="col-lg-9 ps-4 mt-2 font-style-work-sans">
+                            <h3 className='fw-bold text-center mb-1' style={{ wordSpacing: "5px" }}>Mawlana Bhashani Science and Technology University</h3>
                             <p className='text-center'>Santosh, Tangail</p>
-                            <h3 className='text-center mb-3'>Admit Card</h3>
+                            <h3 className='text-center fw-bold mb-3'>Admit Card</h3>
                             <h5 className='text-center'>{name} {degree} Final Examination</h5>
                         </div>
                         <div className='col-lg-2'>
-                            <img src={profile?.imageURL} alt="myself" style={{ width: "170px", height: "170px" }} />
+                            <img src={profile?.imageURL} alt={`picture of ${applicantName} `} style={{ width: "170px", height: "170px" }} />
                         </div>
                     </div>
 
