@@ -29,6 +29,9 @@ const StepProgress = (props) => {
     if (applicationView === 3) {
         applicationView++;
     }
+    if (applicationView === 5) {
+        applicationView++;
+    }
 
     return (
         <div className='container mb-5'>

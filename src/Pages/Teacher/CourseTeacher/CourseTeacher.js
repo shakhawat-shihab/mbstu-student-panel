@@ -371,7 +371,7 @@ const CourseTeacher = () => {
                                                     checked={final}
                                                     onChange={() => setFinal(!final)}
                                                 />
-                                                <div className='text-center'>
+                                                <div className='text-center mt-3'>
                                                     <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
                                                     {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
                                                     <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>
@@ -491,7 +491,7 @@ const CourseTeacher = () => {
                                                     checked={labQuiz}
                                                     onChange={() => setLabQuiz(!labQuiz)}
                                                 />
-                                                <div className='text-center'>
+                                                <div className='text-center mt-3'>
                                                     <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
                                                     {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
                                                     <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>
@@ -531,9 +531,7 @@ const CourseTeacher = () => {
                                             </div>
                                     }
 
-                                    {
-                                        console.log('inside state    e2r     ', state)
-                                    }
+
                                     {
 
 
@@ -598,8 +596,8 @@ const CourseTeacher = () => {
                                                                 // onChange={() => setClassPerformanceProject(!classPerformanceProject)}
                                                                 checked
                                                             />
-                                                            <div className='text-center'>
-                                                                <div className='text-center'>
+                                                            <div className='text-center '>
+                                                                <div className='text-center mt-3'>
                                                                     <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
                                                                     {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
                                                                     <Button variant='success' className='me-2' onClick={() => submitAllMarksCourseTeacher()}>Submit Marks</Button>

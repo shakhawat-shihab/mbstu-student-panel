@@ -1,23 +1,53 @@
 import React from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
+import Pagination from 'react-bootstrap/Pagination';
 import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
 import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
 import html2pdf from 'html2pdf.js';
 import { FaDownload } from 'react-icons/fa';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const CourseTeacherMarksModal = (props) => {
     const { user } = useAuth();
     const marks = props.marks;
     const { showModal } = props;
     const { setShowModal } = props;
+
+
+    //for pagination add the following para
+    const [numberOfPages, setNumberOfPages] = useState(1);
+    const [currentPageNumber, setCurrentPageNumber] = useState(1);
+    const [pages, setPages] = useState([]);
+    const [paginatedMarks, setPaginatedMarks] = useState([]);
+    const numberOfStudentPerPage = 5;
+    useEffect(() => {
+        let pageCount = parseInt(marks.studentsMarks.length / numberOfStudentPerPage);
+        if (marks.studentsMarks.length % numberOfStudentPerPage != 0) {
+            pageCount += 1;
+        }
+        setNumberOfPages(pageCount)
+        const array = []
+        for (let i = 1; i <= pageCount; i++) {
+            array.push(i);
+        }
+        console.log(array)
+        setPages(array);
+    }, [marks])
+    useEffect(() => {
+        const selectedtedMarks = marks.studentsMarks.slice(numberOfStudentPerPage * (currentPageNumber - 1), currentPageNumber * numberOfStudentPerPage)
+        // console.log('currentPageNumber  ', currentPageNumber)
+        // console.log('selectedtedMarks ', selectedtedMarks)
+        setPaginatedMarks(selectedtedMarks)
+    }, [currentPageNumber])
+
+
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
-        // window.open(invoice);
-        // return false;
         html2pdf().from(selected).save(`${marks?.courseCode}_marks.pdf`);
-
     }
+
     return (
         <div>
             <Modal
@@ -40,22 +70,34 @@ const CourseTeacherMarksModal = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <div id="selectedPortion" className='px-4 py-2 my-5'>
-                        <div className='mt-4'>
-                            <h5 className='text-uppercase text-center fw-bold mb-1'>Mawlana Bhashani Science and Technology university</h5>
-                            <h5 className='text-center'>Santosh,Tangail-1902</h5>
+                        <div className='d-flex flex-row-reverse mb-4'>
+                            <small>Page {currentPageNumber} of {numberOfPages}</small>
                         </div>
-                        <div className='mt-3'>
-                            <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(user?.department)}</p>
-                            <p className='text-center '>{checkSemesterName(marks?.semesterId?.semesterCode)}</p>
-                        </div>
-                        <div className=''>
-                            <div className='my-4'>
-                                <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
-                                <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
-                                <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
-                                <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.fullName}</p>
-                            </div>
-                        </div>
+
+                        {/* the title of the courses will be in first page */}
+                        {
+                            currentPageNumber === 1
+                            &&
+                            <>
+                                <div className='mt-2'>
+                                    <h5 className='text-uppercase text-center fw-bold mb-1'>Mawlana Bhashani Science and Technology university</h5>
+                                    <h5 className='text-center'>Santosh, Tangail-1902</h5>
+                                </div>
+                                <div className='mt-3'>
+                                    <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(user?.department)}</p>
+                                    <p className='text-center '>{checkSemesterName(marks?.semesterId?.semesterCode)}</p>
+                                </div>
+                                <div className=''>
+                                    <div className='my-4'>
+                                        <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
+                                        <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
+                                        <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                        <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.fullName}</p>
+                                    </div>
+                                </div>
+                            </>
+                        }
+
 
                         {
                             marks.type === 'theory'
@@ -106,8 +148,8 @@ const CourseTeacherMarksModal = (props) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        Object.keys(marks).length !== 0 &&
-                                        marks?.studentsMarks.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                        Object.keys(paginatedMarks).length !== 0 &&
+                                        paginatedMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
                                             <td style={{ border: "1px solid black" }} className='text-uppercase'>
                                                 <p>{x?.id}</p>
                                             </td>
@@ -159,6 +201,7 @@ const CourseTeacherMarksModal = (props) => {
                                 </tbody>
                             </Table>
                         }
+
                         {
                             marks.type === 'lab'
                             &&
@@ -231,6 +274,7 @@ const CourseTeacherMarksModal = (props) => {
                                 </tbody>
                             </Table>
                         }
+
                         {
                             marks.type === 'project' &&
                             <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
@@ -274,20 +318,44 @@ const CourseTeacherMarksModal = (props) => {
                                 </tbody>
                             </Table>
                         }
-                        <div className='mt-5 pt-5'>
-                            <div className='container d-flex justify-content-between ms-2 pe-4'>
-                                <div className="w-25">
-                                    <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                                    <p className='text-center'>Signature of the Course Teacher</p>
-                                </div>
-                                <div className="w-25">
-                                    <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                                    <p className='text-center'>Chairman</p>
+
+
+                        {/* the signature of the courses will be in last page */}
+                        {
+                            currentPageNumber === numberOfPages
+                            &&
+                            <div className='mt-5 pt-5'>
+                                <div className='container d-flex justify-content-between ms-2 pe-4'>
+                                    <div className="w-25">
+                                        <hr style={{ height: "3px", color: "black", bordr: "none" }} />
+                                        <p className='text-center'>Signature of the Course Teacher</p>
+                                    </div>
+                                    <div className="w-25">
+                                        <hr style={{ height: "3px", color: "black", bordr: "none" }} />
+                                        <p className='text-center'>Chairman</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        }
                     </div>
+
+
+                    {/* for pagination  */}
+                    <div className='d-flex align-items-center justify-content-center'>
+                        {
+                            pages?.map(x => {
+                                return (<Pagination className='mx-2'>
+                                    <Pagination.Item
+                                        active={x === currentPageNumber}
+                                        onClick={() => setCurrentPageNumber(x)}
+                                    >
+                                        {x}
+                                    </Pagination.Item>
+                                </ Pagination>)
+                            })
+                        }
+                    </div>
+
 
                 </Modal.Body>
             </Modal>

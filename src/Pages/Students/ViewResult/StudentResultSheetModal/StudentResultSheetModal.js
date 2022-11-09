@@ -18,8 +18,6 @@ const StudentResultSheetModal = (props) => {
     const resultPublishDateFormat = new Date(resultPublishDate);
     const todayDateFormat = new Date()
 
-
-
     const leng = resultOfASemester?.courses?.length;
 
     let mid = 0;
@@ -48,18 +46,14 @@ const StudentResultSheetModal = (props) => {
             heightAdjust = 15
         }
 
-
         const selected = document.getElementById('selectedPortion');
-
         const divHeight = selected.clientHeight
         const divWidth = selected.clientWidth
         const ratio = divHeight / divWidth;
 
         html2canvas(selected, { scale: '5' }).then((canvas) => {
             const imgData = canvas.toDataURL('image/jpeg');
-
             const pdfDOC = new jsPDF("l", "mm", "a0"); //  use a4 for smaller page
-
             const width = pdfDOC.internal.pageSize.getWidth();
             let height = pdfDOC.internal.pageSize.getHeight();
             height = ratio * width;
@@ -241,31 +235,13 @@ const StudentResultSheetModal = (props) => {
                                                     <td className='tbl-brdr-style' >{x.GP}</td>
 
                                                     {
-
-
-                                                        <td className={
-
-                                                            // t == 0 ? ' bb-0 ' : (t == leng - 1 ? ' ' : ' ')
-                                                            t != leng - 1 ? ' bb-0  brght ' : ' brght '
-                                                            // +
-                                                            // (t == leng - 1) ? ' g ' : ' h ')
-                                                        }
-                                                        >
+                                                        <td className={t != leng - 1 ? ' bb-0  brght ' : ' brght '}>
                                                             {
                                                                 (t === mid) &&
                                                                 GPA
                                                             }
                                                         </td>
-
-
-
-
                                                     }
-
-                                                    {/* {
-                                                        resultOfASemester?.courses?.indexOf(x) === 0 &&
-                                                        <td rowSpan={`${resultOfASemester?.courses?.length}`}  >{resultOfASemester?.GPA}</td>
-                                                    } */}
                                                 </tr>)
                                         })
                                     }

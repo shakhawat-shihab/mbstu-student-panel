@@ -1,27 +1,53 @@
 import React from 'react';
 import { Form, Table } from 'react-bootstrap';
-import { MdPendingActions, MdCancel } from 'react-icons/md';
+import { MdPendingActions, MdOutlineVerified, MdOutlineReportGmailerrorred } from 'react-icons/md';
 
 const Academic = (props) => {
     const { application } = props;
+    console.log('academic ', application)
     return (
         <div>
             {
-                application?.isAcademicCommitteeVerfied || application?.academicCommitteeMessage
+                application?.isAcademicCommitteeVerified || application?.academicCommitteeMessage
                     ?
                     <div className='container shadow-lg  py-4 px-5 my-4 rounded'>
                         <h2 className='text-center mb-5 fw-bold' style={{ color: "#3C3FED" }}>Academic Committee Approval</h2>
                         <div className='mt-3 d-flex justify-content-between'>
                             <h3 className='fw-bold text-center mb-1'>{application?.name}</h3>
                             {
-                                application?.status !== 'pending'
-                                    ?
-                                    <h5 className='fw-bold float-end text-capitalize'>{application?.status}<span className="text-danger fs-1"> <MdCancel /></span></h5>
-                                    :
-                                    <h5 className='fw-bold float-end text-capitalize'>{application?.status}<span className="text-warning fs-1"> <MdPendingActions /></span></h5>
+                                application?.status === 'pending'
+                                &&
+                                <h5 className='fw-bold float-end text-capitalize text-warning'>
+
+                                    <span className=" fs-2 me-2">
+                                        <MdPendingActions />
+                                    </span>
+                                    {application?.status}
+                                </h5>
+                            }
+                            {
+                                application?.status === 'successfull'
+                                &&
+                                <h5 className='fw-bold float-end text-capitalize text-success'>
+                                    <span className=" fs-2 me-2">
+                                        <MdOutlineVerified />
+                                    </span>
+                                    {application?.status}
+
+
+                                </h5>
+                            }
+                            {
+                                application?.status?.includes("denied")
+                                &&
+                                <h5 className='fw-bold float-end text-capitalize text-danger'>
+                                    <span className=" fs-2 me-2">
+                                        <MdOutlineReportGmailerrorred />
+                                    </span>
+                                    {application?.status}
+                                </h5>
                             }
                         </div>
-
                         <div className='d-flex flex-column'>
                             <span style={{ fontSize: "20px" }}><span className="fw-bold">Name: </span>{application?.applicantName}</span>
                             <span style={{ fontSize: "20px" }} className="text-uppercase"><span className="fw-bold">ID: </span>{application?.applicantId}</span>
