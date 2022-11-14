@@ -77,7 +77,7 @@ const CourseTeacher = () => {
         })
             .then(res => res.json())
             .then(info => {
-                // console.log('info ', info)
+                console.log('info ===> ', info)
                 setMarks(info.data);
                 setIsLoadingMarks(false);
 

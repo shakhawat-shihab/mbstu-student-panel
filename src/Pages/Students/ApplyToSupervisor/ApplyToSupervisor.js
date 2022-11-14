@@ -283,7 +283,11 @@ const ApplyToSupervisor = () => {
                                                 </Form>
                                             </div>
                                             :
-                                            <h5 className='text-center text-danger my-4 '>Your Application is accepted already</h5>
+                                            <div className=' d-flex justify-content-center align-items-center half-height' >
+
+                                                <h3 className='text-center text-success my-4 fw-bold '>Your Application is accepted already</h3>
+                                            </div>
+
                                     }
 
                                 </>

@@ -114,7 +114,7 @@ const CreateCourse = () => {
                     title: info.message
                 })
             });
-        reset();
+        // reset();
     };
 
     //console.log('category ', category)

@@ -244,7 +244,7 @@ const SecondMarkModal = (props) => {
                                                                             readOnly />
                                                                     </td>}
                                                                     {<td style={{ border: "1px solid black" }}>
-                                                                        <input className='border-0 w-25 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName}
+                                                                        <input className='border-0 w-25 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
                                                                             {...register(`${x?.id}_name`, { required: true })}
                                                                             readOnly />
                                                                     </td>}

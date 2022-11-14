@@ -179,6 +179,7 @@ const ResultSheet = () => {
                 objForResultCourse.courseId = x?.courseId;
                 objForResultCourse.type = x?.type;
                 objForResultCourse.semesterCode = semesterInfo?.semesterCode;
+                objForResultCourse.isBacklog = x?.isBacklog;
 
                 let totalMarks = 0;
                 if (x?.type === 'theory') {
@@ -200,11 +201,11 @@ const ResultSheet = () => {
                     let avg = 0;
                     cnt && (avg = sum / cnt);
                     //console.log('average ', avg);
-                    let thirtyPercent;
+                    let thirtyPercent = 0;
                     theoryAttendance ? (thirtyPercent = Math.round((avg + parseInt(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
 
                     let theoryWritten;
-                    if (Math.abs(theorySecondExaminer - theoryThirdExaminer) > 15) {
+                    if (Math.abs(theorySecondExaminer - theoryFinal) > 15) {
                         theoryWritten = parseInt((theoryFinal + theorySecondExaminer + theoryThirdExaminer) / 3)
                     }
                     else {
@@ -221,10 +222,15 @@ const ResultSheet = () => {
                     objForResultCourse.labFourty = labExperiment;
                 }
                 else if (x?.type === 'project') {
-                    const { projectClassPerformance = 0, projectPresentation = 0 } = x;
+                    const { projectClassPerformance = 0, projectPresentation = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId } = x;
                     totalMarks = parseInt(projectClassPerformance + projectPresentation);
                     objForResultCourse.projectSeventy = projectClassPerformance;
                     objForResultCourse.projectThirty = projectPresentation;
+                    //project teacher
+                    const temp = {}
+                    temp.name = projectClassPerformanceBy
+                    temp.profileId = projectClassPerformanceByProfileId
+                    temp.name && (objForResultCourse.projectTeacher = temp)
                 }
 
                 totalCreditTaken += x?.credit;
@@ -237,7 +243,7 @@ const ResultSheet = () => {
                 }
                 const gradeAndLetter = checkMarks(totalMarks);
                 // console.log('totalMarks ', totalMarks)
-                // console.log('gradeAndLetter ', gradeAndLetter)
+                // console.log('  gradeAndLetter =====>  ', marksOfSingleStudent?._id?.id, x?.courseCode, totalMarks, gradeAndLetter)
                 sumOfGPA += gradeAndLetter.gp * x?.credit;
 
                 // console.log(' objForResultCourse   ', objForResultCourse)

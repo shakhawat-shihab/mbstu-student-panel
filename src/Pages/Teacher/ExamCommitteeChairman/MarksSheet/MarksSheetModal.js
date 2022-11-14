@@ -10,7 +10,7 @@ const MarksSheetModal = (props) => {
     // const allInfo = props.allInfo;
     const { showModal, setShowModal, courseTitle, courseCode, credit, processedMarks, semesterInfo } = props;
 
-    console.log("processed marks === ", processedMarks);
+    // console.log("processed marks === ", processedMarks);
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');

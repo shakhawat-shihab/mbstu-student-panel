@@ -21,7 +21,7 @@ const CourseTeacherMarksModal = (props) => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [pages, setPages] = useState([]);
     const [paginatedMarks, setPaginatedMarks] = useState([]);
-    const numberOfStudentPerPage = 5;
+    const numberOfStudentPerPage = 2;
     useEffect(() => {
         let pageCount = parseInt(marks.studentsMarks.length / numberOfStudentPerPage);
         if (marks.studentsMarks.length % numberOfStudentPerPage != 0) {
@@ -237,8 +237,8 @@ const CourseTeacherMarksModal = (props) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        Object.keys(marks).length !== 0 &&
-                                        marks?.studentsMarks.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                        Object.keys(paginatedMarks).length !== 0 &&
+                                        paginatedMarks.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
                                             <td style={{ border: "1px solid black" }} className='text-uppercase'>
                                                 <p>{x?.id}</p>
                                             </td>
@@ -296,8 +296,8 @@ const CourseTeacherMarksModal = (props) => {
                                 </thead>
                                 <tbody>
                                     {
-                                        Object.keys(marks).length !== 0 &&
-                                        marks?.studentsMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                        Object.keys(paginatedMarks).length !== 0 &&
+                                        paginatedMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
                                             <td style={{ border: "1px solid black" }} className='text-uppercase'>
                                                 <p>{x?.id}</p>
                                             </td>

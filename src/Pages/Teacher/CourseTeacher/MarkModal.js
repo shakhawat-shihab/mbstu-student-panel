@@ -3,9 +3,10 @@ import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
+import useAuth from '../../../Hooks/useAuth';
 
 const MarkModal = (props) => {
-    // const { user, dept } = useAuth();
+    const { user } = useAuth();
     const { showMarkModal, setShowMarkModal, marks, theoryAttendance,
         setTheoryAttendance, theoryCT1, setTheoryCT1, theoryCT2,
         setTheoryCT2, theoryCT3, setTheoryCT3, theoryFinal, setTheoryFinal,
@@ -54,7 +55,6 @@ const MarkModal = (props) => {
 
 
     const onSubmit = data => {
-
         console.log("my submitted data ==== ", data)
         let supObj = {};
         let arr = [];
@@ -97,6 +97,8 @@ const MarkModal = (props) => {
             if (projectClassPerformance) {
                 supObj.propertyName = "projectClassPerformance";
                 obj.projectClassPerformance = data[`${x.id}_project_performance`];
+                obj.projectClassPerformanceBy = user?.fullName;
+                obj.projectClassPerformanceByProfileId = user?.profileId;
             }
 
             arr.push(obj);
@@ -196,6 +198,7 @@ const MarkModal = (props) => {
 
         if (projectPerformance) {
             choice = "projectClassPerformance";
+
         }
 
         if (fileUpload[0][`${choice}`]) {
@@ -204,6 +207,10 @@ const MarkModal = (props) => {
                 const obj = {};
                 obj.id = x.id;
                 obj[`${choice}`] = x[`${choice}`];
+                if (choice === 'projectClassPerformance') {
+                    obj.projectClassPerformanceBy = user?.fullName;
+                    obj.projectClassPerformanceByProfileId = user?.profileId;
+                }
                 arr.push(obj);
             })
             supObj.marks = arr;
@@ -351,7 +358,7 @@ const MarkModal = (props) => {
                                                                                 readOnly />
                                                                         </td>}
                                                                         {<td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName}
+                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
                                                                                 {...register(`${x?.id}_name`, { required: true })}
                                                                                 readOnly />
                                                                         </td>}

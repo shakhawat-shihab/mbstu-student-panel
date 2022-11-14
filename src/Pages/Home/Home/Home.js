@@ -3,7 +3,7 @@ import React from 'react';
 // import Header from '../../Shared/Header/Header';
 import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
 // import NavigBar from '../../Shared/NavigBar/NavigBar';
-// import Counter from '../Counter/Counter';
+import Counter from '../Counter/Counter';
 import Slider from '../Slider/Slider';
 
 
@@ -17,7 +17,7 @@ const Home = () => {
             {/* <NavigBar></NavigBar> */}
             <Slider></Slider>
             <br></br>
-            {/* <Counter></Counter> */}
+            <Counter></Counter>
         </div>
     );
 };

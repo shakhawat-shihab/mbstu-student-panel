@@ -323,7 +323,7 @@ const MarksAssign = () => {
 
 
     return (
-        <div className='px-2 py-4 shadow-lg w-75 mx-auto rounded'>
+        <div className='px-2 py-4 shadow-lg w-75 mx-auto rounded my-3'>
             <div className=' my-4'>
                 <Form >
                     <Form.Group className="mb-1 w-100 mx-auto">

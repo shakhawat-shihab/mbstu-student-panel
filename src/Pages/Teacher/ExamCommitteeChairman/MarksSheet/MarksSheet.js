@@ -133,7 +133,7 @@ const MarksSheet = () => {
                 theoryAttendance ? (thirtyPercent = Math.round((avg + parseInt(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
 
                 let theoryWritten;
-                if (Math.abs(theorySecondExaminer - theoryThirdExaminer) > 15) {
+                if (Math.abs(theoryFinal - theorySecondExaminer) > 15) {
                     theoryWritten = parseInt((theoryFinal + theorySecondExaminer + theoryThirdExaminer) / 3)
                 }
                 else {
@@ -160,8 +160,10 @@ const MarksSheet = () => {
                 array.push(obj);
             }
             else if (marks.type === 'project') {
-                const { projectClassPerformance, projectPresentation, projectPresentationBy } = marksOfSingleStudent;
+                const { projectClassPerformance, projectClassPerformanceBy, projectClassPerformanceByProfileId, projectPresentation, projectPresentationBy } = marksOfSingleStudent;
                 obj.projectClassPerformance = projectClassPerformance;
+                obj.projectClassPerformanceBy = projectClassPerformanceBy;
+                obj.projectClassPerformanceByProfileId = projectClassPerformanceByProfileId;
                 obj.projectPresentation = projectPresentation;
                 obj.projectPresentationBy = projectPresentationBy;
                 array.push(obj);
@@ -271,7 +273,8 @@ const MarksSheet = () => {
                                                     </p>
                                                     <p><span className='fw-bold'>Third Examiner: </span>
                                                         {marks?.thirdExaminer?.name}
-                                                        {marks?.isSubmittedByThirdExaminer ?
+                                                        {marks?.isSubmittedByThirdExaminer
+                                                            ?
                                                             <span> (Submitted)</span>
                                                             :
                                                             <span> (Not submitted)</span>}
@@ -294,7 +297,7 @@ const MarksSheet = () => {
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                                            processedMarks?.marks?.map(x => <tr key={x?._id} style={{ border: "1px solid black" }}>
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}> <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i> </td>
@@ -344,7 +347,7 @@ const MarksSheet = () => {
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                                            processedMarks?.marks?.map(x => <tr key={x?._id} style={{ border: "1px solid black" }}>
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
@@ -372,10 +375,11 @@ const MarksSheet = () => {
                                                     <p><span className='fw-bold'>Credit Hour: </span>{processedMarks?.credit}</p>
                                                     <p><span className='fw-bold'>Project Teachers: </span>
                                                         {
-                                                            (teacherCount === total) ?
+                                                            (isSubmittedByProjectTeacher.length === teacherList.length)
+                                                                ?
                                                                 <span>All teachers submitted their marks</span>
                                                                 :
-                                                                <span>Submitted {teacherCount} of {total} teachers</span>
+                                                                <span>Submitted {isSubmittedByProjectTeacher.length} of {teacherList.length} teachers</span>
 
                                                         }
                                                     </p>
@@ -393,11 +397,11 @@ const MarksSheet = () => {
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            processedMarks?.marks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                            processedMarks?.marks?.map(x => <tr key={x?._id} style={{ border: "1px solid black" }}>
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
-                                                                <td title={`By ${x?.class_marks_project_by}`} style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
+                                                                <td title={'By ' + x?.projectClassPerformanceBy} style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
                                                                 <td title={'By ' + x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>
                                                             </tr>)
                                                         }

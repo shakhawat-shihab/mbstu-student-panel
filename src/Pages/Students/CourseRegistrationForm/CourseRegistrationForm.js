@@ -57,7 +57,7 @@ const CourseRegistrationForm = () => {
         })
             .then(res => res.json())
             .then(result => {
-                fetch(`http://localhost:5000/api/v1/course-application/total-credit-taken`, {
+                fetch(`http://localhost:5000/api/v1/course-application/total-credit-taken/${result?.data?.semesterCode + 1}`, {
                     headers: {
                         'Content-type': 'application/json',
                         'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -154,8 +154,9 @@ const CourseRegistrationForm = () => {
         }
         else {
             application.name = semesterName;
-            application.semesterCode = semesterCode + 1;
         }
+
+        application.semesterCode = semesterCode + 1;
 
         application.department = data.department;
         application.departmentName = data.departmentName;

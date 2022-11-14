@@ -47,7 +47,7 @@ const ResultSheetModal = (props) => {
                 <Modal.Body>
                     <div id="selectedPortion" className='px-5 py-2 my-5'>
                         <div className='container-fluid w-100'>
-                            <h4 className='text-center mt-4 mb-4 fw-bold'><u>Notice</u></h4>
+                            <h4 className='text-center mt-4 mb-4 fw-bold text-underline'>Notice</h4>
                             <p style={{ fontSize: "1rem" }} className='mb-4'>It is notified that the results of {info?.name} B.Sc (Engg.) Final Examination (session: {info?.session}) Department of {checkDepartmentName(user?.department)} are provisionally published as follows.</p>
                             <p style={{ fontSize: "1rem" }}>The University reserves the right to correct or amend the results, if necessary.</p>
                         </div>
