@@ -24,12 +24,13 @@ const MarksAssign = () => {
     const [courseName, setCourseName] = useState('');
     const [credit, setCredit] = useState();
     const [showModal, setShowModal] = useState(false);
-    const [editExperimentMarks, setEditExperimentMarks] = useState(false);
+    // const [editExperimentMarks, setEditExperimentMarks] = useState(false);
     const [editPresentationMarks, setEditPresentationMarks] = useState(false);
     //const [courseCode]
 
     const [showCommitteeModal, setShowCommitteeModal] = useState(false);
-    const [examCommitteeLab, setExamCommitteeLab] = useState(false);
+    const [examCommitteeLabExp, setExamCommitteeLabExp] = useState(false);
+    const [examCommitteeLabViva, setExamCommitteeLabViva] = useState(false);
     const [examCommitteeProject, setExamCommitteeProject] = useState(false);
     const [isSaving, setIsSaving] = useState(true);
 
@@ -96,230 +97,7 @@ const MarksAssign = () => {
 
     }, [courseId, isSaving])
 
-    //jubair
 
-    // const submitAllMarksExamCommittee = () => {
-
-    //     Swal.fire({
-    //         title: 'Do you want to Turn In the marks?',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Confirm',
-    //         confirmButtonColor: 'green',
-    //         icon: 'warning',
-    //         cancelButtonText: 'No, cancel!',
-    //         cancelButtonColor: 'red'
-
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             Swal.fire('Saved!', '', 'success')
-    //             fetch(`http://localhost:5000/api/v1/marks/turn-in/project-teacher/${courseId}`, {
-    //                 method: 'put',
-    //                 headers: {
-    //                     'Content-type': 'application/json',
-    //                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
-    //                 },
-    //             })
-    //                 .then(res => res.json())
-    //                 .then(info => {
-    //                     console.log('info ', info)
-    //                     // setMarks(info.data);
-    //                     // setIsLoadingMarks(false);
-    //                     if (info.status === 'success') {
-    //                         Toast.fire({
-    //                             icon: 'success',
-    //                             title: info.message
-    //                         })
-    //                     }
-    //                     else {
-    //                         Toast.fire({
-    //                             icon: 'error',
-    //                             title: info.message
-    //                         })
-    //                     }
-    //                 })
-    //         }
-    //     })
-    // }
-
-
-    // useEffect(() => {
-    //     console.log('semester ', semester);
-    //     if (semester && Object.keys(semester).length !== 0) {
-    //         const allMarks = {};
-    //         console.log("Semester value ", semester)
-    //         const coursesArray = []
-    //         semester?.courses.map(x => {
-    //             const objj = {};
-    //             objj.course_code = x.course_code
-    //             objj.course_title = x.course_title
-    //             objj.credit = x.credit
-    //             objj.type = x.type
-    //             coursesArray.push(objj);
-    //         })
-    //         const { s_id, displayName, ...onlyCourses } = semester?.regular_students?.[0];
-    //         //console.log("onlyCourses ", onlyCourses);
-    //         semester?.courses.map(x => {
-    //             const arr = []
-    //             //console.log('code ', x.course_code);
-    //             semester.regular_students.map(student => {
-    //                 const subObj = {}
-    //                 const { ct1, ct2, ct3, attendance, course_teacher_marks, second_examiner_marks, third_examiner_marks, final_marks, lab_attendance, lab_report, lab_quiz, class_marks_lab, class_marks_project, presentation_marks_project, presentation_marks_project_by, experiment_marks_lab_by, experiment_marks_lab } = student[`${x.course_code}`];
-    //                 //console.log(ct1, ct2, ct3, attendance);
-    //                 //theory
-    //                 let cnt = 0;
-    //                 if (x.type === 'theory') {
-    //                     let sum = 0;
-    //                     if (ct1 || ct1 == 0) {
-    //                         sum += parseInt(ct1);
-    //                         cnt++;
-    //                     }
-    //                     if (ct2 || ct2 == 0) {
-    //                         sum += parseInt(ct2);
-    //                         cnt++;
-    //                     }
-    //                     if (ct3 || ct3 == 0) {
-    //                         sum += parseInt(ct3);
-    //                         cnt++;
-    //                     }
-    //                     let avg = 0;
-    //                     cnt && (avg = sum / cnt);
-    //                     // console.log('average ', avg);
-    //                     let thirtyPercent;
-    //                     attendance && (thirtyPercent = Math.round((avg + parseInt(attendance))));
-    //                     let total_marks;
-    //                     ((final_marks || final_marks == 0) && (thirtyPercent || thirtyPercent == 0)) && (total_marks = parseInt(thirtyPercent) + parseInt(final_marks));
-    //                     subObj.thirtyPercent = thirtyPercent;
-    //                     subObj.course_teacher_marks = course_teacher_marks;
-    //                     subObj.second_examiner_marks = second_examiner_marks;
-    //                     subObj.third_examiner_marks = third_examiner_marks;
-    //                     subObj.final_marks = final_marks;
-    //                     total_marks && (subObj.total_marks = total_marks);
-    //                 }
-    //                 //lab , sessional
-    //                 else if (x.type === 'lab') {
-    //                     subObj.class_marks_lab = class_marks_lab;
-    //                     subObj.experiment_marks_lab = experiment_marks_lab;
-    //                     subObj.experiment_marks_lab_by = experiment_marks_lab_by;
-    //                 }
-    //                 //project
-    //                 else if (x.type === 'project') {
-    //                     subObj.class_marks_project = class_marks_project;
-    //                     subObj.presentation_marks_project = presentation_marks_project;
-    //                     subObj.presentation_marks_project_by = presentation_marks_project_by;
-    //                 }
-
-    //                 subObj.displayName = student?.displayName;
-    //                 subObj.s_id = student?.s_id;
-
-    //                 //console.log(subObj);
-    //                 arr.push(subObj);
-    //             })
-    //             //console.log('arr ', arr);
-    //             //const obj
-    //             allMarks[`${x.course_code}_title`] = x.course_title;
-    //             allMarks[`${x.course_code}_marks`] = arr;
-    //             allMarks[`${x.course_code}_type`] = x.type;
-    //         })
-    //         //console.log('allMarks ', allMarks);
-    //         setSemesterAllMarks(allMarks);
-    //         setCourses(coursesArray);
-    //         //set first course as selected course before chosing any code
-    //         if (courseCode == '') {
-    //             setCourseCode(coursesArray[0]['course_code'])
-    //             setCourseName(coursesArray[0]['course_title'])
-    //             setCourse(allMarks[`${coursesArray[0].course_code}_marks`]);
-    //         }
-    //         //console.log('coursesArray ', coursesArray)
-    //         //console.log('allMarks ', allMarks);
-    //     }
-    // }, [semester]);
-    //console.log("semesterAllMarks ", semesterAllMarks);
-
-    //search clicked
-    // const onSubmit = (v) => {
-    //     setEditExperimentMarks(false);
-    //     setEditPresentationMarks(false);
-    //     console.log(' on submit data == ', v);
-    //     courses?.map(c => {
-    //         if (c._id === v) {
-    //             // setCourseName(c.course_title)
-    //             // setCredit(c.credit);
-    //             // setCourseId()
-    //         }
-    //     })
-    //     // const val = data.course_code;
-    //     console.log("val ", v);
-    //     setCourseCode(v);
-    //     const marksOfSelectedCourse = semesterAllMarks[`${v}_marks`];
-    //     console.log('marksOfSelectedCourse ', marksOfSelectedCourse)
-    //     setCourse(marksOfSelectedCourse);
-    // }
-    // const onSubmitPresentationMarks = data => {
-    //     // setEditPresentationMarks(false);
-    //     console.log('onSubmitPresentationMarks  ', data);
-    //     fetch(`http://localhost:5000/add-marks/exam-committee/${semesterId}/${courseCode}`, {
-    //         method: 'put',
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify(data)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             console.log("data ==", data);
-    //             //setCourseCodeChanging(!courseCodeChanging);
-    //             //setCourseCode(data?.course_code);
-    //             if (data.modifiedCount) {
-    //                 setCourseCodeChanging(!courseCodeChanging);
-    //                 //setEditPresentationMarks(false);
-    //                 Toast.fire({
-    //                     icon: 'success',
-    //                     title: 'Successfully updated marks'
-    //                 })
-    //                 //history.push('/dashboard/courses-taken')
-    //             }
-    //             else if (data.matchedCount === 1) {
-    //                 Toast.fire({
-    //                     icon: 'warning',
-    //                     title: 'Give some data then click assign'
-    //                 })
-    //                 //history.push('/dashboard/courses-taken')
-    //             }
-    //         });
-
-    // }
-    // const onSubmitLabMarks = data => {
-    //     //setCourseCodeChanging(!courseCodeChanging);
-    //     //setEditExperimentMarks(false);
-    //     console.log('onSubmitLabMarks  ', data);
-    //     fetch(`http://localhost:5000/add-marks/exam-committee/${semesterId}/${courseCode}`, {
-    //         method: 'put',
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         },
-    //         body: JSON.stringify(data)
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => {
-    //             console.log("data ==", data);
-    //             if (data.modifiedCount) {
-    //                 setCourseCodeChanging(!courseCodeChanging);
-    //                 //setEditExperimentMarks(false);
-    //                 Toast.fire({
-    //                     icon: 'success',
-    //                     title: 'Successfully updated marks'
-    //                 })
-    //                 //history.push('/dashboard/courses-taken')
-    //             }
-    //             else if (data.matchedCount === 1) {
-    //                 Toast.fire({
-    //                     icon: 'warning',
-    //                     title: 'Give some data then click assign'
-    //                 })
-    //                 //history.push('/dashboard/courses-taken')
-    //             }
-    //         });
-    // }
 
 
     return (
@@ -349,8 +127,9 @@ const MarksAssign = () => {
                 </div>
                 <div>
                     <MarksAssignCommitteeModal
-                        marks={marks} showCommitteeModal={showCommitteeModal} setShowCommitteeModal={setShowCommitteeModal}
-                        courseId={courseId} examCommitteeLab={examCommitteeLab} setExamCommitteeLab={setExamCommitteeLab}
+                        marks={marks} showCommitteeModal={showCommitteeModal} setShowCommitteeModal={setShowCommitteeModal} courseId={courseId}
+                        examCommitteeLabExp={examCommitteeLabExp} setExamCommitteeLabExp={setExamCommitteeLabExp}
+                        examCommitteeLabViva={examCommitteeLabViva} setExamCommitteeLabViva={setExamCommitteeLabViva}
                         examCommitteeProject={examCommitteeProject} setExamCommitteeProject={setExamCommitteeProject} isSaving={isSaving} setIsSaving={setIsSaving}
                     />
                 </div>
@@ -386,10 +165,17 @@ const MarksAssign = () => {
                                                             <tr style={{ border: '1px solid black' }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                                {/* <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks (60%)</th> */}
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 marks)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 )
                                                                     <br />
-                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLab(true) }}>Edit</span>
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabExp(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Viva-voce marks <br /> (10 )
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabViva(true) }}>Edit</span>
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total <br /> (50 )
+                                                                    {/* <br />
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLab(true) }}>Edit</span> */}
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -399,12 +185,35 @@ const MarksAssign = () => {
                                                                 marks?.studentsMarks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-
                                                                             readOnly />
                                                                     </td>
                                                                     <td style={{ border: '1px solid black' }}>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</td>
                                                                     <td style={{ border: '1px solid black' }}>
-                                                                        <p className={editExperimentMarks ? 'd-none' : ''} title={`By ${x?.labExperimentBy}`} >{x?.labExperiment}</p>
+                                                                        <p
+                                                                            title={`By ${x?.labExperimentBy}`} >
+                                                                            {x?.labExperiment}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p
+                                                                            title={`By ${x?.labVivaBy}`} >
+                                                                            {x?.labViva}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p >
+                                                                            {
+                                                                                x?.labExperiment && x?.labViva
+                                                                                    ?
+                                                                                    x?.labExperiment + x?.labViva
+                                                                                    :
+                                                                                    <>
+                                                                                        {
+                                                                                            x?.labViva ? x?.labViva : x?.labExperiment
+                                                                                        }
+                                                                                    </>
+                                                                            }
+                                                                        </p>
                                                                     </td>
                                                                 </tr>)
                                                             }

@@ -6,9 +6,11 @@ import * as XLSX from 'xlsx';
 
 const MarksAssignCommitteeModal = (props) => {
 
-    const { marks, showCommitteeModal, setShowCommitteeModal, courseId, examCommitteeLab, setExamCommitteeLab, examCommitteeProject, setExamCommitteeProject, isSaving, setIsSaving } = props;
+    const { marks, showCommitteeModal, setShowCommitteeModal, courseId, examCommitteeLabExp, setExamCommitteeLabExp, examCommitteeLabViva, setExamCommitteeLabViva,
+        examCommitteeProject, setExamCommitteeProject, isSaving, setIsSaving } = props;
     const [fileUpload, setFileUpload] = useState();
     const [labExperiment, setLabExperiment] = useState()
+    const [labViva, setLabViva] = useState()
     const [project, setProject] = useState();
     const { register, handleSubmit, reset } = useForm();
     // const [examCommitteeFinal,setExamCommitteeFinal]=useState()
@@ -27,7 +29,8 @@ const MarksAssignCommitteeModal = (props) => {
     })
 
     const makeAllPropsFalse = () => {
-        setExamCommitteeLab(false)
+        setExamCommitteeLabViva(false)
+        setExamCommitteeLabExp(false)
         setExamCommitteeProject(false)
     }
 
@@ -41,16 +44,18 @@ const MarksAssignCommitteeModal = (props) => {
         marks?.studentsMarks?.map(x => {
             const obj = {};
             obj.id = data[`${x.id}_id`];
-
-            if (examCommitteeLab) {
+            if (examCommitteeLabExp) {
                 supObj.propertyName = "labExperiment";
                 obj.labExperiment = data[`${x.id}_lab_experiment`];
             }
-            if (examCommitteeProject) {
+            else if (examCommitteeLabViva) {
+                supObj.propertyName = "labViva";
+                obj.labViva = data[`${x.id}_lab_viva`];
+            }
+            else if (examCommitteeProject) {
                 supObj.propertyName = "projectPresentation";
                 obj.projectPresentation = data[`${x.id}_project_presentation`];
             }
-
             arr.push(obj);
         })
         supObj.marks = arr;
@@ -107,7 +112,6 @@ const MarksAssignCommitteeModal = (props) => {
                 reject(error);
             };
         });
-
         promise.then((d) => {
             // console.log("hehe he ", d);
             setFileUpload(d);
@@ -116,20 +120,18 @@ const MarksAssignCommitteeModal = (props) => {
 
 
     const onFileUpload = () => {
-
         let supObj = {};
         let arr = [];
-
         let choice;
-
-        if (examCommitteeLab) {
+        if (examCommitteeLabViva) {
+            choice = "labViva";
+        }
+        else if (examCommitteeLabExp) {
             choice = "labExperiment";
         }
-        if (examCommitteeProject) {
+        else if (examCommitteeProject) {
             choice = "projectPresentation";
         }
-
-
         if (fileUpload[0][`${choice}`]) {
             supObj.propertyName = choice;
             fileUpload?.map(x => {
@@ -188,7 +190,7 @@ const MarksAssignCommitteeModal = (props) => {
         <div>
             <Modal
                 show={showCommitteeModal}
-                onHide={() => { setShowCommitteeModal(false); setExamCommitteeLab(false); setExamCommitteeProject(false) }}
+                onHide={() => { setShowCommitteeModal(false); setExamCommitteeLabViva(false); setExamCommitteeLabExp(false); setExamCommitteeProject(false) }}
                 dialogClassName="modal-90w"
                 aria-labelledby="example-custom-modal-styling-title"
                 // fullscreen={true}
@@ -243,11 +245,22 @@ const MarksAssignCommitteeModal = (props) => {
                                                         <tr style={{ border: "1px solid black" }}>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-
-                                                            {examCommitteeLab && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 marks)
-                                                                <br />
-                                                                <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLab(true) }}>Edit</span>
-                                                            </th>}
+                                                            {
+                                                                examCommitteeLabExp
+                                                                &&
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabExp(true) }}>Edit</span>
+                                                                </th>
+                                                            }
+                                                            {
+                                                                examCommitteeLabViva
+                                                                &&
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Viva-voce Marks <br /> (10 marks)
+                                                                    <br />
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabViva(true) }}>Edit</span>
+                                                                </th>
+                                                            }
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -267,16 +280,23 @@ const MarksAssignCommitteeModal = (props) => {
                                                                                 readOnly />
                                                                         </td>
                                                                         {
-                                                                            examCommitteeLab
+                                                                            examCommitteeLabExp
                                                                             &&
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x.labExperiment ? x.labExperiment : labExperiment
                                                                                 } onChange={(e) => setLabExperiment(e.target.value)} {...register(`${x?.id}_lab_experiment`, { required: true })} min="0" max="40" />
                                                                             </td>
-
                                                                         }
-
+                                                                        {
+                                                                            examCommitteeLabViva
+                                                                            &&
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
+                                                                                    x.labViva ? x.labViva : labViva
+                                                                                } onChange={(e) => setLabViva(e.target.value)} {...register(`${x?.id}_lab_viva`, { required: true })} min="0" max="10" />
+                                                                            </td>
+                                                                        }
                                                                     </tr>
                                                                 )
                                                             })
@@ -352,7 +372,6 @@ const MarksAssignCommitteeModal = (props) => {
                                                                                     x?.projectPresentation ? x.projectPresentation : project
                                                                                 } onChange={(e) => setProject(e.target.value)} {...register(`${x?.id}_project_presentation`, { required: true })} min="0" max="30" />
                                                                             </td>
-
                                                                         }
                                                                     </tr>
                                                                 )
