@@ -20,6 +20,7 @@ const ApplyToSupervisor = () => {
     const department = user?.department;
     const departmentName = checkDepartmentNameFromIdCode(id);
 
+    const [isBacklog, setIsBacklog] = useState(false);
     const [isLoadingTeacher, setIsLoadingTeacher] = useState(true);
     const [teachers, setTeachers] = useState([]);
     const [courseCode, setCourseCode] = useState('');
@@ -80,6 +81,24 @@ const ApplyToSupervisor = () => {
 
 
 
+    // useEffect(() => {
+    //     fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`, {
+    //         headers: {
+    //             'Content-type': 'application/json',
+    //             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+    //         },
+    //     })
+    //         .then(res => res.json())
+    //         .then(info => {
+    //             // console.log("teachers of a project course ", info);
+    //             setCourseCode(info?.data?.courseCode);
+    //             setCourseTitle(info?.data?.courseTitle)
+    //             setTeachers(info?.data?.teacherList);
+    //             setIsLoadingTeacher(false);
+    //         })
+    // }, [courseId])
+
+
     useEffect(() => {
         fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`, {
             headers: {
@@ -90,12 +109,62 @@ const ApplyToSupervisor = () => {
             .then(res => res.json())
             .then(info => {
                 // console.log("teachers of a project course ", info);
-                setCourseCode(info?.data?.courseCode);
-                setCourseTitle(info?.data?.courseTitle)
-                setTeachers(info?.data?.teacherList);
-                setIsLoadingTeacher(false);
+
+                //find the project in student result
+                fetch(`http://localhost:5000/api/v1/project-application/find-project-course`, {
+                    headers: {
+                        'Content-type': 'application/json',
+                        'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+                    },
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log("project courses data ", data);
+                        // setProjectCourses(info?.data);
+                        // setIsLoadingProjectCourses(false);
+                        const course = data?.data?.arrayOfBacklogProjectCourse?.find(x => {
+                            if (x?.courseCode === info?.data?.courseCode) {
+                                return x;
+                            }
+                        })
+
+                        //course found in student result ( that means it is a backlog project course)
+                        if (course) {
+                            // console.log('course  ', course);
+                            setIsBacklog(true);
+                            let teacherFound = false;
+                            info?.data?.teacherList.map(x => {
+                                if (x?._id == course?.projectTeacher?.profileId) {
+                                    teacherFound = true;
+                                    return;
+                                }
+                            })
+                            // console.log('teacherFound ', teacherFound)
+                            if (teacherFound) {
+                                const obj = {}
+                                obj.firstName = course?.projectTeacher?.name.split(' ')[0]
+                                obj.lastName = course?.projectTeacher?.name.split(' ')[1]
+                                obj._id = course?.projectTeacher?.profileId
+                                setTeachers([obj]);
+                            }
+                            else {
+                                setTeachers(info?.data?.teacherList);
+                            }
+
+                        }
+                        //course not found in student result ( that means it is a regular project course)
+                        else {
+                            setTeachers(info?.data?.teacherList);
+                        }
+
+                        setCourseCode(info?.data?.courseCode);
+                        setCourseTitle(info?.data?.courseTitle)
+                        setIsLoadingTeacher(false);
+                    })
             })
-    }, [courseId])
+    }, [])
+
+
 
     // console.log(teachers);
 
@@ -112,7 +181,7 @@ const ApplyToSupervisor = () => {
         application.courseMarksId = data.courseId;
         application.projectApplicationTitle = data.projectApplicationTitle;
         application.projectApplicationDescription = data.projectApplicationDescription;
-
+        isBacklog && (application.isBacklog = true)
 
         application.department = data.department;
         application.departmentName = data.departmentName;
@@ -207,7 +276,11 @@ const ApplyToSupervisor = () => {
                                             <div className='w-75 mx-auto shadow-lg rounded px-4 py-3 my-3'>
                                                 <h4 className='text-center mb-5'>Project Proposal Form </h4>
                                                 <Form onSubmit={handleSubmit(onSubmit)}>
-
+                                                    {/* {
+                                                        isBacklog
+                                                        &&
+                                                        <Form.Control type='text' hidden {...register("isBacklog", { required: true })} className="w-100 text-uppercase" value={courseId} />
+                                                    } */}
                                                     <div className="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
                                                         <Form.Group className="mb-3">
                                                             <Form.Label className='text-primary'>Course Title: </Form.Label>
@@ -284,7 +357,6 @@ const ApplyToSupervisor = () => {
                                             </div>
                                             :
                                             <div className=' d-flex justify-content-center align-items-center half-height' >
-
                                                 <h3 className='text-center text-success my-4 fw-bold '>Your Application is accepted already</h3>
                                             </div>
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Accordion, Button } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const TeacherProjectApplication = (props) => {
     // const { user } = useAuth();
     const { applicationDetails, setProposalState, proposalState } = props;
-    console.log('applicationDetails ====> ', applicationDetails);
-
+    // console.log('applicationDetails ====> ', applicationDetails);
+    const history = useHistory()
     const proposalId = applicationDetails?._id;
 
     const Toast = Swal.mixin({
@@ -24,6 +25,7 @@ const TeacherProjectApplication = (props) => {
     const handleAccept = () => {
         // setStatus('accepted');
         // applicationDetails.status = status;
+        console.log('applicationDetails ====> ', applicationDetails);
         setProposalState(!proposalState)
         Swal.fire({
             title: 'Do you want to accept the proposal?',
@@ -43,7 +45,7 @@ const TeacherProjectApplication = (props) => {
                         headers: {
                             'Content-type': 'application/json',
                             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
-                        }
+                        },
                         // body: JSON.stringify(applicationDetails)
                     })
                         .then(res => res.json())
@@ -61,6 +63,7 @@ const TeacherProjectApplication = (props) => {
                                     title: info.message
                                 })
                             }
+                            history.push('/dashboard/courses-taken')
                         })
                 }
             })
@@ -104,6 +107,7 @@ const TeacherProjectApplication = (props) => {
                                 })
                             }
                             setProposalState(!proposalState)
+                            history.push('/dashboard/courses-taken')
                         })
                 }
             })

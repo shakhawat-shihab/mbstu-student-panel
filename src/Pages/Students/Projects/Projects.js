@@ -31,7 +31,7 @@ const Projects = () => {
             .then(res => res.json())
             .then(info => {
                 console.log("project courses ", info);
-                setProjectCourses(info?.data);
+                setProjectCourses(info?.data?.arrayOfProjectCourse);
                 setIsLoadingProjectCourses(false);
             })
     }, [profileId, department])

@@ -141,7 +141,8 @@ const CourseRegistrationForm = () => {
             }
         }
         const regular = [];
-        regularCourses.map(x => {
+        // console.log(regularCourses);
+        regularCourses?.map(x => {
             regular.push(x?._id)
         })
 
@@ -149,7 +150,7 @@ const CourseRegistrationForm = () => {
 
         // data.name ? (application.name = data.name) : (application.name = "Backlog Exam")
 
-        if (regularCourses.length == 0) {
+        if (regularCourses?.length === 0) {
             application.name = "Backlog Exam"
         }
         else {
@@ -181,7 +182,7 @@ const CourseRegistrationForm = () => {
         }
 
 
-        data.regularCourses = regularCourses.map(c => c._id)
+        data.regularCourses = regularCourses?.map(c => c._id)
         console.log('form to push ', application);
         // console.log('credit ', totalCredit)
         if (backlogCredit + credit + previousApplicationCredit < 27) {
