@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Button, Table } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import findClosestTwoMarksAvg from '../../../../Functions/FindClosestTwo';
 import useAuth from '../../../../Hooks/useAuth';
 import ResultSheetModal from './ResultSheetModal';
 
@@ -205,11 +206,11 @@ const ResultSheet = () => {
                     theoryAttendance ? (thirtyPercent = Math.round((avg + parseInt(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
 
                     let theoryWritten;
-                    if (Math.abs(theorySecondExaminer - theoryFinal) > 15) {
-                        theoryWritten = parseInt((theoryFinal + theorySecondExaminer + theoryThirdExaminer) / 3)
+                    if (Math.abs(theorySecondExaminer - theoryFinal) > 14) {
+                        theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
                     }
                     else {
-                        theoryWritten = parseInt((theoryFinal + theorySecondExaminer) / 2)
+                        theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
                     }
                     totalMarks = thirtyPercent + theoryWritten;
                     objForResultCourse.theorySeventy = theoryWritten;

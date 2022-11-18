@@ -9,6 +9,7 @@ import './MarksSheet.css'
 import MarksSheetModal from './MarksSheetModal';
 
 import { AiFillCheckCircle } from "react-icons/ai";
+import findClosestTwoMarksAvg from '../../../../Functions/FindClosestTwo';
 
 const MarksSheet = () => {
     const { semesterId } = useParams();
@@ -122,7 +123,7 @@ const MarksSheet = () => {
                     sum += parseInt(theoryCT2);
                     cnt++;
                 }
-                if (theoryCT3 || theoryCT3 == 0) {
+                if (theoryCT3 || theoryCT3 === 0) {
                     sum += parseInt(theoryCT3);
                     cnt++;
                 }
@@ -133,11 +134,11 @@ const MarksSheet = () => {
                 theoryAttendance ? (thirtyPercent = Math.round((avg + parseInt(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
 
                 let theoryWritten;
-                if (Math.abs(theoryFinal - theorySecondExaminer) > 15) {
-                    theoryWritten = parseInt((theoryFinal + theorySecondExaminer + theoryThirdExaminer) / 3)
+                if (Math.abs(theoryFinal - theorySecondExaminer) > 14) {
+                    theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
                 }
                 else {
-                    theoryWritten = parseInt((theoryFinal + theorySecondExaminer) / 2)
+                    theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
 
                 }
                 let totalMarks = thirtyPercent + theoryWritten
