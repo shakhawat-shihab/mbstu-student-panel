@@ -460,18 +460,18 @@ const MarkModal = (props) => {
 
                                                             {
                                                                 lbAttendance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Attendance<br /> (15 marks)
+                                                                    Lab Attendance<br /> (10 marks)
 
                                                                 </th>
                                                             }
                                                             {
                                                                 lbReport && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Report Marks<br /> (15 marks)
+                                                                    Lab Report Marks<br /> (20 marks)
                                                                 </th>
                                                             }
                                                             {
                                                                 lbQuiz && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Quiz Marks<br /> (30 marks)
+                                                                    Lab Quiz Marks<br /> (20 marks)
                                                                 </th>
                                                             }
                                                         </tr>
@@ -498,7 +498,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.labAttendance ? x.labAttendance : lAttendance
-                                                                                } onChange={(e) => setLAttendance(e.target.value)} {...register(`${x?.id}_lab_attendance`, { required: true })} min="0" max="15" />
+                                                                                } onChange={(e) => setLAttendance(e.target.value)} {...register(`${x?.id}_lab_attendance`, { required: true })} min="0" max="10" />
                                                                             </td>
 
                                                                         }
@@ -508,7 +508,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.labReport ? x.labReport : lReport
-                                                                                } onChange={(e) => setLReport(e.target.value)} {...register(`${x?.id}_lab_report`, { required: true })} min="0" max="15" />
+                                                                                } onChange={(e) => setLReport(e.target.value)} {...register(`${x?.id}_lab_report`, { required: true })} min="0" max="20" />
                                                                             </td>
 
                                                                         }
@@ -518,7 +518,7 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.labQuiz ? x.labQuiz : lQuiz
-                                                                                } onChange={(e) => setLQuiz(e.target.value)} {...register(`${x?.id}_lab_quiz`, { required: true })} min="0" max="30" />
+                                                                                } onChange={(e) => setLQuiz(e.target.value)} {...register(`${x?.id}_lab_quiz`, { required: true })} min="0" max="20" />
                                                                             </td>
 
                                                                         }

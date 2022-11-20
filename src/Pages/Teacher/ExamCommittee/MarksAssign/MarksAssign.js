@@ -191,12 +191,14 @@ const MarksAssign = () => {
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <p
                                                                             title={`By ${x?.labExperimentBy}`} >
+
                                                                             {x?.labExperiment}
                                                                         </p>
                                                                     </td>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <p
                                                                             title={`By ${x?.labVivaBy}`} >
+
                                                                             {x?.labViva}
                                                                         </p>
                                                                     </td>

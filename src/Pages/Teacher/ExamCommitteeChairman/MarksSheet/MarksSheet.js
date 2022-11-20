@@ -114,7 +114,7 @@ const MarksSheet = () => {
             if (marks.type === 'theory') {
                 let cnt = 0;
                 let sum = 0;
-                const { theoryCT1, theoryCT2, theoryCT3, theoryAttendance, theoryFinal = 0, theorySecondExaminer = 0, theoryThirdExaminer = 0 } = marksOfSingleStudent;
+                const { theoryCT1, theoryCT2, theoryCT3, theoryAttendance = 0, theoryFinal = 0, theorySecondExaminer = 0, theoryThirdExaminer = 0 } = marksOfSingleStudent;
                 if (theoryCT1 || theoryCT1 === 0) {
                     sum += parseInt(theoryCT1);
                     cnt++;
@@ -143,6 +143,7 @@ const MarksSheet = () => {
                 }
                 let totalMarks = thirtyPercent + theoryWritten
                 obj.thirtyPercent = thirtyPercent;
+
                 obj.theoryFinal = theoryFinal;
                 obj.theorySecondExaminer = theorySecondExaminer;
                 obj.theoryThirdExaminer = theoryThirdExaminer;
@@ -151,13 +152,12 @@ const MarksSheet = () => {
                 array.push(obj);
             }
             else if (marks.type === 'lab') {
-                const { labAttendance = 0, labReport = 0, labQuiz = 0, labExperiment, labExperimentBy } = marksOfSingleStudent;
+                const { labAttendance = 0, labReport = 0, labQuiz = 0, labExperiment = 0, labViva = 0 } = marksOfSingleStudent;
                 // obj.labAttendance = labAttendance;
                 // obj.labReport = labReport;
                 // obj.labQuiz = labQuiz;
-                obj.labClassMark = parseInt(labAttendance + labQuiz + labReport)
-                obj.labExperiment = labExperiment;
-                obj.labExperimentBy = labExperimentBy;
+                obj.labClassMark = Math.round(labAttendance + labQuiz + labReport)
+                obj.labExamMark = Math.round(labExperiment + labViva)
                 array.push(obj);
             }
             else if (marks.type === 'project') {
@@ -342,8 +342,11 @@ const MarksSheet = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks <br /> (60 marks)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks <br /> (40 marks)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks <br /> (50 marks)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks <br /> (50 marks)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>LG</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>GP</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -353,7 +356,8 @@ const MarksSheet = () => {
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.labClassMark}</td>
-                                                                <td title={'By ' + x?.labExperimentBy} style={{ border: "1px solid black" }}>{x?.labExperiment}</td>
+                                                                <td title={'By ' + x?.labExperimentBy} style={{ border: "1px solid black" }}>{x?.labExamMark}</td>
+
                                                             </tr>)
                                                         }
                                                     </tbody>
