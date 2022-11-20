@@ -167,10 +167,10 @@ const ViewResult = () => {
                     total = x?.theorySeventy + x?.theoryThirty;
                 }
                 else if (x.type === 'lab') {
-                    total = x?.labSixty + x?.labFourty;
+                    total = x?.labClass + x?.labExam;
                 }
                 else if (x.type === 'project') {
-                    total = x?.projectSeventy + x?.projectThirty;
+                    total = x?.projectClass + x?.projectExam;
                 }
                 if (x.semesterCode == semesterCode) {
                     const obj = {}

@@ -219,14 +219,14 @@ const ResultSheet = () => {
                 else if (x?.type === 'lab') {
                     const { labAttendance = 0, labReport = 0, labQuiz = 0, labExperiment = 0 } = x;
                     totalMarks = parseInt(labAttendance + labQuiz + labReport + labExperiment)
-                    objForResultCourse.labSixty = parseInt(labAttendance + labQuiz + labReport);
-                    objForResultCourse.labFourty = labExperiment;
+                    objForResultCourse.labClass = parseInt(labAttendance + labQuiz + labReport);
+                    objForResultCourse.labExam = labExperiment;
                 }
                 else if (x?.type === 'project') {
                     const { projectClassPerformance = 0, projectPresentation = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId } = x;
                     totalMarks = parseInt(projectClassPerformance + projectPresentation);
-                    objForResultCourse.projectSeventy = projectClassPerformance;
-                    objForResultCourse.projectThirty = projectPresentation;
+                    objForResultCourse.projectClass = projectClassPerformance;
+                    objForResultCourse.projectExam = projectPresentation;
                     //project teacher
                     const temp = {}
                     temp.name = projectClassPerformanceBy
