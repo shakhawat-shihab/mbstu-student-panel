@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, ListGroup, Offcanvas } from 'react-bootstrap';
+import { ListGroup, Offcanvas } from 'react-bootstrap';
 import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
 import StudentRoute from '../../LogIn/LogIn/StudentRoute/StudentRoute';
@@ -22,7 +22,6 @@ import ExamCommitteeChairman from '../../Teacher/ExamCommitteeChairman/ExamCommi
 import MarksSheet from '../../Teacher/ExamCommitteeChairman/MarksSheet/MarksSheet';
 import ResultSheet from '../../Teacher/ExamCommitteeChairman/ResultSheet/ResultSheet';
 import MarksAssign from '../../Teacher/ExamCommittee/MarksAssign/MarksAssign';
-// import ApplicationDetails from '../../DeptChairman/CourseAppliaction/ApplicationDetails/ApplicationDetails';
 import HallProvostRoute from '../../LogIn/LogIn/HallProvostRoute/HallProvostRoute';
 import CourseRegistrationForm from '../../Students/CourseRegistrationForm/CourseRegistrationForm';
 import ViewResult from '../../Students/ViewResult/ViewResult';
@@ -35,6 +34,10 @@ import HallProvostCourseRegistrationDetails from '../../HallProvost/HallProvostC
 import AcademicCommitteeRoute from '../../LogIn/LogIn/AcadedmicCommitteeRoute/AcademicCommitteeRoute';
 import AcademicCommitteeCourseRegistrationDetails from '../../AcademicCommittee/AcademicCommitteeCourseRegistration/AcademicCommitteeCourseRegistrationDetails/AcademicCommitteeCourseRegistrationDetails';
 import StudentCourseRegistrationDetails from '../../Students/StudentCourseRegistration/StudentCourseRegistrationDetails/StudentCourseRegistrationDetails';
+import SuperAdminRoute from '../../LogIn/LogIn/SuperAdminRoute/SuperAdminRoute';
+import AddDeptChairman from '../../SuperAdmin/AddDeptChairman/AddDeptChairman';
+import AddHallProvost from '../../SuperAdmin/AddHallProvost/AddHallProvost';
+import AddAcademicCommittee from '../../SuperAdmin/AddAcademicCommittee/AddAcademicCommittee';
 
 
 const Dashboard = () => {
@@ -136,6 +139,20 @@ const Dashboard = () => {
                                         </ListGroup.Item>
                                     </>
                                 }
+                                {
+                                    user?.isSuperAdmin &&
+                                    <>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/add-dept-chairman`}> Add Department Chairman (SA) </Link>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/add-hall-provost`}> Add Hall Provost (SA) </Link>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/add-academic-member`}> Add Academic Committee (SA) </Link>
+                                        </ListGroup.Item>
+                                    </>
+                                }
                             </>
                         }
                     </ListGroup>
@@ -234,6 +251,18 @@ const Dashboard = () => {
                 <AcademicCommitteeRoute path={`${path}/approve-course-registration-academic`}>
                     <AcademicCommitteeCourseRegistration></AcademicCommitteeCourseRegistration>
                 </AcademicCommitteeRoute>
+
+
+                {/* super admin Routes */}
+                <SuperAdminRoute path={`${path}/add-dept-chairman`}>
+                    <AddDeptChairman></AddDeptChairman>
+                </SuperAdminRoute>
+                <SuperAdminRoute path={`${path}/add-hall-provost`}>
+                    <AddHallProvost></AddHallProvost>
+                </SuperAdminRoute>
+                <SuperAdminRoute path={`${path}/add-academic-member`}>
+                    <AddAcademicCommittee></AddAcademicCommittee>
+                </SuperAdminRoute>
 
 
             </Switch>

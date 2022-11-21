@@ -221,6 +221,7 @@ const CourseRegistrationForm = () => {
         }
     };
     // console.log(totalCredit);
+    // console.log('regularCourses ', regularCourses, 'backlogCourses ', backlogCourses);
     // console.log(creditError);
     return (
         <>
@@ -236,7 +237,7 @@ const CourseRegistrationForm = () => {
                     :
                     <>
                         {
-                            (regularCourses == null && backlogCourses?.length == 0)
+                            (regularCourses?.length == 0 && backlogCourses?.length == 0)
                                 ?
                                 <div className=' d-flex justify-content-center align-items-center half-height' >
                                     <h5 className='text-center fs-2 text-secondary fw-bold error-opacity' >Sorry, There is no running semester for you</h5>

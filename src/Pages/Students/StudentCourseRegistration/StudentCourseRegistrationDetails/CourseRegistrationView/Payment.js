@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import { MdPendingActions, MdOutlineVerified, MdOutlineReportGmailerrorred } from 'react-icons/md';
 const Payment = (props) => {
     const { application } = props;
+    const [transactionDate, setTransactionDate] = useState();
     const [amount, setAmount] = useState(0);
     const regularCoursesRate = 110;
     const backlogCoursesRate = 300;
@@ -12,10 +13,23 @@ const Payment = (props) => {
 
 
     useEffect(() => {
+
         const numberOfRegularCourses = application?.regularCourses?.length || 0;
         const numberOfBacklogCourses = application?.backlogCourses?.length || 0;
         const numberOfSpecialCourses = application?.specialCourses?.length || 0;
         setAmount(numberOfRegularCourses * regularCoursesRate + numberOfBacklogCourses * backlogCoursesRate + numberOfSpecialCourses * specialCoursesRate + 100)
+        if (application?.paymentId?.tran_date) {
+            const d = new Date(application?.paymentId?.tran_date);
+            const dformat = [d.getMonth() + 1,
+            d.getDate(),
+            d.getFullYear()].join('/') + ' ' +
+                [d.getHours(),
+                d.getMinutes(),
+                d.getSeconds()].join(':');
+            setTransactionDate(dformat)
+
+        }
+
     }, [application])
 
     const processPayment = () => {
@@ -164,6 +178,47 @@ const Payment = (props) => {
 
                             </table>
                         </div>
+
+                        <br />
+
+                        {
+                            (application?.isPaid)
+                            &&
+                            <div>
+                                <h5 className="fw-bold">Payment Info:</h5>
+                                <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
+
+                                    <tbody>
+                                        <tr className='text-center' style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>Card Brand</td>
+                                            <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.card_brand}</td>
+                                        </tr>
+                                        <tr className='text-center' style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>Card Issuer</td>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.card_issuer}</td>
+                                        </tr>
+                                        <tr className='text-center' style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>Amount</td>
+                                            <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.amount}</td>
+                                        </tr>
+                                        <tr className='text-center' style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>Cuurency</td>
+                                            <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.currency}</td>
+                                        </tr>
+                                        <tr className='text-center' style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>Transaction Id</td>
+                                            <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.tran_id}</td>
+                                        </tr>
+                                        <tr className='text-center' style={{ border: "1px solid black" }}>
+                                            <td style={{ border: "1px solid black", fontSize: "20px" }}>Transaction Time</td>
+                                            <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{transactionDate}</td>
+                                        </tr>
+                                    </tbody>
+
+                                </Table>
+                            </div>
+                        }
+
 
                         <div className='text-center my-5'>
                             {

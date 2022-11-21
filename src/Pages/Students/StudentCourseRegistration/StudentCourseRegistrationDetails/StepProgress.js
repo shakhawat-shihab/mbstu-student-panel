@@ -87,7 +87,7 @@ const StepProgress = (props) => {
                     </Step>
                     <Step>
                         {/* <StepNumber /> */}
-                        <StepTitle> Academic </StepTitle>
+                        <StepTitle> Academic Committee </StepTitle>
                         <StepStatus />
                         {/* <StepDescription>Description</StepDescription> */}
                     </Step>

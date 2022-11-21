@@ -46,7 +46,7 @@ const StudentCourseRegistrationDetails = () => {
         })
             .then(res => res.json())
             .then(info => {
-                console.log("appplication details === ", info?.data);
+                console.log("appplication details === ", info);
                 setApplication(info?.data);
                 let count = 1;
                 if (info?.data?.isChairmanVerified !== undefined) {

@@ -62,7 +62,7 @@ const HallProvostCourseRegistrationDetails = () => {
         })
             .then(res => res.json())
             .then(data => {
-                // console.log("data ", data);
+                console.log("data ", data);
                 if (data?.status === 'success') {
                     Toast.fire({
                         icon: 'success',
@@ -242,24 +242,21 @@ const HallProvostCourseRegistrationDetails = () => {
                     </div>
                 }
 
-                {
-                    // application?.status === 'pending' ?
-                    //     <h5 className='fw-bold'>Status: <span className="text-warning text-capitalize">{application?.status} <MdPendingActions /></span>  </h5>
-                    //     :
-                    //     <h5 className='fw-bold'>Status: <span className="text-success text-capitalize">{application?.status} <FcApproval /></span></h5>
-
-                }
-
                 <div className="form-group mb-5 ">
                     {/* <label for="exampleFormControlTextarea1" className='fw-bold'>Write Commment</label> */}
                     <textarea placeholder="Write comment ..." className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setComment(e.target.value)}></textarea>
                 </div>
 
                 {/* <Button type="button" className="btn btn-success" onClick={handleApprove}>Approve</Button> */}
-                <div className='text-center mb-3'>
-                    <Button variant='success' className='me-2' onClick={() => { handleApprove() }}>Approve</Button>
-                    <Button variant='danger' onClick={() => { handleReject() }} >Reject</Button>
-                </div>
+                {
+                    !application?.isHallVerified && application?.status === 'pending'
+                    &&
+                    <div className='text-center mb-3'>
+                        <Button variant='success' className='me-2' onClick={() => { handleApprove() }}>Approve</Button>
+                        <Button variant='danger' onClick={() => { handleReject() }} >Reject</Button>
+                    </div>
+                }
+
             </div>
         </div>
     );

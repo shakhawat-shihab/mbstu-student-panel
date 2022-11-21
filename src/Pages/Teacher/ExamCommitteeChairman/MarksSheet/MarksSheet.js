@@ -289,9 +289,24 @@ const MarksSheet = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance <br /> (30 marks)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Course Teacher </th>
+
+
+
+                                                            <th className='p-0' style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+
+                                                                Course Teacher
+                                                                {/* <tr className='display-tr'>
+                                                                    <td className='display-td' style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>fd</td>
+                                                                    <td className='display-td' style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>fd</td>
+                                                                
+                                                                </tr> */}
+
+                                                            </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Second Examiner </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Third Examiner </th>
+
+
+
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Marks <br /> (70 marks)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total Marks <br /> (100 marks)</th>
                                                         </tr>

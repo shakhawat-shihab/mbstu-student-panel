@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 import Swal from 'sweetalert2';
+import findClosestTwoMarksAvg from '../../../../Functions/FindClosestTwo';
 import useAuth from '../../../../Hooks/useAuth';
 import './MarksAssign.css';
 import MarksAssignCommitteeModal from './MarksAssignCommitteeModal';
@@ -66,8 +67,8 @@ const MarksAssign = () => {
                 // console.log('semester = ', info);
                 const coursesExceptTheory = [];
                 info?.data?.coursesMarks.map(x => {
-                    if (x.type !== 'theory')
-                        coursesExceptTheory.push(x)
+                    // if (x.type !== 'theory')
+                    coursesExceptTheory.push(x)
                 });
                 //console.log('coursesExceptTheory = ', coursesExceptTheory);
                 setCourses(coursesExceptTheory)
@@ -89,8 +90,59 @@ const MarksAssign = () => {
             })
                 .then(res => res.json())
                 .then(info => {
-                    // console.log('course marks = ', info?.data);
-                    setMarks(info?.data);
+                    console.log('course marks = ', info?.data);
+
+                    //process mark
+                    const supObj = {};
+                    supObj.courseCode = info?.data?.courseCode;
+                    supObj.courseTitle = info?.data?.courseTitle;
+                    supObj.credit = info?.data?.credit;
+                    supObj.type = info?.data?.type;
+                    const array = []
+                    info?.data?.studentsMarks?.map(marksOfSingleStudent => {
+                        // console.log('marksOfSingleStudent ', marksOfSingleStudent)
+                        const obj = {}
+                        obj.id = marksOfSingleStudent.id;
+                        obj.name = marksOfSingleStudent?.studentProfileId?.firstName + ' ' + marksOfSingleStudent?.studentProfileId?.lastName;
+                        obj.isPaid = marksOfSingleStudent?.isPaid;
+                        if (info?.data.type === 'theory') {
+                            const { theoryFinal = 0, theorySecondExaminer = 0, theoryThirdExaminer = 0 } = marksOfSingleStudent;
+                            let theoryWritten;
+                            if (Math.abs(theoryFinal - theorySecondExaminer) > 14) {
+                                theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
+                            }
+                            else {
+                                theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
+                            }
+                            obj.theoryFinal = theoryFinal;
+                            obj.theorySecondExaminer = theorySecondExaminer;
+                            obj.theoryThirdExaminer = theoryThirdExaminer;
+                            obj.theoryWritten = theoryWritten;
+                            if (Math.abs(theoryFinal - theorySecondExaminer) > 14) {
+                                obj.remarks = "Third Examiner";
+                            }
+                            array.push(obj);
+                        }
+                        else if (info?.data.type === 'lab') {
+                            const { labExperiment = 0, labViva = 0 } = marksOfSingleStudent;
+                            obj.labExperiment = labExperiment
+                            obj.labViva = labViva
+                            array.push(obj);
+                        }
+                        else if (info?.data.type === 'project') {
+                            const { projectClassPerformance, projectClassPerformanceBy, projectClassPerformanceByProfileId, projectPresentation, projectPresentationBy } = marksOfSingleStudent;
+                            obj.projectClassPerformance = projectClassPerformance;
+                            obj.projectClassPerformanceBy = projectClassPerformanceBy;
+                            obj.projectClassPerformanceByProfileId = projectClassPerformanceByProfileId;
+                            obj.projectPresentation = projectPresentation;
+                            obj.projectPresentationBy = projectPresentationBy;
+                            array.push(obj);
+                        }
+                    })
+                    // console.log('array  ==> ', array)
+                    supObj.marks = array;
+                    console.log('supObj  ==> ', supObj)
+                    setMarks(supObj);
                     setIsLoadingMarks(false);
                 })
         }
@@ -144,7 +196,93 @@ const MarksAssign = () => {
                             </div>
                             :
                             <>
+                                {
+                                    marks?.type === 'theory'
+                                    &&
+                                    <div className='container'>
+                                        <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                            <div className='p-4 '>
+                                                <div className='mb-5'>
+                                                    <h3 className='text-center mb-5' >Theory</h3>
+                                                    <h3 className='text-center mb-5' >Average Number List</h3>
+                                                    <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
+                                                    <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode.toUpperCase()}</p>
+                                                    <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                                </div>
+                                                <Form
+                                                // onSubmit={handleSubmit(onSubmitLabMarks)}
+                                                >
+                                                    <Table responsive striped bordered hover className='text-center' style={{ border: '1px solid black' }}>
+                                                        <thead>
+                                                            <tr style={{ border: '1px solid black' }}>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Internal Examiner
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    External Examiner
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Third Examiner
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Average
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Remarks
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
 
+                                                            {
+                                                                marks?.marks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                            readOnly />
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>{x?.name}</td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p >
+                                                                            {x?.theoryFinal}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p >
+                                                                            {x?.theorySecondExaminer}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p >
+                                                                            {x?.theoryThirdExaminer}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p >
+                                                                            {x?.theoryWritten}
+                                                                        </p>
+                                                                    </td>
+                                                                    <td style={{ border: '1px solid black' }}>
+                                                                        <p >
+                                                                            {x?.remarks}
+                                                                        </p>
+                                                                    </td>
+                                                                </tr>)
+                                                            }
+
+                                                        </tbody>
+                                                    </Table>
+                                                    <div className='text-center'>
+                                                        <Button variant='primary' className='me-2' onClick={() => setShowModal(true)}>Generate PDF</Button>
+                                                        {/* <input variant='primary' type="submit" value='Save' className='btn btn-primary' /> */}
+                                                        {/* <Button variant='success' className='me-2' onClick={() => submitAllMarksExamCommittee()}>Submit Marks</Button> */}
+                                                    </div>
+                                                </Form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 {
                                     marks?.type === 'lab'
                                     &&
@@ -182,23 +320,21 @@ const MarksAssign = () => {
                                                         <tbody>
 
                                                             {
-                                                                marks?.studentsMarks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
+                                                                marks?.marks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
                                                                             readOnly />
                                                                     </td>
-                                                                    <td style={{ border: '1px solid black' }}>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</td>
+                                                                    <td style={{ border: '1px solid black' }}>{x?.name}</td>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <p
                                                                             title={`By ${x?.labExperimentBy}`} >
-
                                                                             {x?.labExperiment}
                                                                         </p>
                                                                     </td>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <p
                                                                             title={`By ${x?.labVivaBy}`} >
-
                                                                             {x?.labViva}
                                                                         </p>
                                                                     </td>
@@ -258,13 +394,12 @@ const MarksAssign = () => {
                                                         </thead>
                                                         <tbody>
                                                             {
-                                                                marks?.studentsMarks?.map(x => <tr key={x?.s_id}>
+                                                                marks?.marks?.map(x => <tr key={x?.s_id}>
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
-
                                                                             readOnly />
                                                                     </td>
-                                                                    <td style={{ border: '1px solid black' }}>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</td>
+                                                                    <td style={{ border: '1px solid black' }}>{x?.name}</td>
 
                                                                     <td style={{ border: '1px solid black' }}>
                                                                         <p className={editPresentationMarks ? 'd-none' : ''} title={`By ${x?.projectPresentationBy}`} >{x?.projectPresentation}</p>

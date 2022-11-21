@@ -71,19 +71,36 @@ const MarksAssignModal = (props) => {
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                     <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                     {/* <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks<br />(60 marks)</th> */}
-                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks<br /> (40 marks)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks  (40 )</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Viva-voce Marks (10)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total (50)</th>
+                                                    <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Remarks</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-
                                                 {
-                                                    marks?.studentsMarks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
+                                                    marks?.marks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
                                                         <td style={{ border: '1px solid black' }}>
                                                             <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} value={x?.id.toUpperCase()}
                                                                 readOnly />
                                                         </td>
-                                                        <td style={{ border: '1px solid black' }}>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</td>
+                                                        <td style={{ border: '1px solid black' }}>{x?.name}</td>
                                                         <td style={{ border: '1px solid black' }}>{x?.labExperiment}</td>
+                                                        <td style={{ border: '1px solid black' }}>{x?.labViva}</td>
+                                                        <td style={{ border: '1px solid black' }}>
+                                                            {
+                                                                x?.labExperiment && x?.labViva
+                                                                    ?
+                                                                    x?.labExperiment + x?.labViva
+                                                                    :
+                                                                    <>
+                                                                        {
+                                                                            x?.labViva ? x?.labViva : x?.labExperiment
+                                                                        }
+                                                                    </>
+                                                            }
+
+                                                        </td>
                                                     </tr>)
                                                 }
 

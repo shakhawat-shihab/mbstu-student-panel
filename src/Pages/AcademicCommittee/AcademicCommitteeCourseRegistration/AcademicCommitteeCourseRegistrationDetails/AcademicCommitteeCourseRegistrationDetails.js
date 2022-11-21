@@ -8,6 +8,7 @@ const AcademicCommitteeCourseRegistrationDetails = () => {
     const history = useHistory();
     const [application, setApplication] = useState({});
     const [comment, setComment] = useState('');
+    const [transactionDate, setTransactionDate] = useState();
 
     const Toast = Swal.mixin({
         toast: true,
@@ -22,6 +23,8 @@ const AcademicCommitteeCourseRegistrationDetails = () => {
     })
 
 
+
+
     useEffect(() => {
         fetch(`http://localhost:5000/api/v1/course-application/get-application-details/${applicationId}`, {
             headers: {
@@ -31,6 +34,18 @@ const AcademicCommitteeCourseRegistrationDetails = () => {
         })
             .then(res => res.json())
             .then(info => {
+                console.log('info  ', info);
+                if (info?.data?.paymentId?.tran_date) {
+                    const d = new Date(info?.data?.paymentId?.tran_date);
+                    const dformat = [d.getMonth() + 1,
+                    d.getDate(),
+                    d.getFullYear()].join('/') + ' ' +
+                        [d.getHours(),
+                        d.getMinutes(),
+                        d.getSeconds()].join(':');
+                    setTransactionDate(dformat)
+
+                }
                 setApplication(info.data);
             })
     }, [applicationId])
@@ -251,24 +266,62 @@ const AcademicCommitteeCourseRegistrationDetails = () => {
                     </div>
                 }
 
-                {
-                    // application?.status === 'pending' ?
-                    //     <h5 className='fw-bold'>Status: <span className="text-warning text-capitalize">{application?.status} <MdPendingActions /></span>  </h5>
-                    //     :
-                    //     <h5 className='fw-bold'>Status: <span className="text-success text-capitalize">{application?.status} <FcApproval /></span></h5>
 
+                <br />
+
+                {
+                    (application?.isPaid)
+                    &&
+                    <div>
+                        <h5 className="fw-bold">Payment Info:</h5>
+                        <Table responsive striped bordered hover style={{ border: "1px solid black" }}>
+
+                            <tbody>
+                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>Card Brand</td>
+                                    <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.card_brand}</td>
+                                </tr>
+                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>Card Issuer</td>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.card_issuer}</td>
+                                </tr>
+                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>Amount</td>
+                                    <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.amount}</td>
+                                </tr>
+                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>Cuurency</td>
+                                    <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.currency}</td>
+                                </tr>
+                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>Transaction Id</td>
+                                    <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{application?.paymentId?.tran_id}</td>
+                                </tr>
+                                <tr className='text-center' style={{ border: "1px solid black" }}>
+                                    <td style={{ border: "1px solid black", fontSize: "20px" }}>Transaction Time</td>
+                                    <td className="text-uppercase" style={{ border: "1px solid black", fontSize: "20px" }}>{transactionDate}</td>
+                                </tr>
+                            </tbody>
+
+                        </Table>
+                    </div>
                 }
+
 
                 <div className="form-group mb-5 ">
                     {/* <label for="exampleFormControlTextarea1" className='fw-bold'>Write Commment</label> */}
                     <textarea placeholder="Write comment ..." className="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setComment(e.target.value)}></textarea>
                 </div>
 
-                {/* <Button type="button" className="btn btn-success" onClick={handleApprove}>Approve</Button> */}
-                <div className='text-center mb-3'>
-                    <Button variant='success' className='me-2' onClick={() => { handleApprove() }}>Approve</Button>
-                    <Button variant='danger' onClick={() => { handleReject() }} >Reject</Button>
-                </div>
+                {
+                    !application?.isAcademicCommitteeVerified && application?.status === 'pending'
+                    &&
+                    <div className='text-center mb-3'>
+                        <Button variant='success' className='me-2' onClick={() => { handleApprove() }}>Approve</Button>
+                        <Button variant='danger' onClick={() => { handleReject() }} >Reject</Button>
+                    </div>
+                }
+
             </div>
         </div>
     );

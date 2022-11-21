@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 
 const MarksAssignCommitteeModal = (props) => {
-
     const { marks, showCommitteeModal, setShowCommitteeModal, courseId, examCommitteeLabExp, setExamCommitteeLabExp, examCommitteeLabViva, setExamCommitteeLabViva,
         examCommitteeProject, setExamCommitteeProject, isSaving, setIsSaving } = props;
     const [fileUpload, setFileUpload] = useState();
@@ -14,6 +14,8 @@ const MarksAssignCommitteeModal = (props) => {
     const [project, setProject] = useState();
     const { register, handleSubmit, reset } = useForm();
     // const [examCommitteeFinal,setExamCommitteeFinal]=useState()
+
+    console.log('marks ', marks);
 
 
     const Toast = Swal.mixin({
@@ -41,7 +43,7 @@ const MarksAssignCommitteeModal = (props) => {
         console.log("exam modal data ==== ", data)
         let supObj = {};
         let arr = [];
-        marks?.studentsMarks?.map(x => {
+        marks?.marks?.map(x => {
             const obj = {};
             obj.id = data[`${x.id}_id`];
             if (examCommitteeLabExp) {
@@ -183,9 +185,13 @@ const MarksAssignCommitteeModal = (props) => {
                 title: "Please Select a correct File"
             })
         }
-
-
     }
+
+    useEffect(() => {
+        // console.log('he  !!')
+        reset();
+    }, [showCommitteeModal])
+
     return (
         <div>
             <Modal
@@ -249,23 +255,23 @@ const MarksAssignCommitteeModal = (props) => {
                                                                 examCommitteeLabExp
                                                                 &&
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 marks)
-                                                                    <br />
-                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabExp(true) }}>Edit</span>
+                                                                    {/* <br />
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabExp(true) }}>Edit</span> */}
                                                                 </th>
                                                             }
                                                             {
                                                                 examCommitteeLabViva
                                                                 &&
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Viva-voce Marks <br /> (10 marks)
-                                                                    <br />
-                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabViva(true) }}>Edit</span>
+                                                                    {/* <br />
+                                                                    <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabViva(true) }}>Edit</span> */}
                                                                 </th>
                                                             }
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            marks?.studentsMarks?.map(x => {
+                                                            marks?.marks?.map(x => {
                                                                 // console.log(x)
                                                                 return (
                                                                     <tr key={x?.id} style={{ border: "1px solid black" }}>
@@ -275,7 +281,7 @@ const MarksAssignCommitteeModal = (props) => {
                                                                                 readOnly />
                                                                         </td>
                                                                         <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.name}
                                                                                 {...register(`${x?.id}_name`, { required: true })}
                                                                                 readOnly />
                                                                         </td>
