@@ -10,6 +10,7 @@ import MarksSheetModal from './MarksSheetModal';
 
 import { AiFillCheckCircle } from "react-icons/ai";
 import findClosestTwoMarksAvg from '../../../../Functions/FindClosestTwo';
+import checkMarks from '../../../../Functions/MarksToGrade';
 
 const MarksSheet = () => {
     const { semesterId } = useParams();
@@ -144,11 +145,21 @@ const MarksSheet = () => {
                 let totalMarks = thirtyPercent + theoryWritten
                 obj.thirtyPercent = thirtyPercent;
 
+                obj.theoryAttendance = theoryAttendance;
+                obj.ctAvg = avg;
+
                 obj.theoryFinal = theoryFinal;
                 obj.theorySecondExaminer = theorySecondExaminer;
                 obj.theoryThirdExaminer = theoryThirdExaminer;
                 obj.theoryWritten = theoryWritten;
                 obj.totalMarks = totalMarks;
+
+                let grade = {};
+                grade = checkMarks(totalMarks);
+
+                obj.lg = grade?.lg;
+                obj.gp = grade?.gp;
+
                 array.push(obj);
             }
             else if (marks.type === 'lab') {
@@ -158,6 +169,16 @@ const MarksSheet = () => {
                 // obj.labQuiz = labQuiz;
                 obj.labClassMark = Math.round(labAttendance + labQuiz + labReport)
                 obj.labExamMark = Math.round(labExperiment + labViva)
+
+                let totalMarks = Math.round(labAttendance + labQuiz + labReport) + Math.round(labExperiment + labViva);
+                obj.totalMarks = totalMarks;
+
+                let grade = {};
+                grade = checkMarks(totalMarks);
+
+                obj.lg = grade?.lg;
+                obj.gp = grade?.gp;
+
                 array.push(obj);
             }
             else if (marks.type === 'project') {
@@ -206,6 +227,8 @@ const MarksSheet = () => {
                 }
             })
     }
+
+    console.log("my processesd mardksks == ", processedMarks);
 
 
     return (
@@ -282,33 +305,21 @@ const MarksSheet = () => {
                                                     </p>
 
                                                 </div>
-                                                <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
+                                                <Table responsive striped hover className='text-center' style={{ border: "1px solid black" }}>
                                                     <thead>
-                                                        <tr style={{ border: "1px solid black" }}>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>CT & Attendance <br /> (30 marks)</th>
-
-
-
-                                                            <th className='p-0' style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-
-                                                                Course Teacher
-                                                                {/* <tr className='display-tr'>
-                                                                    <td className='display-td' style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>fd</td>
-                                                                    <td className='display-td' style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>fd</td>
-                                                                
-                                                                </tr> */}
-
-                                                            </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Second Examiner </th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Third Examiner </th>
-
-
-
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Marks <br /> (70 marks)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total Marks <br /> (100 marks)</th>
+                                                        <tr style={{ border: "0px" }} >
+                                                            <th style={{ borderTop: "0", textAlign: "center", verticalAlign: "middle" }} rowSpan="2" >Student Id</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Name of the Candidates</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Status</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} colSpan="3">Theory</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Total Marks <br /> (100%)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Letter Grade <br /> (LG)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Grade Point <br /> (GP)</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Participation <br /> (10%)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Test / Assignment (20%)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Examination <br /> (70%)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -317,12 +328,12 @@ const MarksSheet = () => {
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}> <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i> </td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.thirtyPercent}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.theoryFinal}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.theorySecondExaminer}</td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.theoryThirdExaminer}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.theoryAttendance}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.ctAvg}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.theoryWritten}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.totalMarks}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.lg}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.gp}</td>
                                                             </tr>)
                                                         }
                                                     </tbody>
@@ -354,14 +365,17 @@ const MarksSheet = () => {
                                                 <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
                                                     <thead>
                                                         <tr style={{ border: "1px solid black" }}>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Marks <br /> (50 marks)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Experiment Marks <br /> (50 marks)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>LG</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>GP</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Student Id</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Name of the Candidates</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Status</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} colSpan="2">Lab/Sessional</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Total Marks <br /> (100%)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Letter Grade <br /> (LG)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} rowSpan="2">Grade Point <br /> (GP)</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Practical exam/sessional & Viva-voce <br /> (40+10=50%)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Attendance, Lab Report & Quiz Examination <br /> (10+20+20=50%)</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -370,8 +384,13 @@ const MarksSheet = () => {
                                                                 <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
-                                                                <td style={{ border: "1px solid black" }}>{x?.labClassMark}</td>
+
                                                                 <td title={'By ' + x?.labExperimentBy} style={{ border: "1px solid black" }}>{x?.labExamMark}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.labClassMark}</td>
+
+                                                                <td style={{ border: "1px solid black" }}>{x?.totalMarks}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.lg}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.gp}</td>
 
                                                             </tr>)
                                                         }
