@@ -91,7 +91,15 @@ const ResultSheetModal = (props) => {
                                         processedResult?.map(x => <tr key={x?.id} style={{ border: "0.5px solid black" }}>
                                             <td style={{ border: "0.5px solid black" }}>{x.id.toUpperCase()}</td>
                                             <td style={{ border: "0.5px solid black" }}>{x.name}</td>
-                                            <td style={{ border: "0.5px solid black" }}>{x.creditEarned}</td>
+                                            <td style={{ border: "0.5px solid black" }}>
+                                                {
+                                                    x.isBacklog
+                                                        ?
+                                                        `${x.creditEarned} (Out of ${x.totalCreditTaken} )`
+                                                        :
+                                                        x.creditEarned
+                                                }
+                                            </td>
                                             <td style={{ border: "0.5px solid black" }}>
                                                 {
                                                     x?.creditLost !== 0
@@ -121,9 +129,11 @@ const ResultSheetModal = (props) => {
                                             </td>
                                             <td style={{ border: "0.5px solid black" }}>{x.cgpa}</td>
                                             <td style={{ border: "0.5px solid black" }}>{checkGpa(x.cgpa)}</td>
-                                            {
 
-                                                <td style={{ border: "0.5px solid black" }}>{x.remarks && <span>{x.remarks}</span>}</td>
+                                            {
+                                                !x.isBacklog
+                                                &&
+                                                <td style={{ border: "1px solid black" }}>{x?.remarks}</td>
                                             }
 
                                         </tr>)

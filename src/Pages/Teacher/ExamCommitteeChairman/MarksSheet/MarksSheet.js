@@ -107,11 +107,12 @@ const MarksSheet = () => {
         supObj.type = marks?.type;
         const array = []
         marks?.studentsMarks?.map(marksOfSingleStudent => {
-            // console.log('marksOfSingleStudent ', marksOfSingleStudent)
+            console.log('marksOfSingleStudent   ===> ', marksOfSingleStudent)
             const obj = {}
             obj.id = marksOfSingleStudent.id;
             obj.name = marksOfSingleStudent?.studentProfileId?.firstName + ' ' + marksOfSingleStudent?.studentProfileId?.lastName;
             obj.isPaid = marksOfSingleStudent?.isPaid;
+            obj.isBacklog = marksOfSingleStudent?.isBacklog;
             if (marks.type === 'theory') {
                 let cnt = 0;
                 let sum = 0;
@@ -129,19 +130,27 @@ const MarksSheet = () => {
                     cnt++;
                 }
                 let avg = 0;
-                cnt && (avg = sum / cnt);
-                //console.log('average ', avg);
+                cnt && (avg = Math.round(sum / cnt));
+                // console.log('average ', avg);
                 let thirtyPercent;
-                theoryAttendance ? (thirtyPercent = Math.round((avg + parseInt(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
-
-                let theoryWritten;
+                theoryAttendance ? (thirtyPercent = Math.round((avg + Math.round(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
+                let theoryWritten = 0;
+                // console.log('dif  =====> ', Math.abs(theoryFinal - theorySecondExaminer))
                 if (Math.abs(theoryFinal - theorySecondExaminer) > 14) {
-                    theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
+                    if (theorySecondExaminer && theoryThirdExaminer) {
+                        theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
+                    }
+                    else {
+                        theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
+                    }
+
                 }
                 else {
                     theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
-
                 }
+
+
+
                 let totalMarks = thirtyPercent + theoryWritten
                 obj.thirtyPercent = thirtyPercent;
 
@@ -182,17 +191,27 @@ const MarksSheet = () => {
                 array.push(obj);
             }
             else if (marks.type === 'project') {
-                const { projectClassPerformance, projectClassPerformanceBy, projectClassPerformanceByProfileId, projectPresentation, projectPresentationBy } = marksOfSingleStudent;
+                const { projectClassPerformance = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId, projectPresentation = 0, projectPresentationBy } = marksOfSingleStudent;
                 obj.projectClassPerformance = projectClassPerformance;
                 obj.projectClassPerformanceBy = projectClassPerformanceBy;
                 obj.projectClassPerformanceByProfileId = projectClassPerformanceByProfileId;
                 obj.projectPresentation = projectPresentation;
                 obj.projectPresentationBy = projectPresentationBy;
+
+
+                let total = 0;
+                total = projectClassPerformance + projectPresentation;
+                obj.totalMarks = total;
+                let grade = {};
+                grade = checkMarks(total);
+                obj.lg = grade?.lg;
+                obj.gp = grade?.gp;
+
                 array.push(obj);
             }
         })
         supObj.marks = array;
-        // console.log('supObj ====== ', supObj);
+        console.log('supObj ====== ', supObj);
         //console.log(semesterInfo);
         setProcessedMarks(supObj);
     }, [processNewMark]);
@@ -325,7 +344,15 @@ const MarksSheet = () => {
                                                     <tbody>
                                                         {
                                                             processedMarks?.marks?.map(x => <tr key={x?._id} style={{ border: "1px solid black" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        x?.isBacklog
+                                                                            ?
+                                                                            `* ${x.id}`
+                                                                            :
+                                                                            x.id
+                                                                    }
+                                                                </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}> <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i> </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.theoryAttendance}</td>
@@ -381,7 +408,15 @@ const MarksSheet = () => {
                                                     <tbody>
                                                         {
                                                             processedMarks?.marks?.map(x => <tr key={x?._id} style={{ border: "1px solid black" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        x?.isBacklog
+                                                                            ?
+                                                                            `* ${x.id}`
+                                                                            :
+                                                                            x.id
+                                                                    }
+                                                                </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
 
@@ -430,18 +465,32 @@ const MarksSheet = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance <br /> (70 marks)</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva<br /> (30 marks)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total <br /> (100)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>LG</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>GP</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {
                                                             processedMarks?.marks?.map(x => <tr key={x?._id} style={{ border: "1px solid black" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        x?.isBacklog
+                                                                            ?
+                                                                            `* ${x.id}`
+                                                                            :
+                                                                            x.id
+                                                                    }
+                                                                </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
                                                                 <td title={'By ' + x?.projectClassPerformanceBy} style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
                                                                 <td title={'By ' + x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.totalMarks}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.lg}</td>
+                                                                <td style={{ border: "1px solid black" }}>{x?.gp}</td>
                                                             </tr>)
                                                         }
                                                     </tbody>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Button, Form, Modal, Table } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -257,9 +258,13 @@ const MarkModal = (props) => {
             })
 
         }
-
-
     }
+
+    useEffect(() => {
+        // console.log('he  !!')
+        reset();
+    }, [showMarkModal])
+
 
     return (
         <div>

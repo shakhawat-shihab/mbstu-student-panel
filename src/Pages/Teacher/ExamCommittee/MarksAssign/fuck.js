@@ -235,59 +235,45 @@ const MarksAssign = () => {
                                                 <div className='mt-1'>
                                                     <p className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</p>
                                                 </div>
-
-                                                <div className='mt-4'>
-                                                    <p><span className='fw-bold'>Course Teacher: </span>
-                                                        {marks?.teacher?.name}
-                                                        {marks?.isSubmittedByCourseTeacher ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>
-                                                        }
-                                                    </p>
-                                                    <p><span className='fw-bold'>Second Examiner: </span>
-                                                        {marks?.secondExaminer?.name}
-                                                        {marks?.isSubmittedBySecondExaminer ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>}
-                                                    </p>
-                                                    <p><span className='fw-bold'>Third Examiner: </span>
-                                                        {marks?.thirdExaminer?.name}
-                                                        {marks?.isSubmittedByThirdExaminer
-                                                            ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>}
-                                                    </p>
-
-                                                </div>
-
                                                 <div className='mb-2'>
                                                     <div className='mt-4 d-flex justify-content-between'>
                                                         <div className='d-flex flex-column'>
                                                             <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
                                                             <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
                                                         </div>
-                                                        <div className='d-flex flex-column align-items-end'>
+                                                        <div className='d-flex flex-column'>
                                                             <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
-                                                            <span className='fw-bold'>Full Marks: 70</span>
+                                                            <span className='fw-bold'>Full Marks: 50</span>
                                                         </div>
                                                     </div>
                                                 </div>
-
-
+                                                <p><span className='fw-bold'>Course Teacher: </span>
+                                                    {marks?.teacher?.name}
+                                                    {marks?.isSubmittedByCourseTeacher ?
+                                                        <span> (Submitted)</span>
+                                                        :
+                                                        <span> (Not submitted)</span>
+                                                    }
+                                                </p>
+                                                <p><span className='fw-bold'>Second Examiner: </span>
+                                                    {marks?.secondExaminer?.name}
+                                                    {marks?.isSubmittedBySecondExaminer ?
+                                                        <span> (Submitted)</span>
+                                                        :
+                                                        <span> (Not submitted)</span>}
+                                                </p>
+                                                <p><span className='fw-bold'>Third Examiner: </span>
+                                                    {marks?.thirdExaminer?.name}
+                                                    {marks?.isSubmittedByThirdExaminer
+                                                        ?
+                                                        <span> (Submitted)</span>
+                                                        :
+                                                        <span> (Not submitted)</span>}
+                                                </p>
                                                 <Form
                                                 // onSubmit={handleSubmit(onSubmitLabMarks)}
                                                 >
                                                     <Table responsive striped bordered hover className='text-center' style={{ border: '1px solid black' }}>
-                                                        <col width="10%" />
-                                                        <col width="35%" />
-                                                        <col width="10%" />
-                                                        <col width="10%" />
-                                                        <col width="10%" />
-                                                        <col width="10%" />
-                                                        <col width="10%" />
                                                         <thead>
                                                             <tr style={{ border: '1px solid black', fontSize: "12px" }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} className="py-2">Student Id</th>
@@ -367,51 +353,41 @@ const MarksAssign = () => {
                                                 <div className='mt-1'>
                                                     <p className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</p>
                                                 </div>
-
-                                                <div className='mt-4'>
-                                                    <p><span className='fw-bold'>Course Teacher: </span>
-                                                        {marks?.teacher?.name}
-                                                        {marks?.isSubmittedByCourseTeacher ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>
-                                                        }
-                                                    </p>
-
-                                                </div>
                                                 <div className='mb-2'>
                                                     <div className='mt-4 d-flex justify-content-between'>
                                                         <div className='d-flex flex-column'>
                                                             <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
                                                             <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
                                                         </div>
-                                                        <div className='d-flex flex-column align-items-end'>
+                                                        <div className='d-flex flex-column'>
                                                             <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
                                                             <span className='fw-bold'>Full Marks: 50</span>
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <p>
+                                                    <span className='fw-bold'>Course Teacher: </span>
+                                                    {marks?.teacher?.name}
+                                                    {marks?.isSubmittedByCourseTeacher ?
+                                                        <span> (Submitted)</span>
+                                                        :
+                                                        <span> (Not submitted)</span>
+                                                    }
+                                                </p>
 
                                                 <Form
                                                 // onSubmit={handleSubmit(onSubmitLabMarks)}
                                                 >
                                                     <Table responsive striped bordered hover className='text-center' style={{ border: '1px solid black' }}>
-                                                        <col width="10%" />
-                                                        <col width="30%" />
-                                                        <col width="22%" />
-                                                        <col width="13%" />
-                                                        <col width="10%" />
-                                                        <col width="10%" />
                                                         <thead>
                                                             <tr style={{ border: '1px solid black' }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Practical exam/<br /> Sessional Marks  (40)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Practical exam/Sessional Marks <br /> (40)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabExp(true) }}>Edit</span>
                                                                 </th>
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Viva-voce Marks  (10)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Viva-voce Marks <br /> (10)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabViva(true) }}>Edit</span>
                                                                 </th>
@@ -419,8 +395,7 @@ const MarksAssign = () => {
                                                                     {/* <br />
                                                                     <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLab(true) }}>Edit</span> */}
                                                                 </th>
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Remarks
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Remarks
                                                                 </th>
 
                                                             </tr>
@@ -430,7 +405,7 @@ const MarksAssign = () => {
                                                             {
                                                                 marks?.marks?.map(x => <tr key={`${x?.id}_${courseCode}`} style={{ border: '1px solid black' }}>
                                                                     <td style={{ border: '1px solid black' }}>
-                                                                        <input className='border-0 w-100  text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
+                                                                        <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
                                                                             readOnly />
                                                                     </td>
                                                                     <td style={{ border: '1px solid black' }}>{x?.name}</td>
@@ -501,14 +476,14 @@ const MarksAssign = () => {
                                                             <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
                                                             <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
                                                         </div>
-                                                        <div className='d-flex flex-column align-items-end'>
+                                                        <div className='d-flex flex-column'>
                                                             <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
-                                                            <span className='fw-bold'>Full Marks: 30</span>
+                                                            <span className='fw-bold'>Full Marks: 50</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <Form>
-                                                    <Table responsive stripped bordered hover className='text-center' style={{ border: '1px solid black' }}>
+                                                    <Table responsive bordered hover className='text-center' style={{ border: '1px solid black' }}>
                                                         <thead>
                                                             <tr style={{ border: '1px solid black' }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>

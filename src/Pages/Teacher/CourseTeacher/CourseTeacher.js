@@ -17,6 +17,7 @@ const CourseTeacher = () => {
     const { user } = useAuth();
 
     const [marks, setMarks] = useState({});
+    const [marksToView, setMarksToView] = useState([]);
     const [isLoadingMarks, setIsLoadingMarks] = useState(true);
     const [isSaving, setIsSaving] = useState(true);
     const [proposals, setProposals] = useState([]);
@@ -28,6 +29,8 @@ const CourseTeacher = () => {
     const [ct1, setCt1] = useState(true);
     const [ct2, setCt2] = useState(true);
     const [ct3, setCt3] = useState(true);
+    const [ctAvg, setCtAvg] = useState(true);
+    const [classThirty, setClassThirty] = useState(true);
     const [final, setFinal] = useState(true);
     const [labAttendance, setLabAttendance] = useState(true);
     const [labReport, setLabReport] = useState(true);
@@ -46,10 +49,6 @@ const CourseTeacher = () => {
     const [lbReport, setLbReport] = useState(false);
     const [lbQuiz, setLbQuiz] = useState(false);
     const [projectClassPerformance, setProjectClassPerformance] = useState(false);
-
-
-
-
 
 
     const history = useHistory();
@@ -108,6 +107,63 @@ const CourseTeacher = () => {
     }, [courseId, marks, proposalState])
 
 
+    useEffect(() => {
+        const array = []
+        marks?.studentsMarks?.forEach(x => {
+            const obj = {}
+            obj.id = x.id;
+            obj.name = x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName;
+            if (marks?.type === 'theory') {
+                let cnt = 0;
+                let sum = 0;
+                const { theoryCT1, theoryCT2, theoryCT3, theoryAttendance, theoryFinal } = x;
+                if (theoryCT1 || theoryCT1 === 0) {
+                    obj.theoryCT1 = theoryCT1;
+                    sum += parseInt(theoryCT1);
+                    cnt++;
+                }
+                if (theoryCT2 || theoryCT2 === 0) {
+                    obj.theoryCT2 = theoryCT2;
+                    sum += parseInt(theoryCT2);
+                    cnt++;
+                }
+                if (theoryCT3 || theoryCT3 === 0) {
+                    obj.theoryCT3 = theoryCT3;
+                    sum += parseInt(theoryCT3);
+                    cnt++;
+                }
+                let avg = 0;
+                cnt && (avg = Math.round(sum / cnt));
+                //console.log('average ', avg);
+                let thirtyPercent;
+                theoryAttendance ? (thirtyPercent = Math.round((avg + Math.round(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
+                obj.theoryAttendance = theoryAttendance;
+                obj.ctAvg = avg;
+                obj.thirtyPercent = thirtyPercent;
+                obj.theoryFinal = theoryFinal;
+                array.push(obj);
+            }
+            else if (marks.type === 'lab') {
+                const { labAttendance, labReport, labQuiz } = x;
+                obj.labAttendance = labAttendance
+                obj.labReport = labReport
+                obj.labQuiz = labQuiz
+                let totalMarks = 0;
+                totalMarks = Math.round(labAttendance + labQuiz + labReport);
+                obj.labClass = totalMarks;
+                array.push(obj);
+            }
+            else if (marks?.type === 'project') {
+                const { projectClassPerformance } = x;
+                obj.projectClassPerformance = projectClassPerformance;
+                array.push(obj);
+            }
+        });
+        console.log('array  ', array);
+        setMarksToView(array);
+    }, [marks])
+
+
     const submitAllMarksCourseTeacher = () => {
         Swal.fire({
             title: 'Do you want to Turn In the marks?',
@@ -150,6 +206,9 @@ const CourseTeacher = () => {
         })
     }
 
+
+
+
     // console.log('state ', state)
     const onSubmit = data => {
         //setSubmitClick(!submitClick);
@@ -166,8 +225,6 @@ const CourseTeacher = () => {
                 return;
             }
         }
-
-
     };
 
 
@@ -192,19 +249,19 @@ const CourseTeacher = () => {
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
                     </div>
-
                     :
-
                     <>
                         <div>
+                            {/* CourseTeacherMarksModal is for generate pdf */}
                             <CourseTeacherMarksModal
-                                marks={marks} showModal={showModal} setShowModal={setShowModal}
-                                attendance={attendance} ct1={ct1} ct2={ct2} ct3={ct3} final={final}
+                                marksToView={marksToView} marks={marks} showModal={showModal} setShowModal={setShowModal}
+                                attendance={attendance} ct1={ct1} ct2={ct2} ct3={ct3} final={final} ctAvg={ctAvg} classThirty={classThirty}
                                 labAttendance={labAttendance} labQuiz={labQuiz} labReport={labReport}
                                 classPerformanceProject={classPerformanceProject}
                             />
                         </div>
                         <div>
+                            {/* mark modall is for giving marks */}
                             <MarkModal
                                 showMarkModal={showMarkModal} setShowMarkModal={setShowMarkModal} marks={marks}
                                 theoryAttendance={theoryAttendance} setTheoryAttendance={setTheoryAttendance}
@@ -234,12 +291,12 @@ const CourseTeacher = () => {
                                             <Form onSubmit={handleSubmit(onSubmit)}>
                                                 <Form.Group className='mb-2'>
                                                     <Table responsive striped bordered hover className='text-center' >
-                                                        <col width="11%" />
+                                                        {/* <col width="11%" />
                                                         <col width="30%" />
                                                         <col width="12%" />
                                                         <col width="12%" />
                                                         <col width="12%" />
-                                                        <col width="12%" />
+                                                        <col width="12%" /> */}
                                                         <thead>
                                                             <tr  >
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
@@ -265,6 +322,14 @@ const CourseTeacher = () => {
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryCT3(true) }}>Edit</span>
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    CT Average<br />(20 marks)
+
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Total<br />(30%)
+
+                                                                </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                     Final Exam Mark <br />(70 marks)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setTheoryFinal(true) }}>Edit</span>
@@ -273,7 +338,7 @@ const CourseTeacher = () => {
                                                         </thead>
                                                         <tbody>
                                                             {
-                                                                marks?.studentsMarks?.map(x => {
+                                                                marksToView?.map(x => {
                                                                     // console.log(x?.studentProfileId?.firstName);
                                                                     return (
                                                                         <tr key={x?.id} style={{ border: "1px solid black" }}>
@@ -282,7 +347,7 @@ const CourseTeacher = () => {
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
-                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.name}
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
@@ -309,6 +374,18 @@ const CourseTeacher = () => {
                                                                                 {
 
                                                                                     <p>{x?.theoryCT3}</p>
+                                                                                }
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.ctAvg && x?.ctAvg}</p>
+                                                                                }
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.ctAvg && x?.thirtyPercent}</p>
                                                                                 }
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
@@ -360,6 +437,24 @@ const CourseTeacher = () => {
                                                     id="Ct3"
                                                     checked={ct3}
                                                     onChange={() => setCt3(!ct3)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Ct Average"
+                                                    // name="Ct Average"
+                                                    id="CtAverage"
+                                                    checked={ctAvg}
+                                                    onChange={() => setCtAvg(!ctAvg)}
+                                                />
+                                                <Form.Check
+                                                    inline
+                                                    type='checkbox'
+                                                    label="Thirty"
+                                                    // name="thirty"
+                                                    id="thirty"
+                                                    checked={classThirty}
+                                                    onChange={() => setClassThirty(!classThirty)}
                                                 />
 
                                                 <Form.Check
@@ -423,12 +518,16 @@ const CourseTeacher = () => {
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbQuiz(true) }}>Edit</span>
                                                                 </th>
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Total<br />
+
+                                                                </th>
 
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {
-                                                                marks.studentsMarks.map(x => {
+                                                                marksToView.map(x => {
                                                                     // console.log(x)
                                                                     return (
                                                                         <tr key={x?.s_id} style={{ border: "1px solid black" }}>
@@ -437,7 +536,7 @@ const CourseTeacher = () => {
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
-                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.name}
                                                                                     readOnly />
                                                                             </td>
                                                                             <td style={{ border: "1px solid black" }}>
@@ -458,6 +557,12 @@ const CourseTeacher = () => {
                                                                                 {
 
                                                                                     <p>{x?.labQuiz}</p>
+                                                                                }
+                                                                            </td>
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                {
+
+                                                                                    <p>{x?.labClass}</p>
                                                                                 }
                                                                             </td>
                                                                         </tr>
@@ -533,8 +638,6 @@ const CourseTeacher = () => {
 
 
                                     {
-
-
                                         state == '1'
                                             ?
                                             <div className='container'>
@@ -546,7 +649,6 @@ const CourseTeacher = () => {
                                                             <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode?.toUpperCase()}</p>
                                                             <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
                                                         </div>
-
                                                         <Form onSubmit={handleSubmit(onSubmit)}>
                                                             <Form.Group className='mb-2'>
                                                                 <Table responsive bordered striped hover className='text-center'  >
@@ -567,13 +669,13 @@ const CourseTeacher = () => {
                                                                     <tbody>
                                                                         {
                                                                             Object.keys(marks).length !== 0 &&
-                                                                            marks?.studentsMarks?.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
+                                                                            marksToView.map(x => <tr key={x?.s_id} style={{ border: "1px solid black" }}>
                                                                                 <td style={{ border: "1px solid black" }}>
                                                                                     <input className='border-0 w-100 text-center text-uppercase' style={{ backgroundColor: 'inherit' }} value={x?.id}
                                                                                         readOnly />
                                                                                 </td>
                                                                                 <td style={{ border: "1px solid black" }}>
-                                                                                    <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                                    <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.name}
                                                                                         readOnly />
                                                                                 </td>
                                                                                 <td style={{ border: "1px solid black" }}>

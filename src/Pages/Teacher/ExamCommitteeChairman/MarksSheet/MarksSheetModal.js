@@ -70,7 +70,6 @@ const MarksSheetModal = (props) => {
     }
 
 
-    console.log("pagiiiiii === ", paginatedMarks);
 
     return (
         <div>
@@ -108,7 +107,8 @@ const MarksSheetModal = (props) => {
                                 <div className='d-flex flex-row-reverse mb-4'>
                                     <small>Page {currentPageNumber} of {numberOfPages}</small>
                                 </div>
-                                {currentPageNumber === 1
+                                {
+                                    currentPageNumber === 1
                                     &&
                                     <>
                                         <div className='mt-4'>
@@ -164,7 +164,15 @@ const MarksSheetModal = (props) => {
                                                         {
                                                             Object.keys(paginatedMarks).length !== 0 &&
                                                             paginatedMarks?.map(x => <tr key={x?._id} style={{ border: "1px solid black", lineHeight: "8px", fontSize: "12px" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        x?.isBacklog
+                                                                            ?
+                                                                            `* ${x.id}`
+                                                                            :
+                                                                            x.id
+                                                                    }
+                                                                </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}> <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i> </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.theoryAttendance}</td>
@@ -211,7 +219,15 @@ const MarksSheetModal = (props) => {
                                                         {
                                                             Object.keys(paginatedMarks)?.length !== 0 &&
                                                             paginatedMarks?.map(x => <tr key={x?._id} style={{ border: "1px solid black", lineHeight: "8px", fontSize: "12px" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        x?.isBacklog
+                                                                            ?
+                                                                            `* ${x.id}`
+                                                                            :
+                                                                            x.id
+                                                                    }
+                                                                </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
 
@@ -250,7 +266,15 @@ const MarksSheetModal = (props) => {
                                                     <tbody>
                                                         {
                                                             processedMarks?.marks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
-                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>{x?.id}</td>
+                                                                <td className='text-uppercase' style={{ border: "1px solid black" }}>
+                                                                    {
+                                                                        x?.isBacklog
+                                                                            ?
+                                                                            `* ${x.id}`
+                                                                            :
+                                                                            x.id
+                                                                    }
+                                                                </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
                                                                 <td title={x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>

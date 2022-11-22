@@ -12,9 +12,10 @@ import { useEffect } from 'react';
 const CourseTeacherMarksModal = (props) => {
     const { user } = useAuth();
     const marks = props.marks;
+    const marksToView = props.marksToView;
     const { showModal } = props;
     const { setShowModal } = props;
-
+    // console.log('marksToView ', marksToView);
 
     //for pagination add the following para
     const [numberOfPages, setNumberOfPages] = useState(1);
@@ -23,8 +24,8 @@ const CourseTeacherMarksModal = (props) => {
     const [paginatedMarks, setPaginatedMarks] = useState([]);
     const numberOfStudentPerPage = 2;
     useEffect(() => {
-        let pageCount = parseInt(marks.studentsMarks.length / numberOfStudentPerPage);
-        if (marks.studentsMarks.length % numberOfStudentPerPage != 0) {
+        let pageCount = parseInt(marksToView.length / numberOfStudentPerPage);
+        if (marksToView.length % numberOfStudentPerPage != 0) {
             pageCount += 1;
         }
         setNumberOfPages(pageCount)
@@ -34,9 +35,9 @@ const CourseTeacherMarksModal = (props) => {
         }
         console.log(array)
         setPages(array);
-    }, [marks])
+    }, [marksToView])
     useEffect(() => {
-        const selectedtedMarks = marks.studentsMarks.slice(numberOfStudentPerPage * (currentPageNumber - 1), currentPageNumber * numberOfStudentPerPage)
+        const selectedtedMarks = marksToView.slice(numberOfStudentPerPage * (currentPageNumber - 1), currentPageNumber * numberOfStudentPerPage)
         // console.log('currentPageNumber  ', currentPageNumber)
         // console.log('selectedtedMarks ', selectedtedMarks)
         setPaginatedMarks(selectedtedMarks)
@@ -138,6 +139,18 @@ const CourseTeacherMarksModal = (props) => {
                                             </th>
                                         }
                                         {
+                                            props?.ctAvg &&
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                CT Avg <br />(20 %)
+                                            </th>
+                                        }
+                                        {
+                                            props?.classThirty &&
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                Thirty <br />(30%)
+                                            </th>
+                                        }
+                                        {
                                             props?.final &&
                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                 Final Exam Mark <br />(70 marks)
@@ -154,7 +167,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 <p>{x?.id}</p>
                                             </td>
                                             <td style={{ border: "1px solid black" }}>
-                                                <p>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</p>
+                                                <p>{x?.name}</p>
                                             </td>
                                             {
                                                 props?.attendance &&
@@ -185,6 +198,22 @@ const CourseTeacherMarksModal = (props) => {
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
                                                         <p>{x?.theoryCT3}</p>
+                                                    }
+                                                </td>
+                                            }
+                                            {
+                                                props?.ctAvg &&
+                                                <td style={{ border: "1px solid black" }}>
+                                                    {
+                                                        <p>{x?.ctAvg}</p>
+                                                    }
+                                                </td>
+                                            }
+                                            {
+                                                props?.classThirty &&
+                                                <td style={{ border: "1px solid black" }}>
+                                                    {
+                                                        <p>{x?.classThirty}</p>
                                                     }
                                                 </td>
                                             }
@@ -243,7 +272,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 <p>{x?.id}</p>
                                             </td>
                                             <td style={{ border: "1px solid black" }}>
-                                                <p>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</p>
+                                                <p>{x?.name}</p>
                                             </td>
                                             {
                                                 props?.labAttendance &&
@@ -302,7 +331,7 @@ const CourseTeacherMarksModal = (props) => {
                                                 <p>{x?.id}</p>
                                             </td>
                                             <td style={{ border: "1px solid black" }}>
-                                                <p>{x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}</p>
+                                                <p>{x?.name}</p>
                                             </td>
                                             {
                                                 props?.classPerformanceProject &&

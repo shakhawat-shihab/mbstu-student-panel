@@ -254,7 +254,7 @@ const MarksAssignCommitteeModal = (props) => {
                                                             {
                                                                 examCommitteeLabExp
                                                                 &&
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Experiment Marks <br /> (40 marks)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Final Practical exam/Sessional Marks<br /> (40 marks)
                                                                     {/* <br />
                                                                     <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabExp(true) }}>Edit</span> */}
                                                                 </th>
@@ -262,7 +262,7 @@ const MarksAssignCommitteeModal = (props) => {
                                                             {
                                                                 examCommitteeLabViva
                                                                 &&
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Lab Viva-voce Marks <br /> (10 marks)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Viva-voce Marks <br /> (10 marks)
                                                                     {/* <br />
                                                                     <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeLabViva(true) }}>Edit</span> */}
                                                                 </th>
@@ -356,7 +356,7 @@ const MarksAssignCommitteeModal = (props) => {
                                                     </thead>
                                                     <tbody>
                                                         {
-                                                            marks?.studentsMarks?.map(x => {
+                                                            marks?.marks?.map(x => {
                                                                 // console.log(x)
                                                                 return (
                                                                     <tr key={x?.id} style={{ border: "1px solid black" }}>
@@ -366,7 +366,7 @@ const MarksAssignCommitteeModal = (props) => {
                                                                                 readOnly />
                                                                         </td>
                                                                         <td style={{ border: "1px solid black" }}>
-                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.studentProfileId?.firstName + ' ' + x?.studentProfileId?.lastName}
+                                                                            <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.name}
                                                                                 {...register(`${x?.id}_name`, { required: true })}
                                                                                 readOnly />
                                                                         </td>

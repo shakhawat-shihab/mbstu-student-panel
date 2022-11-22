@@ -154,7 +154,7 @@ const ResultSheet = () => {
         const arrayOfStudentsProfile = []
         marks?.map(marksOfSingleStudent => {
             const supObj = {};
-            console.log('marksOfSingleStudent ', marksOfSingleStudent)
+            // console.log('marksOfSingleStudent ', marksOfSingleStudent)
             arrayOfStudentsProfile.push(marksOfSingleStudent?._id?.profile);
             supObj.id = marksOfSingleStudent?._id?.id;
             supObj.name = marksOfSingleStudent?.studentInfo?.[0]?.firstName + ' ' + marksOfSingleStudent?.studentInfo?.[0]?.lastName;
@@ -163,9 +163,13 @@ const ResultSheet = () => {
             let creditLost = 0;
             let sumOfGPA = 0;
             const failedCourse = []
-            const objForResultCourses = {}
+            const objForResultCourses = {};
+            let backlog = false;
             marksOfSingleStudent?.marksArray.map(x => {
 
+                if (x?.isBacklog) {
+                    backlog = true;
+                }
                 //unpaid course means the result will not inlude that course
                 // if (x?.isPaid === false) {
                 //     return;
@@ -206,12 +210,20 @@ const ResultSheet = () => {
                     theoryAttendance ? (thirtyPercent = Math.round((avg + parseInt(theoryAttendance)))) : (thirtyPercent = Math.round(avg))
 
                     let theoryWritten;
-                    if (Math.abs(theorySecondExaminer - theoryFinal) > 14) {
-                        theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
+                    if (Math.abs(theoryFinal - theorySecondExaminer) > 14) {
+                        if (theorySecondExaminer && theoryThirdExaminer) {
+                            theoryWritten = findClosestTwoMarksAvg(theoryFinal, theorySecondExaminer, theoryThirdExaminer);
+                        }
+                        else {
+                            theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
+                        }
+
                     }
                     else {
                         theoryWritten = Math.round((theoryFinal + theorySecondExaminer) / 2)
                     }
+
+
                     totalMarks = thirtyPercent + theoryWritten;
                     objForResultCourse.theorySeventy = theoryWritten;
                     objForResultCourse.theoryThirty = thirtyPercent;
@@ -263,11 +275,13 @@ const ResultSheet = () => {
             else {
                 supObj.remarks = 'Promoted'
             }
+            backlog && (supObj.isBacklog = backlog);
             supObj.totalCreditTaken = totalCreditTaken
             supObj.creditEarned = creditEarned;
             supObj.creditLost = creditLost;
             supObj.cgpa = CGPA.toFixed(2);
             supObj.failedCourses = failedCourse;
+
             // console.log(supObj);
             ArrayOfStudentsResult.push(supObj);
 
@@ -364,7 +378,15 @@ const ResultSheet = () => {
                                 <tr key={x?.id} style={{ border: "1px solid black" }}>
                                     <td style={{ border: "1px solid black" }}>{x.id.toUpperCase()}</td>
                                     <td style={{ border: "1px solid black" }}>{x.name}</td>
-                                    <td style={{ border: "1px solid black" }}>{x.creditEarned}</td>
+                                    <td style={{ border: "1px solid black" }}>
+                                        {
+                                            x.isBacklog
+                                                ?
+                                                `${x.creditEarned} (Out of ${x.totalCreditTaken} )`
+                                                :
+                                                x.creditEarned
+                                        }
+                                    </td>
                                     <td style={{ border: "1px solid black" }}>
                                         {
                                             x?.creditLost !== 0
@@ -395,7 +417,7 @@ const ResultSheet = () => {
                                     <td style={{ border: "1px solid black" }}>{x.cgpa}</td>
                                     <td style={{ border: "1px solid black" }}>{checkGpa(x.cgpa)}</td>
                                     {
-                                        (x.totalCreditTaken === offeredCredit)
+                                        !x.isBacklog
                                         &&
                                         <td style={{ border: "1px solid black" }}>{x?.remarks}</td>
                                     }
