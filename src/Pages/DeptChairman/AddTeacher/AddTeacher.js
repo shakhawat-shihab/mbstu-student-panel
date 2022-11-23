@@ -1,92 +1,193 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Table } from 'react-bootstrap';
-import { useForm } from 'react-hook-form';
-import useAuth from '../../../Hooks/useAuth';
+import { useState } from "react";
+import { Button, Card, Form, InputGroup, Spinner } from "react-bootstrap";
+import Swal from "sweetalert2";
+import mbstuLogo from "../../../images/mbstu-logo.jpg"
+import { AiFillTag } from "react-icons/ai";
 
 const AddTeacher = () => {
-    const { dept } = useAuth();
-    const [teachers, setTeachers] = useState([]);
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
-    const [saveButtonState, setSaveButtonState] = useState(true);
-    console.log("saveButtonState = ", saveButtonState)
-    useEffect(() => {
-        fetch(`http://localhost:5000/teachers/${dept}`)
-            .then(res => res.json())
-            .then(data => {
-                console.log("teachers ", data);
-                setTeachers(data);
-            })
-    }, [saveButtonState])
-    const onSubmit = data => {
-        data.email = data.email.toLowerCase();
-        data.department = dept;
-        console.log(data);
-        fetch('http://localhost:5000/add-teacher', {
-            method: 'put',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then(data => {
-                console.log("data ", data);
-                setSaveButtonState(!saveButtonState);
-                if (data.insertedId) {
-                    console.log("data ", data);
-                }
-            });
-    };
 
-    const visibile = {
-        visibility: 'visible'
-    }
-    const invisibile = {
-        visibility: 'hidden'
+    const [email, setEmail] = useState('');
+    const [usersByEmail, setUsersByEmail] = useState([]);
+    const [isLoadingUserByEmail, setIsLoadingUserByEmail] = useState(false);
+
+    const [department, setDepartment] = useState('cse');
+    const [chairman, setChairman] = useState({});
+    const [isLoadingChairman, setIsLoadingChairman] = useState(true);
+
+    const [changeChairman, setChangeChairman] = useState(true);
+
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+
+    const findUsersByEmail = () => {
+        // console.log('email  ', email);
+        if (email.trim() !== '') {
+            setIsLoadingUserByEmail(true);
+            fetch(`http://localhost:5000/api/v1/user/email/${email.trim()}`, {
+                method: 'get',
+                headers: {
+                    'content-type': 'application/json',
+                    'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+                },
+            })
+                .then(res => res.json())
+                .then(info => {
+                    // console.log('chairman info = ', info);
+                    setUsersByEmail(info?.data);
+                    setIsLoadingUserByEmail(false);
+                })
+        }
     }
 
 
     return (
-        <div className='container-fluid shadow-lg w-75 my-5 py-2'>
-            <h4 className='text-center'>Add teacher</h4>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <Form.Group className=" w-100 mx-auto">
-                    <Form.Label className='text-primary'>Name:</Form.Label>
-                    <Form.Control {...register("displayName", { required: true })} type='text' placeholder="Enter Full Name" className="w-100"
-                    />
-                    <span style={errors.displayName ? visibile : invisibile} className='text-info ps-2' >* Enter a name: </span>
-                </Form.Group>
-                <Form.Group className=" w-100 mx-auto">
-                    <Form.Label className='text-primary'>Email:</Form.Label>
-                    <Form.Control {...register("email", { required: true })} type='email' placeholder="Enter a valid email" className="w-100"
-                    />
-                    <span style={errors.email ? visibile : invisibile} className='text-info ps-2' >* Enter an email </span>
-                </Form.Group>
-                <div className='text-center mb-3'>
-                    <input type="submit" value='Add Teacher' className="btn btn-primary" onClick={() => { }} />
-                </div>
-            </Form>
+        <>
+            <div className='text-center'>
+                <div className=' mx-4 my-5'>
+                    <h2 className='text-center'>Add Teacher</h2>
 
-            <h6 className='text-primary mt-5 mb-3'>Current Teachers: </h6>
-            <Table responsive striped bordered hover>
-                <thead>
-                    <tr style={{ border: "1px solid black" }}>
-                        <th style={{ border: "1px solid black" }}>Teacher Name</th>
-                        <th style={{ border: "1px solid black" }}>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
+
+                    <div >
+                        <InputGroup className="mb-3 w-50 mx-auto">
+                            <Form.Control
+                                placeholder="Write an email"
+                                aria-label="Write an email"
+                                onKeyUp={(e) => { setEmail(e.target.value) }}
+                            />
+                            <Button variant="outline-secondary" id="button-addon2" onClick={() => findUsersByEmail()}>
+                                Search
+                            </Button>
+                        </InputGroup>
+                    </div>
+
                     {
-                        teachers.map(x => <tr key={x?.email} style={{ border: "1px solid black" }}>
-                            <td style={{ border: "1px solid black" }}>{x?.displayName}</td>
-                            <td style={{ border: "1px solid black" }}>{x?.email}</td>
-                        </tr>)
-                    }
-                </tbody>
-            </Table>
+                        isLoadingUserByEmail
+                            ?
+                            <>
+                                <div className='text-center my-4 '>
+                                    <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
+                                        <span className="visually-hidden">Loading...</span>
+                                    </Spinner>
 
-        </div>
-    );
+                                </div>
+                            </>
+                            :
+                            <>
+                                {
+                                    usersByEmail.length === 0
+                                        ?
+                                        <div className='my-4'>
+
+                                            <h4>No user found with </h4>
+
+                                        </div>
+                                        :
+                                        usersByEmail.map(x =>
+                                            <Card key={x?._id} className="mb-3 shadow-sm">
+                                                <div className='py-4 px-3'>
+                                                    <div className='d-flex'>
+                                                        <div >
+                                                            <img src={mbstuLogo} width='200px' />
+                                                        </div>
+                                                        <div className='ms-5'>
+                                                            <h4 className='text-start mb-2'> {x?.profile?.firstName + ' ' + x?.profile?.lastName}</h4>
+                                                            <br />
+                                                            <h5 className='text-start '> Email:  {x?.email}</h5>
+                                                            {
+                                                                x?.department
+                                                                &&
+                                                                <h6 className='text-start s'> Department: {x?.department}</h6>
+                                                            }
+
+                                                            <div className='text-start'>
+                                                                {
+                                                                    x?.isStudent
+                                                                    &&
+                                                                    <>
+                                                                        <AiFillTag className=' fs-4' />
+                                                                        <span className='ms-1 me-3'>Student</span>
+                                                                    </>
+                                                                }
+
+                                                                {
+                                                                    x?.isTeacher
+                                                                    &&
+                                                                    <>
+                                                                        <AiFillTag className='text-info fs-4' />
+                                                                        <span className='ms-1 me-3 text-info'>Teacher</span>
+                                                                    </>
+                                                                }
+
+                                                                {
+                                                                    x?.isDeptChairman
+                                                                    &&
+                                                                    <>
+                                                                        <AiFillTag className='text-primary fs-4' />
+                                                                        <span className='ms-1 me-3 text-primary'>Department Chairman</span>
+                                                                    </>
+                                                                }
+
+                                                                {
+                                                                    x?.isAcademicCommittee
+                                                                    &&
+                                                                    <>
+                                                                        <AiFillTag className='text-success fs-4' />
+                                                                        <span className='ms-1 me-3 text-success'>Academic Committee</span>
+                                                                    </>
+                                                                }
+
+                                                                {
+                                                                    x?.isHallProvost
+                                                                    &&
+                                                                    <>
+                                                                        <AiFillTag className='text-warning fs-4' />
+                                                                        <span className='ms-1 me-3  text-warning'>Hall Provost</span>
+                                                                    </>
+                                                                }
+                                                            </div>
+
+                                                            <div className='text-start pt-3'>
+                                                                <Button variant="primary" className=''
+                                                                // onClick={() => { makeDepartmentChairman(x?._id) }}
+                                                                >
+                                                                    Make Depart Chaimran
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </Card>
+                                        )
+                                }
+                            </>
+                    }
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+
+            </div>
+        </>)
 };
 
 export default AddTeacher;

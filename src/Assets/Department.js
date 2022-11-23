@@ -1,0 +1,22 @@
+const Departments = [
+    { value: "cse", label: "Computer Science and Engineering" },
+    { value: "ict", label: "Information and Communication Technology" },
+    { value: "te", label: "Textile Engineering" },
+    { value: "me", label: "Mechanical Engineering" },
+    { value: "esrm", label: "Environmental Science and Resource Management" },
+    { value: "cps", label: "Criminology and Police Science" },
+    { value: "ftns", label: "Food Technology and Nutritional Science" },
+    { value: "bge", label: "Biotechnology and Genetic Engineering" },
+    { value: "bmb", label: "Biochemistry and Molecular Biology" },
+    { value: "phar", label: "Pharmacy" },
+    { value: "chem", label: "Chemistry" },
+    { value: "math", label: "Mathematics" },
+    { value: "phy", label: "Physics" },
+    { value: "stat", label: "Statistics" },
+    { value: "bba", label: "Business Administration" },
+    { value: "acc", label: "Accounting" },
+    { value: "mng", label: "Management" },
+    { value: "eco", label: "Economics" },
+    { value: "eng", label: "English" },
+];
+export default Departments;
