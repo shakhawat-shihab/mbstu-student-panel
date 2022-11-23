@@ -8,6 +8,8 @@ import html2pdf from 'html2pdf.js';
 import { FaDownload } from 'react-icons/fa';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const CourseTeacherMarksModal = (props) => {
     const { user } = useAuth();
@@ -22,7 +24,7 @@ const CourseTeacherMarksModal = (props) => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [pages, setPages] = useState([]);
     const [paginatedMarks, setPaginatedMarks] = useState([]);
-    const numberOfStudentPerPage = 2;
+    const numberOfStudentPerPage = 25;
     useEffect(() => {
         let pageCount = parseInt(marksToView.length / numberOfStudentPerPage);
         if (marksToView.length % numberOfStudentPerPage != 0) {
@@ -46,7 +48,25 @@ const CourseTeacherMarksModal = (props) => {
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
-        html2pdf().from(selected).save(`${marks?.courseCode}_marks.pdf`);
+
+        const divHeight = selected.clientHeight
+        const divWidth = selected.clientWidth
+        const ratio = divHeight / divWidth;
+
+        html2canvas(selected, { useCORS: true }, { scale: '5' }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg');
+
+            const pdfDOC = new jsPDF("p", "mm", "a4");
+
+            const width = pdfDOC.internal.pageSize.getWidth();
+            let height = pdfDOC.internal.pageSize.getHeight();
+
+            height = ratio * width;
+            pdfDOC.addImage(imgData, 'JPEG', 0, 0, width, height + 30, 'FAST');
+            pdfDOC.save(`${marks?.courseCode.toUpperCase()}_marks.pdf`);
+        });
+        // const selected = document.getElementById('selectedPortion');
+        // html2pdf().from(selected).save(`${marks?.courseCode}_marks.pdf`);
     }
 
     return (
@@ -80,21 +100,41 @@ const CourseTeacherMarksModal = (props) => {
                             currentPageNumber === 1
                             &&
                             <>
-                                <div className='mt-2'>
-                                    <h5 className='text-uppercase text-center fw-bold mb-1'>Mawlana Bhashani Science and Technology university</h5>
-                                    <h5 className='text-center'>Santosh, Tangail-1902</h5>
-                                </div>
-                                <div className='mt-3'>
-                                    <p className='text-center fw-bold mb-1'>Department of {checkDepartmentName(user?.department)}</p>
-                                    <p className='text-center '>{checkSemesterName(marks?.semesterId?.semesterCode)}</p>
-                                </div>
+
                                 <div className=''>
-                                    <div className='my-4'>
-                                        <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
-                                        <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
-                                        <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
-                                        <p><span className="fw-bold">Name of the Examiner(s): </span>{user?.fullName}</p>
+                                    <div className='mt-4'>
+                                        <h5 className='text-uppercase text-center fw-bold mb-1 mt-2'>Mawlana Bhashani Science and Technology university</h5>
+                                        <h6 className='text-center'>Santosh,Tangail-1902</h6>
+                                        <h6 className='text-center'>Marks-sheet</h6>
+                                        <h6 className='text-center'>Class Test/Home Work/Assignment/Quiz/Tutorial/Presentation</h6>
                                     </div>
+
+                                    <div>
+                                        <h6 className='text-center'>{marks?.semesterId?.name} {marks?.semesterId?.degree} Final Examination</h6>
+
+                                    </div>
+
+                                    <div className='mt-1'>
+                                        <p className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</p>
+                                    </div>
+
+                                    <div className='mb-2'>
+                                        <div className='mt-4 d-flex justify-content-between'>
+                                            <div className='d-flex flex-column'>
+                                                <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
+                                                <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
+                                                <span className='fw-bold'>Name of the Examiner: {marks?.teacher?.name}</span>
+                                            </div>
+                                            <div className='d-flex flex-column align-items-end'>
+                                                <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
+                                                <span className='fw-bold'>Full Marks:
+                                                    {marks?.type === "theory" && <span>30</span>}
+                                                    {marks?.type === "lab" && <span>50</span>}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </>
                         }
@@ -103,163 +143,174 @@ const CourseTeacherMarksModal = (props) => {
                         {
                             marks.type === 'theory'
                             &&
-                            <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
-                                {/* <col width="11%" />
-                                <col width="30%" />
-                                <col width="12%" />
-                                <col width="12%" />
-                                <col width="12%" />
-                                <col width="12%" /> */}
-                                <thead>
-                                    <tr style={{ border: "1px solid black" }}>
-                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                        {
-                                            props?.attendance &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                Attendance <br />(10 marks)
-                                            </th>
-                                        }
-                                        {
-                                            props?.ct1 &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                CT-1 <br />(20 marks)
-                                            </th>
-                                        }
-                                        {
-                                            props?.ct2 &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                CT-2 <br />(20 marks)
-                                            </th>
-                                        }
-                                        {
-                                            props?.ct3 &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                CT-3 <br />(20 marks)
-                                            </th>
-                                        }
-                                        {
-                                            props?.ctAvg &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                CT Avg <br />(20 %)
-                                            </th>
-                                        }
-                                        {
-                                            props?.classThirty &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                Thirty <br />(30%)
-                                            </th>
-                                        }
-                                        {
-                                            props?.final &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                Final Exam Mark <br />(70 marks)
-                                            </th>
-                                        }
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        Object.keys(paginatedMarks).length !== 0 &&
-                                        paginatedMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
-                                            <td style={{ border: "1px solid black" }} className='text-uppercase'>
-                                                <p>{x?.id}</p>
-                                            </td>
-                                            <td style={{ border: "1px solid black" }}>
-                                                <p>{x?.name}</p>
-                                            </td>
+                            <>
+                                <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
+                                    <col width="7%" />
+                                    <col width="21%" />
+                                    {/* <col width="9%" />
+                                <col width="9%" />
+                                <col width="9%" />
+                                <col width="9%" />
+                                <col width="9%" />
+                                <col width="9%" />
+                                <col width="9%" /> */}
+                                    {/* <col width="9%" /> */}
+                                    <thead>
+                                        <tr style={{ border: "1px solid black", fontSize: "12px" }}>
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                             {
                                                 props?.attendance &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.theoryAttendance}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    Class Participation <br />(10%)
+                                                </th>
                                             }
                                             {
                                                 props?.ct1 &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.theoryCT1}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    CT-1 <br />(20 marks)
+                                                </th>
                                             }
                                             {
                                                 props?.ct2 &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.theoryCT2}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    CT-2 <br />(20 marks)
+                                                </th>
                                             }
                                             {
                                                 props?.ct3 &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.theoryCT3}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    CT-3 <br />(20 marks)
+                                                </th>
                                             }
                                             {
                                                 props?.ctAvg &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.ctAvg}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    Class Test/ Home Work/ Assignment<br />(20%)
+                                                </th>
                                             }
                                             {
                                                 props?.classThirty &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.classThirty}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    Total (30%)
+                                                </th>
                                             }
                                             {
                                                 props?.final &&
-                                                <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.theoryFinal}</p>
-                                                    }
-                                                </td>
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    Final Exam Mark <br />(70%)
+                                                </th>
                                             }
-                                        </tr>)
-                                    }
-                                </tbody>
-                            </Table>
+                                            {
+                                                props?.remarks &&
+                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                    Remarks
+                                                </th>
+                                            }
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            Object.keys(paginatedMarks).length !== 0 &&
+                                            paginatedMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black", fontSize: "12px" }}>
+                                                <td style={{ border: "1px solid black" }} className='text-uppercase'>
+                                                    {x?.id}
+                                                </td>
+                                                <td style={{ border: "1px solid black" }}>
+                                                    {x?.name}
+                                                </td>
+                                                {
+                                                    props?.attendance &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.theoryAttendance}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.ct1 &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.theoryCT1}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.ct2 &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.theoryCT2}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.ct3 &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.theoryCT3}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.ctAvg &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.ctAvg}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.classThirty &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.thirtyPercent}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.final &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.theoryFinal}
+                                                    </td>
+                                                }
+                                                {
+                                                    props?.remarks &&
+                                                    <td style={{ border: "1px solid black" }}>
+                                                        {x?.remarks}
+                                                    </td>
+                                                }
+                                            </tr>)
+                                        }
+                                    </tbody>
+                                </Table>
+                            </>
+
+
                         }
 
                         {
                             marks.type === 'lab'
                             &&
                             <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
-                                {/* <col width="15%" />
+                                <col width="15%" />
                                 <col width="30%" />
-                                <col width="15%" />
-                                <col width="15%" />
-                                <col width="15%" /> */}
+
                                 <thead>
-                                    <tr style={{ border: "1px solid black" }}>
+                                    <tr style={{ border: "1px solid black", fontSize: "12px" }}>
                                         <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
-                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                        {
-                                            props?.labAttendance &&
-                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                Lab Attendance (15%)
-                                            </th>
-                                        }
+                                        <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name of the Candidates</th>
                                         {
                                             props?.labReport &&
                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                Lab Report Marks (15%)
+                                                Lab Report Marks<br /> (20)
                                             </th>
                                         }
                                         {
+                                            props?.labAttendance &&
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                Lab Attendance Marks<br />(10)
+                                            </th>
+                                        }
+
+                                        {
                                             props?.labQuiz &&
                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                Lab Quiz Marks (30%)
+                                                Lab Quiz Marks<br />(20)
+                                            </th>
+                                        }
+                                        {
+                                            props?.total &&
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                Total (50)
                                             </th>
                                         }
                                     </tr>
@@ -267,35 +318,35 @@ const CourseTeacherMarksModal = (props) => {
                                 <tbody>
                                     {
                                         Object.keys(paginatedMarks).length !== 0 &&
-                                        paginatedMarks.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                        paginatedMarks.map(x => <tr key={x?.id} style={{ border: "1px solid black", fontSize: "12px" }}>
                                             <td style={{ border: "1px solid black" }} className='text-uppercase'>
-                                                <p>{x?.id}</p>
+                                                {x?.id}
                                             </td>
                                             <td style={{ border: "1px solid black" }}>
-                                                <p>{x?.name}</p>
+                                                {x?.name}
                                             </td>
                                             {
                                                 props?.labAttendance &&
                                                 <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.labAttendance}</p>
-                                                    }
+                                                    {x?.labAttendance}
                                                 </td>
                                             }
                                             {
                                                 props?.labReport &&
                                                 <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.labReport}</p>
-                                                    }
+                                                    {x?.labReport}
                                                 </td>
                                             }
                                             {
                                                 props?.labQuiz &&
                                                 <td style={{ border: "1px solid black" }}>
-                                                    {
-                                                        <p>{x?.labQuiz}</p>
-                                                    }
+                                                    {x?.labQuiz}
+                                                </td>
+                                            }
+                                            {
+                                                props?.total &&
+                                                <td style={{ border: "1px solid black" }}>
+                                                    {x?.labClass}
                                                 </td>
                                             }
                                         </tr>)
@@ -348,20 +399,28 @@ const CourseTeacherMarksModal = (props) => {
                             </Table>
                         }
 
+                        {
+                            currentPageNumber === numberOfPages
+                            &&
+                            <span className='fw-bolder' style={{ fontSize: "10px" }}>Note: All columns must be filed up and examiner should give of total marks in round figure but not in fractions. *Means "Failed Previously or Improvement."</span>
+                        }
+
 
                         {/* the signature of the courses will be in last page */}
                         {
                             currentPageNumber === numberOfPages
                             &&
                             <div className='mt-5 pt-5'>
-                                <div className='container d-flex justify-content-between ms-2 pe-4'>
-                                    <div className="w-25">
-                                        <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                                        <p className='text-center'>Signature of the Course Teacher</p>
+                                <div className='container d-flex justify-content-between pe-4'>
+                                    <div className="w-50 d-flex flex-column fw-bold">
+                                        <hr style={{ width: "280px", height: "3px", color: "black" }} />
+                                        <span className=''>Signature of the Course Teacher</span>
+                                        <span>Date: </span>
                                     </div>
-                                    <div className="w-25">
+                                    <div className="w-25 d-flex flex-column fw-bold">
                                         <hr style={{ height: "3px", color: "black", bordr: "none" }} />
-                                        <p className='text-center'>Chairman</p>
+                                        <span className=''>Signature of the Chairman</span>
+                                        <span>Date: </span>
                                     </div>
                                 </div>
                             </div>

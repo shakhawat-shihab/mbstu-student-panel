@@ -123,7 +123,7 @@ const MarksSheetModal = (props) => {
                                         </div>
 
                                         <div className='container'>
-                                            <div className='mt-4 mx-4 d-flex justify-content-between'>
+                                            <div className='mt-4 mx-3 d-flex justify-content-between'>
                                                 <div className='d-flex flex-column'>
                                                     <span className='fw-bold'>Course Code: {courseCode?.toUpperCase()}</span>
                                                     <span className='fw-bold'>Course Title: {courseTitle}</span>
@@ -141,8 +141,8 @@ const MarksSheetModal = (props) => {
                                     processedMarks?.type === 'theory'
                                     &&
                                     <div className='container'>
-                                        <div className='container my-1 ' >
-                                            <div className='p-3 '>
+                                        <div className='container my-1' >
+                                            <div className='p-2 '>
                                                 <Table responsive striped hover className='text-center' style={{ border: "1px solid black" }}>
                                                     <thead>
                                                         <tr style={{ fontSize: "12px" }} >
@@ -185,11 +185,7 @@ const MarksSheetModal = (props) => {
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 }
@@ -198,7 +194,7 @@ const MarksSheetModal = (props) => {
                                     &&
                                     <div className='container'>
                                         <div className='container my-1' >
-                                            <div className='p-3 '>
+                                            <div className='p-2 '>
                                                 <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
                                                     <thead>
                                                         <tr style={{ border: "1px solid black", fontSize: "12px" }}>
@@ -242,9 +238,7 @@ const MarksSheetModal = (props) => {
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                             </div>
-
                                         </div>
                                     </div>
                                 }
@@ -253,7 +247,7 @@ const MarksSheetModal = (props) => {
                                     &&
                                     <div className='container'>
                                         <div className='container my-1 ' >
-                                            <div className='p-3 '>
+                                            <div className='p-2 '>
                                                 <Table responsive bordered className='text-center' style={{ border: "1px solid black" }}>
                                                     <thead>
                                                         <tr style={{ border: "1px solid black" }}>
@@ -282,15 +276,22 @@ const MarksSheetModal = (props) => {
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                             </div>
                                         </div>
                                     </div>
                                 }
+
                                 {
                                     currentPageNumber === numberOfPages
                                     &&
-                                    <div className="d-flex w-100 ms-5" style={{ fontSize: "12px" }}>
+
+                                    <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
+                                }
+
+                                {
+                                    currentPageNumber === numberOfPages
+                                    &&
+                                    <div className="d-flex w-100 ms-4 ps-2" style={{ fontSize: "12px" }}>
                                         <div className=''>
                                             <p>Signature of </p>
                                         </div>

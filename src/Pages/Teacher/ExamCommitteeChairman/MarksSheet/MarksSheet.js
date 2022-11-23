@@ -11,6 +11,7 @@ import MarksSheetModal from './MarksSheetModal';
 import { AiFillCheckCircle } from "react-icons/ai";
 import findClosestTwoMarksAvg from '../../../../Functions/FindClosestTwo';
 import checkMarks from '../../../../Functions/MarksToGrade';
+import checkDepartmentName from '../../../../Functions/DeptCodeToDeptName';
 
 const MarksSheet = () => {
     const { semesterId } = useParams();
@@ -292,36 +293,56 @@ const MarksSheet = () => {
                                     processedMarks?.type === 'theory'
                                     &&
                                     <div className='container'>
-                                        <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                        <div className='container shadow-lg  rounded  my-5 ' >
                                             <div className='p-4 '>
-                                                <div className='mb-5'>
-                                                    <h5 className='text-center mb-5 mt-3 fw-bold'>{semesterInfo?.department?.toUpperCase()} {semesterInfo?.name} {semesterInfo?.degree} Final Examination Result</h5>
-                                                    <p><span className='fw-bold'>Course Name: </span>{processedMarks?.courseTitle}</p>
-                                                    <p><span className='fw-bold'>Course Code: </span>{processedMarks?.courseCode.toUpperCase()}</p>
-                                                    <p><span className='fw-bold'>Credit Hour: </span>{processedMarks?.credit}</p>
-                                                    <p><span className='fw-bold'>Course Teacher: </span>
-                                                        {marks?.teacher?.name}
-                                                        {marks?.isSubmittedByCourseTeacher ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>
-                                                        }
-                                                    </p>
-                                                    <p><span className='fw-bold'>Second Examiner: </span>
-                                                        {marks?.secondExaminer?.name}
-                                                        {marks?.isSubmittedBySecondExaminer ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>}
-                                                    </p>
-                                                    <p><span className='fw-bold'>Third Examiner: </span>
-                                                        {marks?.thirdExaminer?.name}
-                                                        {marks?.isSubmittedByThirdExaminer
-                                                            ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>}
-                                                    </p>
+                                                <div className='mb-2'>
+                                                    <div className='mt-4'>
+                                                        <h5 className='text-uppercase text-center mb-1 mt-2'>Mawlana Bhashani Science and Technology university</h5>
+                                                        <h6 className='text-center'>Santosh,Tangail-1902</h6>
+                                                    </div>
+                                                    <div>
+                                                        <h6 className='text-center'>{semesterInfo?.name} {semesterInfo?.degree} Final Examination</h6>
+                                                    </div>
+                                                    <div className=''>
+                                                        <h6 className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</h6>
+                                                    </div>
+                                                    <div className='mt-4'>
+                                                        <p><span className='fw-bold'>Course Teacher: </span>
+                                                            {marks?.teacher?.name}
+                                                            {marks?.isSubmittedByCourseTeacher ?
+                                                                <span> (Submitted)</span>
+                                                                :
+                                                                <span> (Not submitted)</span>
+                                                            }
+                                                        </p>
+                                                        <p><span className='fw-bold'>Second Examiner: </span>
+                                                            {marks?.secondExaminer?.name}
+                                                            {marks?.isSubmittedBySecondExaminer ?
+                                                                <span> (Submitted)</span>
+                                                                :
+                                                                <span> (Not submitted)</span>}
+                                                        </p>
+                                                        <p><span className='fw-bold'>Third Examiner: </span>
+                                                            {marks?.thirdExaminer?.name}
+                                                            {marks?.isSubmittedByThirdExaminer
+                                                                ?
+                                                                <span> (Submitted)</span>
+                                                                :
+                                                                <span> (Not submitted)</span>}
+                                                        </p>
+
+                                                    </div>
+
+                                                    <div className='mt-5 d-flex justify-content-between'>
+                                                        <div className='d-flex flex-column'>
+                                                            <span className='fw-bold'>Course Code: {courseCode?.toUpperCase()}</span>
+                                                            <span className='fw-bold'>Course Title: {courseTitle}</span>
+                                                        </div>
+                                                        <div className='d-flex flex-column'>
+                                                            <span className='fw-bold'>Credit Hour: {credit}</span>
+                                                            <span className='fw-bold'>Full Marks: 100</span>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
                                                 <Table responsive striped hover className='text-center' style={{ border: "1px solid black" }}>
@@ -374,20 +395,41 @@ const MarksSheet = () => {
                                     processedMarks?.type === 'lab'
                                     &&
                                     <div className='container'>
-                                        <div className='container-fluid shadow-lg  rounded  my-5 ' >
+                                        <div className='container shadow-lg  rounded  my-5 ' >
                                             <div className='p-4 '>
-                                                <div className='mb-5'>
-                                                    <h5 className='text-center mb-5 mt-3 fw-bold'>{semesterInfo?.department?.toUpperCase()} {semesterInfo?.name} {semesterInfo?.degree} Final Examination Result</h5>
-                                                    <p><span className='fw-bold'>Course Name: </span>{processedMarks?.courseTitle}</p>
-                                                    <p><span className='fw-bold'>Course Code: </span>{processedMarks?.courseCode}</p>
-                                                    <p><span className='fw-bold'>Credit Hour: </span>{processedMarks?.credit}</p>
-                                                    <p><span className='fw-bold'>Course Teacher: </span>
-                                                        {marks?.teacher?.name}
-                                                        {marks?.isSubmittedByCourseTeacher ?
-                                                            <span> (Submitted)</span>
-                                                            :
-                                                            <span> (Not submitted)</span>}
-                                                    </p>
+                                                <div className='mb-2'>
+                                                    <div className='mt-4'>
+                                                        <h5 className='text-uppercase text-center mb-1 mt-2'>Mawlana Bhashani Science and Technology university</h5>
+                                                        <h6 className='text-center'>Santosh,Tangail-1902</h6>
+                                                    </div>
+                                                    <div>
+                                                        <h6 className='text-center'>{semesterInfo?.name} {semesterInfo?.degree} Final Examination</h6>
+                                                    </div>
+                                                    <div className=''>
+                                                        <h6 className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</h6>
+                                                    </div>
+                                                    <div className='mt-4'>
+                                                        <p><span className='fw-bold'>Course Teacher: </span>
+                                                            {marks?.teacher?.name}
+                                                            {marks?.isSubmittedByCourseTeacher ?
+                                                                <span> (Submitted)</span>
+                                                                :
+                                                                <span> (Not submitted)</span>
+                                                            }
+                                                        </p>
+
+                                                    </div>
+
+                                                    <div className='mt-3 d-flex justify-content-between'>
+                                                        <div className='d-flex flex-column'>
+                                                            <span className='fw-bold'>Course Code: {courseCode?.toUpperCase()}</span>
+                                                            <span className='fw-bold'>Course Title: {courseTitle}</span>
+                                                        </div>
+                                                        <div className='d-flex flex-column'>
+                                                            <span className='fw-bold'>Credit Hour: {credit}</span>
+                                                            <span className='fw-bold'>Full Marks: 100</span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <Table responsive striped bordered hover className='text-center' style={{ border: "1px solid black" }}>
                                                     <thead>
@@ -444,8 +486,8 @@ const MarksSheet = () => {
                                             <div className='p-4 '>
                                                 <div className='mb-5'>
                                                     <h5 className='text-center mb-5 mt-3 fw-bold'>{semesterInfo?.department?.toUpperCase()} {semesterInfo?.name} {semesterInfo?.degree} Final Examination Result</h5>
-                                                    <p><span className='fw-bold'>Course Name: </span>{processedMarks?.courseTitle}</p>
-                                                    <p><span className='fw-bold'>Course Code: </span>{processedMarks?.courseCode}</p>
+                                                    <p><span className='fw-bold'>Course Title: </span>{processedMarks?.courseTitle}</p>
+                                                    <p><span className='fw-bold'>Course Code: </span>{processedMarks?.courseCode?.toUpperCase()}</p>
                                                     <p><span className='fw-bold'>Credit Hour: </span>{processedMarks?.credit}</p>
                                                     <p><span className='fw-bold'>Project Teachers: </span>
                                                         {

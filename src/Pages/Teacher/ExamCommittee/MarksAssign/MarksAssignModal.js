@@ -75,7 +75,7 @@ const MarksAssignModal = (props) => {
     // console.log("mark asssign maarskkks == ", semesterAllMarks);
     // console.log("mark assign courssese ==", courseCode);
 
-    console.log("paginated marksss == ", paginatedMarks)
+    // console.log("paginated marksss == ", paginatedMarks)
 
     return (
         <div>
@@ -138,7 +138,14 @@ const MarksAssignModal = (props) => {
                                                 </div>
                                                 <div className='d-flex flex-column align-items-end'>
                                                     <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
-                                                    <span className='fw-bold'>Full Marks: 50</span>
+                                                    <span className='fw-bold'>Full Marks:
+                                                        {
+                                                            marks?.type === 'theory' && <span> 70</span>
+                                                        }
+                                                        {
+                                                            marks?.type === 'lab' && <span> 50</span>
+                                                        }
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,7 +177,7 @@ const MarksAssignModal = (props) => {
                                                                 External Examiner
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Third Examiner
+                                                                Third Examiner <br />(If any)
                                                             </th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                 Average
@@ -199,7 +206,6 @@ const MarksAssignModal = (props) => {
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                             </div>
                                         </div>
                                     </div>
@@ -262,7 +268,6 @@ const MarksAssignModal = (props) => {
 
                                                     </tbody>
                                                 </Table>
-                                                <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                             </div>
                                         </div>
                                     </div>
@@ -299,11 +304,18 @@ const MarksAssignModal = (props) => {
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                             </div>
                                         </div>
                                     </div>
                                 }
+
+                                {
+
+                                    currentPageNumber === numberOfPages
+                                    &&
+                                    <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
+                                }
+
                                 {
                                     currentPageNumber === numberOfPages
                                     &&

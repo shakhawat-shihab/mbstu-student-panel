@@ -289,7 +289,7 @@ const MarksAssign = () => {
                                                         <col width="10%" />
                                                         <col width="10%" />
                                                         <thead>
-                                                            <tr style={{ border: '1px solid black', fontSize: "12px" }}>
+                                                            <tr style={{ border: '1px solid black' }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }} className="py-2">Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
@@ -299,7 +299,7 @@ const MarksAssign = () => {
                                                                     External Examiner
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Third Examiner
+                                                                    Third Examiner (If any)
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                                     Average
