@@ -24,7 +24,7 @@ const Option = (props) => {
 const CreateCourse = () => {
     const { user } = useAuth();
     const { department } = user;
-    console.log(department);
+    // console.log(department);
     const { register, handleSubmit, reset } = useForm();
     const [category, setCategory] = useState('compulsory');
     const [isDepartmental, setIsDepartmental] = useState(true);

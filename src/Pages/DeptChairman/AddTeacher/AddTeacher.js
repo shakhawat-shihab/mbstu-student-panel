@@ -3,18 +3,14 @@ import { Button, Card, Form, InputGroup, Spinner } from "react-bootstrap";
 import Swal from "sweetalert2";
 import mbstuLogo from "../../../images/mbstu-logo.jpg"
 import { AiFillTag } from "react-icons/ai";
+import useAuth from "../../../Hooks/useAuth";
 
 const AddTeacher = () => {
+    const { user } = useAuth();
 
     const [email, setEmail] = useState('');
     const [usersByEmail, setUsersByEmail] = useState([]);
     const [isLoadingUserByEmail, setIsLoadingUserByEmail] = useState(false);
-
-    const [department, setDepartment] = useState('cse');
-    const [chairman, setChairman] = useState({});
-    const [isLoadingChairman, setIsLoadingChairman] = useState(true);
-
-    const [changeChairman, setChangeChairman] = useState(true);
 
     const Toast = Swal.mixin({
         toast: true,
@@ -27,6 +23,60 @@ const AddTeacher = () => {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     })
+
+    const addTeacher = (userId) => {
+        console.log('userId ', userId);
+        fetch(`http://localhost:5000/api/v1/user/add-teacher/${userId}`, {
+            method: 'put',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+            },
+        })
+            .then(res => res.json())
+            .then(info => {
+                if (info?.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: info?.message
+                    });
+                    findUsersByEmail();
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: info?.message
+                    })
+                }
+            })
+    }
+
+    const removeTeacher = (userId) => {
+        console.log('userId ', userId);
+        fetch(`http://localhost:5000/api/v1/user/remove-teacher/${userId}`, {
+            method: 'put',
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
+            },
+        })
+            .then(res => res.json())
+            .then(info => {
+                if (info?.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: info?.message
+                    });
+                    findUsersByEmail();
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: info?.message
+                    })
+                }
+            })
+    }
 
 
     const findUsersByEmail = () => {
@@ -54,9 +104,7 @@ const AddTeacher = () => {
         <>
             <div className='text-center'>
                 <div className=' mx-4 my-5'>
-                    <h2 className='text-center'>Add Teacher</h2>
-
-
+                    <h2 className='text-center'>Add Teachers for <span className="text-uppercase">{user?.department}</span>  Department</h2>
                     <div >
                         <InputGroup className="mb-3 w-50 mx-auto">
                             <Form.Control
@@ -157,10 +205,16 @@ const AddTeacher = () => {
                                                             </div>
 
                                                             <div className='text-start pt-3'>
-                                                                <Button variant="primary" className=''
-                                                                // onClick={() => { makeDepartmentChairman(x?._id) }}
+                                                                <Button variant="success" className=''
+                                                                    onClick={() => { addTeacher(x?._id) }}
                                                                 >
-                                                                    Make Depart Chaimran
+                                                                    Add Teacher
+                                                                </Button>
+                                                                <br />
+                                                                <Button variant="danger" className='mt-3'
+                                                                    onClick={() => { removeTeacher(x?._id) }}
+                                                                >
+                                                                    Remove Teacher
                                                                 </Button>
                                                             </div>
                                                         </div>

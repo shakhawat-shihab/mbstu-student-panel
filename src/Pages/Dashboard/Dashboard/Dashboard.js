@@ -38,6 +38,7 @@ import SuperAdminRoute from '../../LogIn/LogIn/SuperAdminRoute/SuperAdminRoute';
 import AddDeptChairman from '../../SuperAdmin/AddDeptChairman/AddDeptChairman';
 import AddHallProvost from '../../SuperAdmin/AddHallProvost/AddHallProvost';
 import AddAcademicCommittee from '../../SuperAdmin/AddAcademicCommittee/AddAcademicCommittee';
+import CreateHall from '../../SuperAdmin/CreateHall/CreateHall';
 
 
 const Dashboard = () => {
@@ -142,6 +143,9 @@ const Dashboard = () => {
                                 {
                                     user?.isSuperAdmin &&
                                     <>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/create-hall`}> Create Hall (SA) </Link>
+                                        </ListGroup.Item>
                                         <ListGroup.Item action >
                                             <Link to={`${url}/add-dept-chairman`}> Add Department Chairman (SA) </Link>
                                         </ListGroup.Item>
@@ -254,6 +258,9 @@ const Dashboard = () => {
 
 
                 {/* super admin Routes */}
+                <SuperAdminRoute path={`${path}/create-hall`}>
+                    <CreateHall></CreateHall>
+                </SuperAdminRoute>
                 <SuperAdminRoute path={`${path}/add-dept-chairman`}>
                     <AddDeptChairman></AddDeptChairman>
                 </SuperAdminRoute>
