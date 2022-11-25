@@ -109,10 +109,21 @@ const CreateCourse = () => {
         })
             .then(res => res.json())
             .then(info => {
-                Toast.fire({
-                    icon: info.status,
-                    title: info.message
-                })
+
+                if (info?.status === 'success') {
+                    Toast.fire({
+                        icon: 'success',
+                        title: info.message
+                    })
+                }
+
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: info.message
+                    })
+                }
+
             });
         // reset();
     };

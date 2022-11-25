@@ -160,7 +160,7 @@ const AddDeptChairman = () => {
                             Object.keys(chairman)?.length !== 0
                                 ?
                                 <div className='my-5 mx-auto d-flex flex-column w-25'>
-                                    <h5 className='text-center text-success fw-bold mb-3'>Current Chairman</h5>
+                                    <h5 className='text-center text-success fw-bold mb-3'>Current Chairman of <span className='text-primary'>{checkDepartmentName(department)} </span> Department </h5>
                                     <div className='mx-auto mb-2'>
                                         <img src={chairmanImg} style={{ width: "160px", height: "160px" }} alt="chairman" />
                                     </div>

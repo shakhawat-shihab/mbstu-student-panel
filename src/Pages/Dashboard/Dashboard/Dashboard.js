@@ -39,6 +39,9 @@ import AddDeptChairman from '../../SuperAdmin/AddDeptChairman/AddDeptChairman';
 import AddHallProvost from '../../SuperAdmin/AddHallProvost/AddHallProvost';
 import AddAcademicCommittee from '../../SuperAdmin/AddAcademicCommittee/AddAcademicCommittee';
 import CreateHall from '../../SuperAdmin/CreateHall/CreateHall';
+import StudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
+import AddStudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
+import RemoveStudentFromHall from '../../HallProvost/RemoveStudentFromHall/RemoveStudentFromHall';
 
 
 const Dashboard = () => {
@@ -130,6 +133,12 @@ const Dashboard = () => {
                                         <ListGroup.Item action >
                                             <Link to={`${url}/approve-course-registration-hall`}> Approve Application (HP) </Link>
                                         </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/add-student-to-hall`}>Add Student to Hall (HP) </Link>
+                                        </ListGroup.Item>
+                                        <ListGroup.Item action >
+                                            <Link to={`${url}/remove-student-from-hall`}> Remove Student from Hall (HP) </Link>
+                                        </ListGroup.Item>
                                     </>
                                 }
                                 {
@@ -163,6 +172,8 @@ const Dashboard = () => {
                 </Offcanvas.Body>
             </Offcanvas>
             <Switch>
+
+                {/* general route */}
                 <Route exact path={path}>
                     <DashboardHome></DashboardHome>
                 </Route>
@@ -245,6 +256,12 @@ const Dashboard = () => {
                 </HallProvostRoute>
                 <HallProvostRoute path={`${path}/approve-course-registration-hall`}>
                     <HallProvostCourseRegistration></HallProvostCourseRegistration>
+                </HallProvostRoute>
+                <HallProvostRoute path={`${path}/add-student-to-hall`}>
+                    <AddStudentToHall></AddStudentToHall>
+                </HallProvostRoute>
+                <HallProvostRoute path={`${path}/remove-student-from-hall`}>
+                    <RemoveStudentFromHall></RemoveStudentFromHall>
                 </HallProvostRoute>
 
 
