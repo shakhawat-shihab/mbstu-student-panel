@@ -118,7 +118,7 @@ const AddDeptChairman = () => {
     }
 
 
-
+    console.log("user by email == ", usersByEmail);
 
 
     return (
@@ -160,7 +160,7 @@ const AddDeptChairman = () => {
                             Object.keys(chairman)?.length !== 0
                                 ?
                                 <div className='my-5 mx-auto d-flex flex-column w-25'>
-                                    <h5 className='text-center text-success fw-bold mb-3'>Current Chairman of <span className='text-primary'>{checkDepartmentName(department)} </span> Department </h5>
+                                    <h5 className='text-center text-success fw-bold mb-3'>Current Chairman</h5>
                                     <div className='mx-auto mb-2'>
                                         <img src={chairmanImg} style={{ width: "160px", height: "160px" }} alt="chairman" />
                                     </div>
@@ -214,11 +214,11 @@ const AddDeptChairman = () => {
                                 :
                                 <div className='container my-5'>
                                     <h4 className='text-center my-5'><u>Search Result</u></h4>
-                                    <div className='row'>
+                                    <div className='row g-3'>
                                         {
                                             usersByEmail.map(x =>
                                                 <div className='col-lg-6 col-md-12 col-sm-12'>
-                                                    <Card key={x?._id} className="mb-3 shadow-sm">
+                                                    <Card key={x?._id} className="mb-3 shadow-sm h-100">
                                                         <div className='py-3'>
                                                             <div className='d-flex p-2'>
                                                                 <div >
@@ -275,60 +275,74 @@ const AddDeptChairman = () => {
                                                                     }
 
                                                                 </div>
-                                                                <div className='ms-4 pt-3'>
+                                                                <div className='ms-4 pt-3 w-75'>
                                                                     <h4 className='text-start fw-bold'> {x?.profile?.firstName + ' ' + x?.profile?.lastName}</h4>
 
                                                                     <h6 className='text-start '> Email:  {x?.email}</h6>
+
+                                                                    {
+                                                                        x?.isStudent
+                                                                        &&
+                                                                        <h6 className='text-start'> ID: {x?.profile?.id?.toUpperCase()}</h6>
+
+                                                                    }
                                                                     {
                                                                         x?.department
                                                                         &&
-                                                                        <h6 className='text-start s'> Department: {x?.department?.toUpperCase()}</h6>
+                                                                        <h6 className='text-start'> Department: {x?.department?.toUpperCase()}</h6>
                                                                     }
 
-                                                                    <div className='text-start'>
+                                                                    {
+                                                                        (x?.hall?.name)
+                                                                        &&
+                                                                        <h6 className='text-start'> Hall: {x?.hall?.name}</h6>
+
+                                                                    }
+
+                                                                    <div className=' mt-3 text-start row g-2'>
                                                                         {
                                                                             x?.isStudent
                                                                             &&
-                                                                            <>
+                                                                            <span className='col-5'>
                                                                                 <AiFillTag className=' fs-4' />
                                                                                 <span className='ms-1 me-2'>Student</span>
-                                                                            </>
+                                                                            </span>
                                                                         }
 
                                                                         {
                                                                             x?.isTeacher
                                                                             &&
-                                                                            <>
+                                                                            <span className='col-5'>
                                                                                 <AiFillTag className='text-info fs-4' />
                                                                                 <span className='ms-1 me-2 text-info'>Teacher</span>
-                                                                            </>
+                                                                            </span>
                                                                         }
 
                                                                         {
                                                                             x?.isDeptChairman
                                                                             &&
-                                                                            <>
+                                                                            <span className='col-5'>
                                                                                 <AiFillTag className='text-primary fs-4' />
-                                                                                <span className='ms-1 me-2 text-primary'>Department Chairman</span>
-                                                                            </>
+                                                                                <span className='ms-1 me-2 text-primary'> Chairman</span>
+                                                                            </span>
                                                                         }
 
                                                                         {
                                                                             x?.isAcademicCommittee
                                                                             &&
-                                                                            <>
+                                                                            <span className='col-5'>
                                                                                 <AiFillTag className='text-success fs-4' />
                                                                                 <span className='ms-1 me-2 text-success'>Academic Committee</span>
-                                                                            </>
+                                                                            </span>
                                                                         }
 
                                                                         {
                                                                             x?.isHallProvost
                                                                             &&
-                                                                            <>
+                                                                            <span className='col-5'>
                                                                                 <AiFillTag className='text-warning fs-4' />
                                                                                 <span className='ms-1 me-2  text-warning'>Hall Provost</span>
-                                                                            </>
+                                                                            </span>
                                                                         }
                                                                     </div>
 

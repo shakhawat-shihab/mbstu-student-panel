@@ -72,6 +72,7 @@ const Register = () => {
         }
         setEmailErrorMessage("You have entered an invalid email address!")
     }
+
     const checkPasswod = (value) => {
         //  I use the following script for min 8 letter password,
         // with at least a symbol, upper and lower case letters and a number
@@ -81,6 +82,7 @@ const Register = () => {
         }
         setPasswordErrorMessage("Chose a strong Password!")
     }
+
     const checkEmailIsAlreadyUsed = () => {
         setIsLoadingEmailExist(true);
         fetch(`http://localhost:5000/users/exist/${email}`)
@@ -92,6 +94,7 @@ const Register = () => {
                 }
             })
     }
+
     useEffect(() => {
         if (password === confirmPassword && passwordErrorMessage === '') {
             setConfirmPasswordErrorMessage('');
@@ -162,6 +165,8 @@ const Register = () => {
             </Popover.Body>
         </Popover>
     );
+
+
     return (
         <div>
             {/* <Header></Header> */}

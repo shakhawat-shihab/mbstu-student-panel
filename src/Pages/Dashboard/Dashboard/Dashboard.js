@@ -42,6 +42,7 @@ import CreateHall from '../../SuperAdmin/CreateHall/CreateHall';
 import StudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
 import AddStudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
 import RemoveStudentFromHall from '../../HallProvost/RemoveStudentFromHall/RemoveStudentFromHall';
+import ChangePassword from '../../LogIn/LogIn/Password/ChangePassword/ChangePassword';
 
 
 const Dashboard = () => {
@@ -179,6 +180,9 @@ const Dashboard = () => {
                 </Route>
                 <Route exact path={`${path}/profile`}>
                     <Updateprofile></Updateprofile>
+                </Route>
+                <Route path={`${path}/profile/change-password`}>
+                    <ChangePassword></ChangePassword>
                 </Route>
 
                 {/* student Routes */}

@@ -8,11 +8,12 @@ import Compressor from 'compressorjs';
 import studentImage from '../../../images/student.png';
 import teacherImage from '../../../images/teacher.png';
 import userImage from '../../../images/user.png';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const UpdateProfile = () => {
 
+    const { url } = useRouteMatch();
     const { user } = useAuth();
     const history = useHistory();
     // console.log("update profile user === ", user)
@@ -189,7 +190,7 @@ const UpdateProfile = () => {
                                     <div className='text-center mb-4'>
 
                                         <>
-                                            <img src={imageSrc ? imageSrc : profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "150px", height: "150px" }} className="border border-3 border-lg img-fluid mx-auto" />
+                                            <img src={imageSrc ? imageSrc : profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "200px", height: "200px" }} className="border border-3 border-lg img-fluid mx-auto" />
                                         </>
 
                                     </div>
@@ -358,6 +359,11 @@ const UpdateProfile = () => {
                                     }
                                     <div className='text-center mt-2 mb-5 pe-3 pt-4'>
                                         <input className="btn btn-primary" type="submit" value='Save changes' />
+                                        <Link to={`${url}/change-password`}>
+                                            <Button variant='warning ms-3'>
+                                                Change Password
+                                            </Button>
+                                        </Link>
                                     </div>
 
                                 </div>

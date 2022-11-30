@@ -12,8 +12,10 @@ import SpecialPage from './Pages/SpecialPage/SpecialPage';
 import Register from './Pages/LogIn/Register/Register';
 import Dashboard from './Pages/Dashboard/Dashboard/Dashboard';
 import Header from './Pages/Shared/Header/Header';
-// import initializeFirebase from './Pages/LogIn/Firebase/firebase.init';
-// import NavigationBar from './Pages/Shared/Navigationbar/NavigationBar';
+import PasswordReset from './Pages/LogIn/LogIn/Password/PasswordReset/PasswordReset';
+import ForgetPassword from './Pages/LogIn/LogIn/Password/ForgetPassword/ForgetPassword';
+
+
 // initializeFirebase();
 function App() {
   // const a = React.version;
@@ -31,6 +33,12 @@ function App() {
           </Route>
           <Route path='/login'>
             <LogIn></LogIn>
+          </Route>
+          <Route path='/reset-password/:email/:token'>
+            <PasswordReset></PasswordReset>
+          </Route>
+          <Route path='/forget-password'>
+            <ForgetPassword></ForgetPassword>
           </Route>
           <Route path='/register'>
             <Register></Register>

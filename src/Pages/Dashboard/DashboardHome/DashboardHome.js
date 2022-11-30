@@ -104,7 +104,7 @@ const DashboardHome = () => {
                                 <div className='mb-3 text-center'>
 
                                     <>
-                                        <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "150px", height: "150px" }} className="border border-3 border-lg img-fluid mx-auto" />
+                                        <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "200px", height: "200px" }} className="border border-3 border-lg img-fluid mx-auto" />
                                     </>
 
                                 </div>

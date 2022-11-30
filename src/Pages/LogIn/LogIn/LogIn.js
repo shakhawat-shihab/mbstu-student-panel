@@ -142,7 +142,11 @@ const Login = () => {
                         {/* {passwordErrorMessage} */}
                     </Form.Text>
                 </Form.Group>
-                <small className='ms-1'><NavLink to="/register" className="link">Not a member yet?</NavLink></small>
+                <small className='ms-1'>
+                    <NavLink to="/register" className="link">Not a member yet?</NavLink>
+                    <span className='px-2'>|</span>
+                    <NavLink to="/forget-password" className="link">Forget Password?</NavLink>
+                </small>
                 {/* enter login */}
                 {/* <Form.Group className="my-3 " controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Keep Me logged in" />
