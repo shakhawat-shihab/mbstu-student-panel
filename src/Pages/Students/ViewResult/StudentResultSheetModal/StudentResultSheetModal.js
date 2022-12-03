@@ -302,8 +302,8 @@ const StudentResultSheetModal = (props) => {
                         </div>
                         <div className='row row-cols-lg-3 mt-5 ' style={{ fontSize: "12px" }}>
                             <div className='d-flex flex-column'>
-                                <span><span className='fw-bold'>Date of Publications: {resultPublishDateFormat.toLocaleDateString()} </span></span>
-                                <span><span className='fw-bold'>Date of Issue: {todayDateFormat.toLocaleDateString()} </span></span>
+                                <span><span className='fw-bold'>Date of Publications: {` ${resultPublishDateFormat.getDate()}/${resultPublishDateFormat.getMonth()}/${resultPublishDateFormat.getFullYear()}`} </span></span>
+                                <span><span className='fw-bold'>Date of Issue:{` ${todayDateFormat.getDate()}/${todayDateFormat.getMonth() + 1}/${todayDateFormat.getFullYear()}`}  </span></span>
                             </div>
                             <div className='d-flex flex-column'>
                                 <span><span className='fw-bold'>Credits Offered: </span>{creditOffered}</span>

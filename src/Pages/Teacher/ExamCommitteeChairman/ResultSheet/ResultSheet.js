@@ -5,7 +5,6 @@ import { Button, Table } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import findClosestTwoMarksAvg from '../../../../Functions/FindClosestTwo';
-import useAuth from '../../../../Hooks/useAuth';
 import ResultSheetModal from './ResultSheetModal';
 
 const ResultSheet = () => {
@@ -235,9 +234,9 @@ const ResultSheet = () => {
                     objForResultCourse.labExam = labExperiment;
                 }
                 else if (x?.type === 'project') {
-                    const { projectClassPerformance = 0, projectPresentation = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId } = x;
-                    totalMarks = parseInt(projectClassPerformance + projectPresentation);
-                    objForResultCourse.projectClass = projectClassPerformance;
+                    const { projectClassPerformance = 0, projectInternalMarks = 0, projectPresentation = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId } = x;
+                    totalMarks = parseInt(projectClassPerformance + projectInternalMarks + projectPresentation);
+                    objForResultCourse.projectClass = projectClassPerformance + projectInternalMarks;
                     objForResultCourse.projectExam = projectPresentation;
                     //project teacher
                     const temp = {}

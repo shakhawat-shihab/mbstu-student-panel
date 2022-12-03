@@ -12,7 +12,7 @@ const MarkModal = (props) => {
         setTheoryAttendance, theoryCT1, setTheoryCT1, theoryCT2,
         setTheoryCT2, theoryCT3, setTheoryCT3, theoryFinal, setTheoryFinal,
         lbAttendance, setLbAttendance, lbReport, setLbReport, lbQuiz, setLbQuiz,
-        projectClassPerformance, setProjectClassPerformance, courseId, isSaving, setIsSaving } = props;
+        projectClassPerformance, setProjectClassPerformance, projectInternal, setProjectInternal, courseId, isSaving, setIsSaving } = props;
 
     const { register, handleSubmit, reset } = useForm();
     const [attendance, setAttendance] = useState();
@@ -26,6 +26,7 @@ const MarkModal = (props) => {
     const [fileUpload, setFileUpload] = useState();
 
     const [projectPerformance, setProjectPerformance] = useState();
+    const [projectInt, setProjectInt] = useState();
 
     const [showErrorModal, setShowErrorModal] = useState(true);
 
@@ -52,6 +53,7 @@ const MarkModal = (props) => {
         setLbReport(false);
         setLbQuiz(false);
         setProjectClassPerformance(false);
+        setProjectInternal(false);
     }
 
 
@@ -98,6 +100,12 @@ const MarkModal = (props) => {
             if (projectClassPerformance) {
                 supObj.propertyName = "projectClassPerformance";
                 obj.projectClassPerformance = data[`${x.id}_project_performance`];
+                obj.projectClassPerformanceBy = user?.fullName;
+                obj.projectClassPerformanceByProfileId = user?.profileId;
+            }
+            if (projectInternal) {
+                supObj.propertyName = "projectInternalMarks";
+                obj.projectInternalMarks = data[`${x.id}_project_internal`];
                 obj.projectClassPerformanceBy = user?.fullName;
                 obj.projectClassPerformanceByProfileId = user?.profileId;
             }
@@ -196,10 +204,11 @@ const MarkModal = (props) => {
         if (lbQuiz) {
             choice = "labQuiz";
         }
-
         if (projectPerformance) {
             choice = "projectClassPerformance";
-
+        }
+        if (projectInternal) {
+            choice = "projectInternalMarks";
         }
 
         if (fileUpload[0][`${choice}`]) {
@@ -208,7 +217,7 @@ const MarkModal = (props) => {
                 const obj = {};
                 obj.id = x.id;
                 obj[`${choice}`] = x[`${choice}`];
-                if (choice === 'projectClassPerformance') {
+                if (choice === 'projectClassPerformance' || choice === 'projectInternalMarks') {
                     obj.projectClassPerformanceBy = user?.fullName;
                     obj.projectClassPerformanceByProfileId = user?.profileId;
                 }
@@ -270,7 +279,11 @@ const MarkModal = (props) => {
         <div>
             <Modal
                 show={showMarkModal}
-                onHide={() => { setShowMarkModal(false); setTheoryAttendance(false); setTheoryCT1(false); setTheoryCT2(false); setTheoryCT3(false); setTheoryFinal(false); setLbAttendance(false); setLbReport(false); setLbQuiz(false) }}
+                onHide={() => {
+                    setShowMarkModal(false); setTheoryAttendance(false); setTheoryCT1(false); setTheoryCT2(false); setTheoryCT3(false); setTheoryFinal(false);
+                    setLbAttendance(false); setLbReport(false); setLbQuiz(false);
+                    setProjectPerformance(false); setProjectInternal(false)
+                }}
                 dialogClassName="modal-90w"
                 aria-labelledby="example-custom-modal-styling-title"
                 // fullscreen={true}
@@ -571,11 +584,21 @@ const MarkModal = (props) => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
 
                                                             {
-                                                                projectClassPerformance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Class Performance<br /> (70 marks)
-
+                                                                projectClassPerformance
+                                                                &&
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Class Performance<br /> (20 marks)
                                                                 </th>
                                                             }
+
+                                                            {
+                                                                projectInternal
+                                                                &&
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Class Performance<br /> (50 marks)
+                                                                </th>
+                                                            }
+
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -600,9 +623,17 @@ const MarkModal = (props) => {
                                                                             <td style={{ border: "1px solid black" }}>
                                                                                 <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
                                                                                     x?.projectClassPerformance ? x.projectClassPerformance : projectPerformance
-                                                                                } onChange={(e) => setProjectPerformance(e.target.value)} {...register(`${x?.id}_project_performance`, { required: true })} min="0" max="70" />
+                                                                                } onChange={(e) => setProjectPerformance(e.target.value)} {...register(`${x?.id}_project_performance`, { required: true })} min="0" max="20" />
                                                                             </td>
-
+                                                                        }
+                                                                        {
+                                                                            projectInternal
+                                                                            &&
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
+                                                                                    x?.projectInternalMarks ? x.projectInternalMarks : projectInt
+                                                                                } onChange={(e) => setProjectInt(e.target.value)} {...register(`${x?.id}_project_internal`, { required: true })} min="0" max="50" />
+                                                                            </td>
                                                                         }
                                                                     </tr>
                                                                 )

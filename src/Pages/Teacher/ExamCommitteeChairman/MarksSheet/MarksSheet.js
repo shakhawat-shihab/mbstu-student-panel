@@ -192,8 +192,11 @@ const MarksSheet = () => {
                 array.push(obj);
             }
             else if (marks.type === 'project') {
-                const { projectClassPerformance = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId, projectPresentation = 0, projectPresentationBy } = marksOfSingleStudent;
+                const { projectClassPerformance = 0, projectInternalMarks = 0, projectClassPerformanceBy, projectClassPerformanceByProfileId, projectPresentation = 0, projectPresentationBy } = marksOfSingleStudent;
                 obj.projectClassPerformance = projectClassPerformance;
+                obj.projectInternalMarks = projectInternalMarks;
+                //print this projectClass property in table
+                obj.projectClass = projectClassPerformance + projectInternalMarks;
                 obj.projectClassPerformanceBy = projectClassPerformanceBy;
                 obj.projectClassPerformanceByProfileId = projectClassPerformanceByProfileId;
                 obj.projectPresentation = projectPresentation;
@@ -201,7 +204,7 @@ const MarksSheet = () => {
 
 
                 let total = 0;
-                total = projectClassPerformance + projectPresentation;
+                total = projectClassPerformance + projectInternalMarks + projectPresentation;
                 obj.totalMarks = total;
                 let grade = {};
                 grade = checkMarks(total);
@@ -507,7 +510,8 @@ const MarksSheet = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Status</th>
-                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (70)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Performance (20)</th>
+                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Class Internal (50)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva (30)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Total <br /> (100)</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>LG</th>
@@ -528,8 +532,9 @@ const MarksSheet = () => {
                                                                 </td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.name}</td>
                                                                 <td style={{ border: "1px solid black" }}>  <i>{x?.isPaid ? 'Paid' : 'Unpaid'}</i>  </td>
-                                                                <td title={'By ' + x?.projectClassPerformanceBy} style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
-                                                                <td title={'By ' + x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>
+                                                                <td title={'By ' + x?.projectClassPerformanceBy && x?.projectClassPerformanceBy} style={{ border: "1px solid black" }}>{x?.projectClassPerformance}</td>
+                                                                <td title={'By ' + x?.projectClassPerformanceBy && x?.projectClassPerformanceBy} style={{ border: "1px solid black" }}>{x?.projectInternalMarks}</td>
+                                                                <td title={'By ' + x?.projectClassPerformanceBy && x?.projectPresentationBy} style={{ border: "1px solid black" }}>{x?.projectPresentation}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.totalMarks}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.lg}</td>
                                                                 <td style={{ border: "1px solid black" }}>{x?.gp}</td>

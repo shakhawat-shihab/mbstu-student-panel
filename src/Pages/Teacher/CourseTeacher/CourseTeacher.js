@@ -52,11 +52,10 @@ const CourseTeacher = () => {
     const [lbReport, setLbReport] = useState(false);
     const [lbQuiz, setLbQuiz] = useState(false);
     const [projectClassPerformance, setProjectClassPerformance] = useState(false);
+    const [projectInternal, setProjectInternal] = useState(false);
 
     const [remarks, setRemarks] = useState(true);
     const [total, setTotal] = useState(true);
-
-
 
     const history = useHistory();
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -71,8 +70,6 @@ const CourseTeacher = () => {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     })
-
-
 
 
     useEffect(() => {
@@ -163,8 +160,9 @@ const CourseTeacher = () => {
                 array.push(obj);
             }
             else if (marks?.type === 'project') {
-                const { projectClassPerformance } = x;
+                const { projectClassPerformance, projectInternalMarks } = x;
                 obj.projectClassPerformance = projectClassPerformance;
+                obj.projectInternalMarks = projectInternalMarks;
                 array.push(obj);
             }
         });
@@ -280,8 +278,10 @@ const CourseTeacher = () => {
                                 theoryCT2={theoryCT2} setTheoryCT2={setTheoryCT2} theoryCT3={theoryCT3}
                                 setTheoryCT3={setTheoryCT3} theoryFinal={theoryFinal} setTheoryFinal={setTheoryFinal}
                                 lbAttendance={lbAttendance} setLbAttendance={setLbAttendance} lbReport={lbReport}
-                                setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz} projectClassPerformance={projectClassPerformance}
-                                setProjectClassPerformance={setProjectClassPerformance} courseId={courseId} setIsSaving={setIsSaving} isSaving={isSaving}
+                                setLbReport={setLbReport} lbQuiz={lbQuiz} setLbQuiz={setLbQuiz}
+                                projectClassPerformance={projectClassPerformance} setProjectClassPerformance={setProjectClassPerformance}
+                                projectInternal={projectInternal} setProjectInternal={setProjectInternal}
+                                courseId={courseId} setIsSaving={setIsSaving} isSaving={isSaving}
                             />
 
                         </div>
@@ -727,7 +727,12 @@ const CourseTeacher = () => {
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                                Class Performance<br />(70 marks)
+                                                                                Internal Marks<br />(50 marks)
+                                                                                <br />
+                                                                                <span className='edit' onClick={() => { setShowMarkModal(true); setProjectInternal(true) }}>Edit</span>
+                                                                            </th>
+                                                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                                Class Performance<br />(20 marks)
                                                                                 <br />
                                                                                 <span className='edit' onClick={() => { setShowMarkModal(true); setProjectClassPerformance(true) }}>Edit</span>
                                                                             </th>
@@ -744,6 +749,11 @@ const CourseTeacher = () => {
                                                                                 <td style={{ border: "1px solid black" }}>
                                                                                     <input className='border-0 w-100 text-center' style={{ backgroundColor: 'inherit' }} defaultValue={x?.name}
                                                                                         readOnly />
+                                                                                </td>
+                                                                                <td style={{ border: "1px solid black" }}>
+                                                                                    {
+                                                                                        <p>{x?.projectInternalMarks}</p>
+                                                                                    }
                                                                                 </td>
                                                                                 <td style={{ border: "1px solid black" }}>
                                                                                     {
