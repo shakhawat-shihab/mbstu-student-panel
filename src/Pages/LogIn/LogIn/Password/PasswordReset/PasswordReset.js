@@ -21,10 +21,10 @@ const PasswordReset = () => {
     const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
 
 
-    if (isAuthenticated()) {
-        // console.log('redirect called')
-        return <Redirect to="/" />
-    }
+    // if (isAuthenticated()) {
+    //     // console.log('redirect called')
+    //     return <Redirect to="/" />
+    // }
 
 
     const Toast = Swal.mixin({
@@ -131,9 +131,10 @@ const PasswordReset = () => {
         <div>
             <NavigationBar></NavigationBar>
             <div className='py-5'>
-                <h2 className='text-center'>Reset Password</h2>
+                {/* <h2 className='text-center'>Reset Password</h2> */}
                 <div className='form-width mx-auto my-4 p-3 shadow-lg rounded'>
-                    <h4 className='text-center my-4'>Email address: <span className='text-primary'>{email}</span> </h4>
+                    <h2 className='text-center text-primary fw-bold mt-3 mb-3'>Reset Password</h2>
+                    <p className='my-4 text-center'>Email address: <span className='text-danger'>{email}</span> </p>
                     {/* enter password */}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <InputGroup className="">
@@ -219,9 +220,15 @@ const PasswordReset = () => {
                         </Form.Text>
                     </Form.Group>
 
-                    <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={changePassword}>
+                    {/* <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={changePassword}>
                         Save Password
-                    </button>
+                    </button> */}
+
+                    <div className='my-3'>
+                        <button className='w-100  mb-3 btn btn-success fw-bold ' onClick={changePassword}>
+                            Save Password
+                        </button>
+                    </div>
                 </div>
 
             </div>

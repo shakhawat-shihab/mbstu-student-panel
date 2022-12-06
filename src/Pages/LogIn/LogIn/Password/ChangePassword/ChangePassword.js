@@ -4,13 +4,13 @@ import { AiOutlineCheckCircle } from 'react-icons/ai';
 import { BiError, BiHide, BiInfoCircle, BiShow } from 'react-icons/bi';
 import { useHistory, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import useAuth from '../../../../../Hooks/useAuth';
+// import useAuth from '../../../../../Hooks/useAuth';
 
 const ChangePassword = () => {
 
     const history = useHistory();
-    const { email, token } = useParams();
-    const { isAuthenticated } = useAuth();
+    // const { email, token } = useParams();
+    // const { isAuthenticated } = useAuth();
     const [password, setPassword] = useState('');
     const [visiblePassword, setVisiblePassword] = useState(false);
     const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
@@ -123,7 +123,7 @@ const ChangePassword = () => {
                 <div className='py-5'>
 
                     <div className='form-width mx-auto my-4 p-3 shadow-lg rounded'>
-                        <h2 className='text-center mt-5 mb-4'>Change Password</h2>
+                        <h3 className='text-center text-primary fw-bold mt-4 mb-5'>Change Password</h3>
                         {/* enter password */}
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <InputGroup className="">
@@ -208,10 +208,11 @@ const ChangePassword = () => {
                                 {confirmPasswordErrorMessage}
                             </Form.Text>
                         </Form.Group>
-
-                        <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={changePassword}>
-                            Save Password
-                        </button>
+                        <div className='w-50 mx-auto'>
+                            <button className='mx-5 my-3 btn btn-success fw-bold ' onClick={changePassword}>
+                                Save Password
+                            </button>
+                        </div>
                     </div>
 
                 </div>

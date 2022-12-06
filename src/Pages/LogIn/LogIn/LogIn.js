@@ -97,8 +97,9 @@ const Login = () => {
         <div>
             {/* <Header></Header> */}
             <NavigationBar></NavigationBar>
-            <h2 className='text-center my-3'>Sign in </h2>
+
             <div className='form-width mx-auto my-4 p-3 shadow-lg'>
+                <h2 className='text-center text-primary fw-bold mt-3 mb-5'>Sign in </h2>
                 <div className='pb-4 text-center'>
                     <img src={logoSrc} className="img-fluid rounded mx-auto img-width" alt="" />
                 </div>
@@ -144,16 +145,22 @@ const Login = () => {
                 </Form.Group>
                 <small className='ms-1'>
                     <NavLink to="/register" className="link">Not a member yet?</NavLink>
-                    <span className='px-2'>|</span>
-                    <NavLink to="/forget-password" className="link">Forget Password?</NavLink>
+                    <span className='px-2 text-primary'>|</span>
+                    <NavLink to="/forget-password" className="link me-2">Forget Password?</NavLink>
                 </small>
                 {/* enter login */}
                 {/* <Form.Group className="my-3 " controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Keep Me logged in" />
                 </Form.Group> */}
-                <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={handleLogIn}>
+                {/* <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={handleLogIn}>
                     Log In
-                </button>
+                </button> */}
+
+                <div className='my-3'>
+                    <button className='w-100 mb-3 btn btn-success fw-bold ' onClick={handleLogIn}>
+                        Log In
+                    </button>
+                </div>
 
 
             </div>

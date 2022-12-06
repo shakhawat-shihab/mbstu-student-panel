@@ -1,0 +1,8 @@
+.custom-link {
+    text-decoration: none !important;
+    /* color: inherit !important; */
+}
+
+.bg-own {
+    background-color: blue !important;
+}

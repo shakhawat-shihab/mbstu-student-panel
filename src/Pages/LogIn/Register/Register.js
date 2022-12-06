@@ -10,9 +10,10 @@ import { useEffect } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import Swal from 'sweetalert2';
 // import { getAuth, updateProfile } from 'firebase/auth';
-import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
+// import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
 import logoSrc from '../../../images/login-logo.png'
 import useMongoose from '../../../Hooks/useMongoose';
+import NavigationBar from '../../Shared/Navigationbar/NavigationBar';
 // import { register } from '../../../api/apiAuth';
 const Register = () => {
     // const { register } = apiAuth();
@@ -76,33 +77,38 @@ const Register = () => {
     const checkPasswod = (value) => {
         //  I use the following script for min 8 letter password,
         // with at least a symbol, upper and lower case letters and a number
-        if (/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value)) {
+        // if (/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value)) {
+        //     setPasswordErrorMessage('');
+        //     return;
+        // }
+        // setPasswordErrorMessage("Chose a strong Password!")
+        if (value?.trim()?.length >= 6) {
             setPasswordErrorMessage('');
             return;
         }
         setPasswordErrorMessage("Chose a strong Password!")
     }
 
-    const checkEmailIsAlreadyUsed = () => {
-        setIsLoadingEmailExist(true);
-        fetch(`http://localhost:5000/users/exist/${email}`)
-            .then(res => res.json())
-            .then(data => {
-                setIsLoadingEmailExist(false);
-                if (data === true) {
-                    setEmailErrorMessage('Email is already used');
-                }
-            })
+    const checkPasswordMatch = (value) => {
+        console.log(value, password)
+        if (password === value?.trim()) {
+            setConfirmPasswordErrorMessage('');
+            return;
+        }
+        setConfirmPasswordErrorMessage("Password mismatched")
     }
 
-    useEffect(() => {
-        if (password === confirmPassword && passwordErrorMessage === '') {
-            setConfirmPasswordErrorMessage('');
-        }
-        else {
-            setConfirmPasswordErrorMessage("Password mismathed!");
-        }
-    }, [password, confirmPassword, passwordErrorMessage]);
+    // const checkEmailIsAlreadyUsed = () => {
+    //     setIsLoadingEmailExist(true);
+    //     fetch(`http://localhost:5000/users/exist/${email}`)
+    //         .then(res => res.json())
+    //         .then(data => {
+    //             setIsLoadingEmailExist(false);
+    //             if (data === true) {
+    //                 setEmailErrorMessage('Email is already used');
+    //             }
+    //         })
+    // }
 
 
 
@@ -170,9 +176,10 @@ const Register = () => {
     return (
         <div>
             {/* <Header></Header> */}
-            {/* <NavigationBar></NavigationBar> */}
-            <h2 className='text-center my-3'>Create an account </h2>
-            <div className='form-width mx-auto my-4 p-3 shadow-lg'>
+            <NavigationBar></NavigationBar>
+            <div className='form-width mx-auto my-4 p-3 shadow-lg rounded'>
+
+                <h2 className='text-center text-primary fw-bold mt-3 mb-5'>Create an account </h2>
                 <div className='pb-4 text-center'>
                     <img src={logoSrc} className="img-fluid rounded mx-auto img-width" alt="" />
                 </div>
@@ -304,7 +311,7 @@ const Register = () => {
                             <Form.Control size="lg" className='input-design' type={visiblePassword ? 'text' : 'password'} placeholder="Password" required
                                 onChange={(e) => {
                                     setPassword(e.target.value);
-                                    // checkPasswod(e.target.value);
+                                    checkPasswod(e.target.value);
                                     //checkPasswordMatch(confirmPassword);
                                 }}
                             />
@@ -350,7 +357,7 @@ const Register = () => {
                                 onChange={(e) => {
                                     console.log(e.target.value);
                                     setConfirmPassword(e.target.value);
-                                    // checkPasswordMatch(e.target.value);
+                                    checkPasswordMatch(e.target.value);
                                 }} />
                             <InputGroup.Text className='bg-white' onClick={() => setVisibleConfirmPassword(!visibleConfirmPassword)} > {visibleConfirmPassword ? <BiShow className='fs-4' /> : <BiHide className='fs-4' />}
                             </InputGroup.Text>
@@ -384,9 +391,15 @@ const Register = () => {
                     </Form.Group>
 
                     <small className='ms-1'><NavLink to="/login" className="link">Already a member?</NavLink></small>
-                    <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={handleCreateAccount}>
+                    {/* <button className='w-100 my-3 btn btn-outline-success fw-bold ' onClick={handleCreateAccount}>
                         Create account
-                    </button>
+                    </button> */}
+
+                    <div className='my-3'>
+                        <button className='w-100 mb-3 btn btn-success fw-bold ' onClick={handleCreateAccount}>
+                            Create account
+                        </button>
+                    </div>
                 </Form>
             </div>
         </div>

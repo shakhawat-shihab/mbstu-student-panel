@@ -71,7 +71,8 @@ const ForgetPassword = () => {
                 <div className='py-5'>
 
                     <div className='form-width mx-auto my-4 p-3 shadow-lg rounded'>
-                        <h2 className='text-center mt-5 mb-4'>Forget Password</h2>
+                        {/* <h2 className='text-center mt-5 mb-4'>Forget Password</h2> */}
+                        <h2 className='text-center text-primary fw-bold mt-3 mb-5'>Forget Password </h2>
                         {/* <h4 className='text-center my-4'>Email address: <span className='text-primary'>{email}</span> </h4> */}
                         {/* enter email */}
                         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -88,9 +89,15 @@ const ForgetPassword = () => {
                             </Form.Text>
                         </Form.Group>
 
-                        <button className='w-100 mb-3 btn btn-outline-success fw-bold ' onClick={forgetPassword}>
+                        {/* <button className='w-100 mb-3 btn btn-outline-success fw-bold ' onClick={forgetPassword}>
                             Send Password Reset Email
-                        </button>
+                        </button> */}
+
+                        <div className='my-3'>
+                            <button className='w-100 mb-3 btn btn-success fw-bold ' onClick={forgetPassword}>
+                                Send Password Reset Email
+                            </button>
+                        </div>
                     </div>
 
                 </div>

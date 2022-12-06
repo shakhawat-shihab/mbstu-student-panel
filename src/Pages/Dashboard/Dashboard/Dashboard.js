@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ListGroup, Offcanvas } from 'react-bootstrap';
 import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
@@ -39,22 +39,43 @@ import AddDeptChairman from '../../SuperAdmin/AddDeptChairman/AddDeptChairman';
 import AddHallProvost from '../../SuperAdmin/AddHallProvost/AddHallProvost';
 import AddAcademicCommittee from '../../SuperAdmin/AddAcademicCommittee/AddAcademicCommittee';
 import CreateHall from '../../SuperAdmin/CreateHall/CreateHall';
-import StudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
 import AddStudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
 import RemoveStudentFromHall from '../../HallProvost/RemoveStudentFromHall/RemoveStudentFromHall';
 import ChangePassword from '../../LogIn/LogIn/Password/ChangePassword/ChangePassword';
-
+import userPhoto from "../../../images/user.png";
+import './Dashboard.css'
 
 const Dashboard = () => {
     const { user, isLoading, isLoadingRole } = useAuth();
     const [show, setShow] = useState(false);
     let { path, url } = useRouteMatch();
     // console.log('url =', url, student);
+
+    const [profile, setProfile] = useState({});
     const stateChange = () => {
         setShow(true)
     }
 
     // console.log("path === ", path);
+
+    console.log("useerre === ", user);
+
+    useEffect(() => {
+        //console.log('email ', email);
+        fetch('http://localhost:5000/api/v1/profile', {
+            headers: {
+                'Content-type': 'application/json',
+                'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
+            },
+        })
+            .then(res => res.json())
+            .then(info => {
+                setProfile(info?.data)
+                // console.log('my-profile === ', info);
+                // console.log('email', email);
+                // seTakenCourses(data);
+            })
+    }, [])
     return (
         <>
             {/* <div className='text-center'>
@@ -68,103 +89,117 @@ const Dashboard = () => {
             </div> */}
 
             <Offcanvas show={show} onHide={() => { setShow(false) }} >
-                <Offcanvas.Header closeButton className='bg-secondary'>
-                    <Offcanvas.Title>Dashboard of <br /> <span className='text-info'>{user?.fullName}</span> </Offcanvas.Title>
+                <Offcanvas.Header closeButton className='bg-dark mb-0'>
+                    <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="user_profile" style={{ width: "100px", height: "100px", borderRadius: "50%" }} />
+                    <Offcanvas.Title className='fs-4 text-white'>Dashboard of <br /> <span className='text-info'>{user?.fullName}</span> </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className='p-0'>
-                    <ListGroup defaultActiveKey="#link1">
-                        <ListGroup.Item action >
-                            <Link to={`${url}/profile`}> Update Profile (G) </Link>
-                        </ListGroup.Item>
+                    <ListGroup defaultActiveKey="#link1" className='bg-own'>
+                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/profile`}  >
+                            <ListGroup.Item className="" action >
+                                Update Profile (G)
+                            </ListGroup.Item>
+                        </Link>
                         {
                             !isLoadingRole && !isLoading &&
                             <>
                                 {
                                     user?.isStudent &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/course-registration`}> Course Registration (S)</Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/project`}> Apply to Supervisor (S)</Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/course-registration-view`}>Course Applications (S)</Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/view-result`}>My  Result (S)</Link>
-                                        </ListGroup.Item>
+
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/course-registration`}>
+                                            <ListGroup.Item className="" action >Course Registration (S)</ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/project`}>
+                                            <ListGroup.Item className="" action >Apply to Supervisor (S)</ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/course-registration-view`}>
+                                            <ListGroup.Item className="" action >Course Applications (S)</ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/view-result`}>
+                                            <ListGroup.Item className="" action >My  Result (S)</ListGroup.Item>
+                                        </Link>
 
                                     </>
                                 }
                                 {
                                     user?.isTeacher &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/courses-taken`}>Taken Courses (T) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/exam-committee`}>Exam Committee (T) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/exam-committee-chairman`}>Exam Committee Chairman (T) </Link>
-                                        </ListGroup.Item>
+
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/courses-taken`}>
+                                            <ListGroup.Item className="" action >Taken Courses (T) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/exam-committee`}>
+                                            <ListGroup.Item className="" action >Exam Committee (T) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/exam-committee-chairman`}>
+                                            <ListGroup.Item className="" action >Exam Committee Chairman (T) </ListGroup.Item>
+                                        </Link>
+
                                     </>
                                 }
                                 {
                                     user?.isDeptChairman &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/create-semester`}> Create Semester (C) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/add-teacher`}> Add Teacher (C) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/create-course`}>Create Course (C) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/approve-course-registration-dept`}>Approve Application (C) </Link>
-                                        </ListGroup.Item>
+
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/create-semester`}>
+                                            <ListGroup.Item className="" action > Create Semester (C) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/add-teacher`}>
+                                            <ListGroup.Item className="" action > Add Teacher (C) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/create-course`}>
+                                            <ListGroup.Item className="" action >Create Course (C)  </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/approve-course-registration-dept`}>
+                                            <ListGroup.Item className="" action >Approve Application (C) </ListGroup.Item>
+                                        </Link>
+
                                     </>
                                 }
                                 {
                                     user?.isHallProvost &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/approve-course-registration-hall`}> Approve Application (HP) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/add-student-to-hall`}>Add Student to Hall (HP) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/remove-student-from-hall`}> Remove Student from Hall (HP) </Link>
-                                        </ListGroup.Item>
+
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/approve-course-registration-hall`}>
+                                            <ListGroup.Item className="" action > Approve Application (HP) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/add-student-to-hall`}>
+                                            <ListGroup.Item className="" action >Add Student to Hall (HP) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/remove-student-from-hall`}>
+                                            <ListGroup.Item className="" action > Remove Student from Hall (HP) </ListGroup.Item>
+                                        </Link>
+
                                     </>
                                 }
                                 {
                                     user?.isAcademicCommittee &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/approve-course-registration-academic`}> Approve Application (AC) </Link>
-                                        </ListGroup.Item>
+
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/approve-course-registration-academic`}>
+                                            <ListGroup.Item className="" action > Approve Application (AC) </ListGroup.Item>
+                                        </Link>
+
                                     </>
                                 }
                                 {
                                     user?.isSuperAdmin &&
                                     <>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/create-hall`}> Create Hall (SA) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/add-dept-chairman`}> Add Department Chairman (SA) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/add-hall-provost`}> Add Hall Provost (SA) </Link>
-                                        </ListGroup.Item>
-                                        <ListGroup.Item action >
-                                            <Link to={`${url}/add-academic-member`}> Add Academic Committee (SA) </Link>
-                                        </ListGroup.Item>
+
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/create-hall`}>
+                                            <ListGroup.Item className="" action > Create Hall (SA) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/add-dept-chairman`}>
+                                            <ListGroup.Item className="" action > Add Department Chairman (SA) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/add-hall-provost`}>
+                                            <ListGroup.Item className="" action > Add Hall Provost (SA) </ListGroup.Item>
+                                        </Link>
+                                        <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/add-academic-member`}>
+                                            <ListGroup.Item className="" action > Add Academic Committee (SA) </ListGroup.Item>
+                                        </Link>
+
                                     </>
                                 }
                             </>
