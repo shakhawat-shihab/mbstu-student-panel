@@ -88,12 +88,12 @@ const Dashboard = () => {
                 </Button>
             </div> */}
 
-            <Offcanvas show={show} onHide={() => { setShow(false) }} >
-                <Offcanvas.Header closeButton className='bg-dark mb-0'>
+            <Offcanvas show={show} onHide={() => { setShow(false) }} variant='dark' >
+                <Offcanvas.Header closeButton className='bg-dark mb-0' >
                     <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="user_profile" style={{ width: "100px", height: "100px", borderRadius: "50%" }} />
                     <Offcanvas.Title className='fs-4 text-white'>Dashboard of <br /> <span className='text-info'>{user?.fullName}</span> </Offcanvas.Title>
                 </Offcanvas.Header>
-                <Offcanvas.Body className='p-0'>
+                <Offcanvas.Body className='p-0 bg-own'>
                     <ListGroup defaultActiveKey="#link1" className='bg-own'>
                         <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/profile`}  >
                             <ListGroup.Item className="" action >
@@ -106,7 +106,6 @@ const Dashboard = () => {
                                 {
                                     user?.isStudent &&
                                     <>
-
                                         <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/course-registration`}>
                                             <ListGroup.Item className="" action >Course Registration (S)</ListGroup.Item>
                                         </Link>
@@ -205,7 +204,9 @@ const Dashboard = () => {
                             </>
                         }
                     </ListGroup>
+
                 </Offcanvas.Body>
+
             </Offcanvas>
             <Switch>
 

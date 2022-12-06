@@ -1,8 +1,17 @@
 .custom-link {
     text-decoration: none !important;
-    /* color: inherit !important; */
+
+}
+
+.custom-link button {
+    text-decoration: none !important;
+    padding: 15px 20px;
+    /* background-color: rgb(25, 25, 51) !important; */
+    background-color: #282A3A !important;
+    color: azure;
+    border-bottom: 3px solid #3F444F;
 }
 
 .bg-own {
-    background-color: blue !important;
+    background-color: #212529 !important;
 }
