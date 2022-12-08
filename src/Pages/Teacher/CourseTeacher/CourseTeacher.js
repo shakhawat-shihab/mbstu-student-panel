@@ -150,7 +150,7 @@ const CourseTeacher = () => {
                 array.push(obj);
             }
             else if (marks.type === 'lab') {
-                const { labAttendance, labReport, labQuiz } = x;
+                const { labAttendance = 0, labReport = 0, labQuiz = 0 } = x;
                 obj.labAttendance = labAttendance
                 obj.labReport = labReport
                 obj.labQuiz = labQuiz
@@ -322,7 +322,7 @@ const CourseTeacher = () => {
                                                         </div>
                                                         <div className='d-flex flex-column align-items-end'>
                                                             <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
-                                                            <span className='fw-bold'>Full Marks: 30</span>
+                                                            <span className='fw-bold'>Full Marks: 100</span>
                                                         </div>
                                                     </div>
                                                 </div>

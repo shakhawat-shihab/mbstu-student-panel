@@ -140,7 +140,6 @@ const Dashboard = () => {
                                 {
                                     user?.isDeptChairman &&
                                     <>
-
                                         <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/create-semester`}>
                                             <ListGroup.Item className="" action > Create Semester (C) </ListGroup.Item>
                                         </Link>
@@ -153,7 +152,6 @@ const Dashboard = () => {
                                         <Link className='custom-link' onClick={() => { setShow(false) }} to={`${url}/approve-course-registration-dept`}>
                                             <ListGroup.Item className="" action >Approve Application (C) </ListGroup.Item>
                                         </Link>
-
                                     </>
                                 }
                                 {
