@@ -47,7 +47,7 @@ const DashboardHome = () => {
     // const email = 'lubnaju@yahoo.com';
     // useEffect(() => {
     //     //console.log('email ', email);
-    //     fetch(http://localhost:5000/courses-taken/${email})
+    //     fetch(https://mbstu-panel-server.onrender.com/courses-taken/${email})
     //         .then(res => res.json())
     //         .then(data => {
     //             console.log('taken courses', data);
@@ -58,7 +58,7 @@ const DashboardHome = () => {
 
     useEffect(() => {
         //console.log('email ', email);
-        fetch('http://localhost:5000/api/v1/profile', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/profile', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

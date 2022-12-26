@@ -8,7 +8,7 @@ const HallProvostCourseRegistration = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/course-application/get-applications-hall', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/get-applications-hall', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

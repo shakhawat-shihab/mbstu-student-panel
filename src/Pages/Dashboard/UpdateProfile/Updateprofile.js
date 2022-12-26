@@ -58,7 +58,7 @@ const UpdateProfile = () => {
 
     useEffect(() => {
         //console.log('email ', email);
-        fetch('http://localhost:5000/api/v1/profile', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/profile', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -123,7 +123,7 @@ const UpdateProfile = () => {
 
         setShowModal(true);
 
-        fetch(`http://localhost:5000/api/v1/profile/update`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/profile/update`, {
             method: 'put',
             headers: {
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

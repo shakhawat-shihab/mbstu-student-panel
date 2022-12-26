@@ -25,7 +25,7 @@ const HallProvostCourseRegistrationDetails = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/course-application/get-application-details/${applicationId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/course-application/get-application-details/${applicationId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -52,7 +52,7 @@ const HallProvostCourseRegistrationDetails = () => {
 
         console.log("Application to push === ", approvedApplication);
 
-        fetch('http://localhost:5000/api/v1/course-application/approve-application-by-hall', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/approve-application-by-hall', {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -91,7 +91,7 @@ const HallProvostCourseRegistrationDetails = () => {
 
         console.log("Application to push === ", deniedApplication);
 
-        fetch('http://localhost:5000/api/v1/course-application/deny-application-by-hall', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/deny-application-by-hall', {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

@@ -99,7 +99,7 @@ const CreateCourse = () => {
         })
         course.relatedDepartment = deptRelatedArray;
         console.log('course to save ', course);
-        fetch('http://localhost:5000/api/v1/course/create', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course/create', {
             method: 'post',
             headers: {
                 'content-type': 'application/json',

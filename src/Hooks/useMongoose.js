@@ -2,7 +2,8 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { useEffect, useState } from 'react';
 // const API1 = process.env.API;
-const API = 'http://localhost:5000/api/v1';
+// const API = 'https://mbstu-panel-server.onrender.com/api/v1';
+const API = 'https://mbstu-panel-server.onrender.com/api/v1';
 const useMongoose = () => {
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(true);

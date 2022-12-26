@@ -10,7 +10,7 @@ const ExamCommittee = () => {
     const { url } = useRouteMatch();
     useEffect(() => {
         // console.log()
-        fetch(`http://localhost:5000/api/v1/semester/load-running-semester/exam-committee/`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/semester/load-running-semester/exam-committee/`, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`

@@ -41,7 +41,7 @@ const ResultSheet = () => {
         }
     })
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/semester/marks-of-all-course/${semesterId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/semester/marks-of-all-course/${semesterId}`, {
             method: 'get',
             headers: {
                 'content-type': 'application/json',
@@ -304,7 +304,7 @@ const ResultSheet = () => {
         resultToPublish.profileIdarray = studentsProfilesIds;
 
         console.log('Result To Publish ==  ', resultToPublish);
-        fetch(`http://localhost:5000/api/v1/student-result/publish-result`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/student-result/publish-result`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

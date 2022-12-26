@@ -64,7 +64,7 @@ const MarksAssignCommitteeModal = (props) => {
         console.log('marks to push ', supObj);
 
 
-        fetch(`http://localhost:5000/api/v1/marks/update-marks/exam-committe/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/update-marks/exam-committe/${courseId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -146,7 +146,7 @@ const MarksAssignCommitteeModal = (props) => {
 
             console.log('marks to push file == ', supObj);
 
-            fetch(`http://localhost:5000/api/v1/marks/update-marks/exam-committe/${courseId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/update-marks/exam-committe/${courseId}`, {
                 method: 'put',
                 headers: {
                     'content-type': 'application/json',

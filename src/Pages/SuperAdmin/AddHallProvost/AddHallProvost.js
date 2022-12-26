@@ -41,7 +41,7 @@ const AddHallProvost = () => {
     })
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/hall/get-halls`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/hall/get-halls`, {
             method: 'get',
             headers: {
                 'content-type': 'application/json',
@@ -60,7 +60,7 @@ const AddHallProvost = () => {
     useEffect(() => {
         console.log('hall ==> ', hall)
         if (hall !== '') {
-            fetch(`http://localhost:5000/api/v1/user/find-hall-provost/${hall}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/find-hall-provost/${hall}`, {
                 method: 'get',
                 headers: {
                     'content-type': 'application/json',
@@ -82,7 +82,7 @@ const AddHallProvost = () => {
         // console.log('email  ', email);
         if (email.trim() !== '') {
             setIsLoadingUserByEmail(true);
-            fetch(`http://localhost:5000/api/v1/user/email/${email.trim()}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/email/${email.trim()}`, {
                 method: 'get',
                 headers: {
                     'content-type': 'application/json',
@@ -104,7 +104,7 @@ const AddHallProvost = () => {
 
     const addHallProvost = (userId) => {
         console.log('userId ', userId);
-        fetch(`http://localhost:5000/api/v1/user/add-hall-provost/${hall}/${userId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/add-hall-provost/${hall}/${userId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

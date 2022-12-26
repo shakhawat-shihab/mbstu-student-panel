@@ -100,7 +100,7 @@ const PasswordReset = () => {
             return;
         }
 
-        fetch(`http://localhost:5000/api/v1/user/reset-password/${token}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/reset-password/${token}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

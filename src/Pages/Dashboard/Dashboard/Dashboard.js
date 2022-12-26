@@ -67,7 +67,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         //console.log('email ', email);
-        fetch('http://localhost:5000/api/v1/profile', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/profile', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

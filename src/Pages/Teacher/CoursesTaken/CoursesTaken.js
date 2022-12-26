@@ -12,7 +12,7 @@ const TakenCourses = () => {
     //console.log('path = ', path, ' and url = ', url)
     useEffect(() => {
         //console.log('email ', email);
-        fetch(`http://localhost:5000/api/v1/marks/taken-courses/${profileId}/${state}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/taken-courses/${profileId}/${state}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

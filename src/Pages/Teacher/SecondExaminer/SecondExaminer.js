@@ -37,7 +37,7 @@ const SecondExaminer = () => {
     })
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     // useEffect(() => {
-    //     fetch(`http://localhost:5000/get-marks/second-examiner/${semesterId}/${courseCode.toUpperCase()}/${email}`)
+    //     fetch(`https://mbstu-panel-server.onrender.com/get-marks/second-examiner/${semesterId}/${courseCode.toUpperCase()}/${email}`)
     //         .then(res => res.json())
     //         .then(data => {
     //             console.log('a course ', data);
@@ -57,7 +57,7 @@ const SecondExaminer = () => {
 
     useEffect(() => {
         setIsLoadingMarks(true);
-        fetch(`http://localhost:5000/api/v1/marks/get-marks/second-examiner/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/get-marks/second-examiner/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -89,7 +89,7 @@ const SecondExaminer = () => {
         }
         // console.log('submit ', data)
         // console.log("Hello")
-        // fetch(`http://localhost:5000/add-marks/second-examiner/${semesterId}/${courseCode}`, {
+        // fetch(`https://mbstu-panel-server.onrender.com/add-marks/second-examiner/${semesterId}/${courseCode}`, {
         //     method: 'put',
         //     headers: {
         //         'content-type': 'application/json'
@@ -130,7 +130,7 @@ const SecondExaminer = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire('Saved!', '', 'success')
-                fetch(`http://localhost:5000/api/v1/marks/turn-in/second-examiner/${courseId}`, {
+                fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/turn-in/second-examiner/${courseId}`, {
                     method: 'put',
                     headers: {
                         'Content-type': 'application/json',

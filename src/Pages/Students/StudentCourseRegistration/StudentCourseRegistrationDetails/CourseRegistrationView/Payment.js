@@ -43,7 +43,7 @@ const Payment = (props) => {
             // amount: 100,
         }
 
-        fetch('http://localhost:5000/api/v1/payment/ssl-init', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/payment/ssl-init', {
             method: 'post',
             // { redirect: 'follow', 'content-type': 'Access-Control-Allow-Origin' }
             headers: {

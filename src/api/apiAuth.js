@@ -2,7 +2,7 @@ import axios from 'axios';
 // import { API } from '../utils/config';
 // const API = process.env.API;
 
-const API = 'http://localhost:5000/api/v1';
+const API = 'https://mbstu-panel-server.onrender.com/api/v1';
 const apiAuth = () => {
     const register = (user) => {
         // console.log('API = ', API)

@@ -110,7 +110,7 @@ const ViewResult = () => {
     //for loading profile
     useEffect(() => {
         setIsLoadingProfile(true);
-        fetch(`http://localhost:5000/api/v1/profile`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/profile`, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
@@ -128,7 +128,7 @@ const ViewResult = () => {
     //for loading courses marks 
     useEffect(() => {
         // setIsLoadingResult(true);
-        fetch(`http://localhost:5000/api/v1/student-result/get-student-result/${user?.profileId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/student-result/get-student-result/${user?.profileId}`, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
@@ -136,7 +136,7 @@ const ViewResult = () => {
         })
             .then(res => res.json())
             .then(info => {
-                // console.log('infoooooooo  = ', info);
+                console.log('infoooooooo  = ', info);
                 setSemesters(info?.data?.semesterIds);
                 setSemesterCode(info?.data?.semesterCode);
                 setResult(info?.data?.coursesMarks);
@@ -150,8 +150,9 @@ const ViewResult = () => {
 
     //for processing marks
     useEffect(() => {
-        if (semesters.length > 0) {
-            setIsProcessingResultOfASemester(true);
+        console.log('semesters ==> ', semesters)
+        if (semesters?.length > 0) {
+            // setIsProcessingResultOfASemester(true);
             console.log('semester code change', semesters)
             const supObj = {}
             let totalCreditEarned = 0;
@@ -222,7 +223,6 @@ const ViewResult = () => {
             setIsProcessingResultOfASemester(false);
             // setProcessedSemester(sem);
 
-
             //calculate total cgpa
             let Cumlative_GPA = 0;
             if (totalCreditEarned > 0) {
@@ -233,7 +233,6 @@ const ViewResult = () => {
             }
             setCGPA(Cumlative_GPA)
         }
-
     }, [semesterCode, result, semesters])
 
 
@@ -269,10 +268,14 @@ const ViewResult = () => {
 
     return (
         <>
+
             {
                 (isProcessingResultOfASemester || isLoadingResult || isLoadingProfile)
                     ?
                     <div className='text-center my-5 py-5 '>
+                        {/* {
+                            console.log(isProcessingResultOfASemester, isLoadingResult, isLoadingProfile)
+                        } */}
                         <Spinner className='align-items-center justify-content-start mx-auto' animation="grow" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>

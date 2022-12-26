@@ -49,7 +49,7 @@ const CourseRegistrationForm = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/student-result/get-semester-code`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/student-result/get-semester-code`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -57,7 +57,7 @@ const CourseRegistrationForm = () => {
         })
             .then(res => res.json())
             .then(result => {
-                fetch(`http://localhost:5000/api/v1/course-application/total-credit-taken/${result?.data?.semesterCode + 1}`, {
+                fetch(`https://mbstu-panel-server.onrender.com/api/v1/course-application/total-credit-taken/${result?.data?.semesterCode + 1}`, {
                     headers: {
                         'Content-type': 'application/json',
                         'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -81,7 +81,7 @@ const CourseRegistrationForm = () => {
         // if()
         // console.log("fgsgd ", regularCourseNotApplied, semesterCode)
         if (semesterCode !== -1 && regularCourseNotApplied === false) {
-            fetch(`http://localhost:5000/api/v1/semester/courses-running/${semesterCode + 1}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/semester/courses-running/${semesterCode + 1}`, {
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -107,7 +107,7 @@ const CourseRegistrationForm = () => {
 
     useEffect(() => {
         if (semesterCode !== -1) {
-            fetch(`http://localhost:5000/api/v1/semester/courses-previous/${semesterCode}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/semester/courses-previous/${semesterCode}`, {
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -186,7 +186,7 @@ const CourseRegistrationForm = () => {
         console.log('form to push ', application);
         // console.log('credit ', totalCredit)
         if (backlogCredit + credit + previousApplicationCredit < 27) {
-            fetch('http://localhost:5000/api/v1/course-application/create', {
+            fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/create', {
                 method: 'post',
                 headers: {
                     'Content-type': 'application/json',

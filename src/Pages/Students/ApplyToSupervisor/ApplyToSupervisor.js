@@ -46,7 +46,7 @@ const ApplyToSupervisor = () => {
 
     useEffect(() => {
         setIsLoadingProposals(true)
-        fetch(`http://localhost:5000/api/v1/project-application/my-proposal/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/project-application/my-proposal/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -63,7 +63,7 @@ const ApplyToSupervisor = () => {
 
     useEffect(() => {
         setIsLoadingAcceptedProposal(true)
-        fetch(`http://localhost:5000/api/v1/project-application/check-any-accepted/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/project-application/check-any-accepted/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -82,7 +82,7 @@ const ApplyToSupervisor = () => {
 
 
     // useEffect(() => {
-    //     fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`, {
+    //     fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/load-teacher/${courseId}`, {
     //         headers: {
     //             'Content-type': 'application/json',
     //             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -100,7 +100,7 @@ const ApplyToSupervisor = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/marks/load-teacher/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/load-teacher/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -111,7 +111,7 @@ const ApplyToSupervisor = () => {
                 // console.log("teachers of a project course ", info);
 
                 //find the project in student result
-                fetch(`http://localhost:5000/api/v1/project-application/find-project-course`, {
+                fetch(`https://mbstu-panel-server.onrender.com/api/v1/project-application/find-project-course`, {
                     headers: {
                         'Content-type': 'application/json',
                         'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -199,7 +199,7 @@ const ApplyToSupervisor = () => {
 
         console.log('application to push ', application);
 
-        fetch('http://localhost:5000/api/v1/project-application/create', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/project-application/create', {
             method: 'post',
             headers: {
                 'content-type': 'application/json',

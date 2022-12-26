@@ -37,7 +37,7 @@ const SemesterChairman = () => {
         }
     })
     useEffect(() => {
-        fetch(`http://localhost:5000/semester/${semesterId}/${email}`)
+        fetch(`https://mbstu-panel-server.onrender.com/semester/${semesterId}/${email}`)
             .then(res => res.json())
             .then(data => {
                 console.log('semester = ', data);
@@ -277,7 +277,7 @@ const SemesterChairman = () => {
         })
         console.log('students ', students);
 
-        fetch(`http://localhost:5000/publish-result-object`, {
+        fetch(`https://mbstu-panel-server.onrender.com/publish-result-object`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json'

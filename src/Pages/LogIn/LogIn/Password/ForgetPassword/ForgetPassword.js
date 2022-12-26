@@ -45,7 +45,7 @@ const ForgetPassword = () => {
             })
             return;
         }
-        fetch(`http://localhost:5000/api/v1/user/create-reset-password-link/${email}`)
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/create-reset-password-link/${email}`)
             .then(res => res.json())
             .then(info => {
                 if (info?.status === 'success') {

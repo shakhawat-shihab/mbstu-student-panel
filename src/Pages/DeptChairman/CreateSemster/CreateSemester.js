@@ -48,7 +48,7 @@ const CreateSemester = () => {
     //const department = 'cse';
     //console.log(" semester ", semester)
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/user/teacher?fields=${department}`)
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/teacher?fields=${department}`)
             .then(res => res.json())
             .then(info => {
                 // console.log("teachers of current user's department ", info.data);
@@ -57,7 +57,7 @@ const CreateSemester = () => {
     }, [])
     useEffect(() => {
         if (semester != '') {
-            fetch(`http://localhost:5000/api/v1/course/${semester}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/course/${semester}`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`
@@ -136,7 +136,7 @@ const CreateSemester = () => {
 
         console.log("semesters to push ", semester);
         // console.log(" teacher List ", teacherList)
-        fetch('http://localhost:5000/api/v1/semester', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/semester', {
             method: 'post',
             headers: {
                 'content-type': 'application/json',

@@ -100,7 +100,7 @@ const Register = () => {
 
     // const checkEmailIsAlreadyUsed = () => {
     //     setIsLoadingEmailExist(true);
-    //     fetch(`http://localhost:5000/users/exist/${email}`)
+    //     fetch(`https://mbstu-panel-server.onrender.com/users/exist/${email}`)
     //         .then(res => res.json())
     //         .then(data => {
     //             setIsLoadingEmailExist(false);

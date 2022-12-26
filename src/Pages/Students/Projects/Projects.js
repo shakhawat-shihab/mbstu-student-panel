@@ -14,7 +14,7 @@ const Projects = () => {
     // const [student, setStudent] = useState({});
     const { url } = useRouteMatch();
     // useEffect(() => {
-    //     fetch(`http://localhost:5000/students/${email}`)
+    //     fetch(`https://mbstu-panel-server.onrender.com/students/${email}`)
     //         .then(res => res.json())
     //         .then(data => {
     //             console.log("student ", data);
@@ -22,7 +22,7 @@ const Projects = () => {
     //         })
     // }, [email])
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/project-application/find-project-course`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/project-application/find-project-course`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

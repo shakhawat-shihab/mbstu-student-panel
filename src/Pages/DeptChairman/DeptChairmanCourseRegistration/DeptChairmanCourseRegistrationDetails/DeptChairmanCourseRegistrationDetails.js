@@ -28,7 +28,7 @@ const DeptChairmanCourseRegistrationDetails = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/course-application/get-application-details/${applicationId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/course-application/get-application-details/${applicationId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -66,7 +66,7 @@ const DeptChairmanCourseRegistrationDetails = () => {
 
         console.log("Application to push === ", approvedApplication);
 
-        fetch('http://localhost:5000/api/v1/course-application/approve-application-by-dept-chairman', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/approve-application-by-dept-chairman', {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -101,7 +101,7 @@ const DeptChairmanCourseRegistrationDetails = () => {
         deniedApplication.studentProfileId = application?.applicantProfileId;
         deniedApplication.department = application?.department;
 
-        fetch('http://localhost:5000/api/v1/course-application/deny-application-by-dept-chairman', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/deny-application-by-dept-chairman', {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

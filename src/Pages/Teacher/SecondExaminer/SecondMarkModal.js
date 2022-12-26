@@ -51,7 +51,7 @@ const SecondMarkModal = (props) => {
         supObj.marks = arr;
         console.log('marks to push ', supObj);
 
-        fetch(`http://localhost:5000/api/v1/marks/update-marks/second-examiner/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/update-marks/second-examiner/${courseId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -126,7 +126,7 @@ const SecondMarkModal = (props) => {
             })
             supObj.marks = arr;
             console.log('marks to push file === ', supObj);
-            fetch(`http://localhost:5000/api/v1/marks/update-marks/second-examiner/${courseId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/update-marks/second-examiner/${courseId}`, {
                 method: 'put',
                 headers: {
                     'content-type': 'application/json',

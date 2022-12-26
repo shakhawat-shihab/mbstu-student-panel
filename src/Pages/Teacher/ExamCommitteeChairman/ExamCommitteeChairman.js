@@ -8,7 +8,7 @@ const ExamCommitteeChairman = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { url } = useRouteMatch();
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/semester/load-running-semester/exam-committee-chairman/`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/semester/load-running-semester/exam-committee-chairman/`, {
             headers: {
                 'content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`

@@ -115,7 +115,7 @@ const MarkModal = (props) => {
         supObj.marks = arr;
         console.log('marks to push ', supObj);
 
-        fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/update-marks/course-teacher/${courseId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -227,7 +227,7 @@ const MarkModal = (props) => {
 
             console.log('marks to push file == ', supObj);
 
-            fetch(`http://localhost:5000/api/v1/marks/update-marks/course-teacher/${courseId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/update-marks/course-teacher/${courseId}`, {
                 method: 'put',
                 headers: {
                     'content-type': 'application/json',

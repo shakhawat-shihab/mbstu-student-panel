@@ -43,7 +43,7 @@ const StudentProjectApplication = (props) => {
     //         .then((result) => {
     //             if (result.isConfirmed) {
     //                 // Swal.fire('Saved!', '', 'success')
-    //                 fetch(`http://localhost:5000/api/v1/project-application/approve-proposal/${proposalId}`, {
+    //                 fetch(`https://mbstu-panel-server.onrender.com/api/v1/project-application/approve-proposal/${proposalId}`, {
     //                     method: 'put',
     //                     headers: {
     //                         'Content-type': 'application/json',

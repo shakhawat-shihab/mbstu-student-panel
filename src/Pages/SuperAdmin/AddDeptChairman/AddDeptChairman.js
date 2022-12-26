@@ -41,7 +41,7 @@ const AddDeptChairman = () => {
     })
 
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/user/find-dept-chairman/${department}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/find-dept-chairman/${department}`, {
             method: 'get',
             headers: {
                 'content-type': 'application/json',
@@ -62,7 +62,7 @@ const AddDeptChairman = () => {
         // setMessage('');
         if (email.trim() !== '') {
             setIsLoadingUserByEmail(true);
-            fetch(`http://localhost:5000/api/v1/user/email/${email.trim()}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/email/${email.trim()}`, {
                 method: 'get',
                 headers: {
                     'content-type': 'application/json',
@@ -84,7 +84,7 @@ const AddDeptChairman = () => {
 
     const makeDepartmentChairman = (userId) => {
         // console.log('userId ', userId);
-        fetch(`http://localhost:5000/api/v1/user/add-dept-chairman/${department}/${userId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/add-dept-chairman/${department}/${userId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

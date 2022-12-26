@@ -58,7 +58,7 @@ const MarksAssign = () => {
 
     //for loading courses of a semester
     useEffect(() => {
-        fetch(`http://localhost:5000/api/v1/semester/courses/${semesterId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/semester/courses/${semesterId}`, {
             method: 'get',
             headers: {
                 'content-type': 'application/json',
@@ -87,7 +87,7 @@ const MarksAssign = () => {
     useEffect(() => {
         if (courseId !== '') {
             setIsLoadingMarks(true);
-            fetch(`http://localhost:5000/api/v1/marks/get-marks/exam-committe/${courseId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/get-marks/exam-committe/${courseId}`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`

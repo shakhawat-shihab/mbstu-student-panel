@@ -105,7 +105,7 @@ const useFirebase = () => {
 
     useEffect(() => {
         setIsLoadingRole(true);
-        fetch(`http://localhost:5000/users/role/${user.email}`)
+        fetch(`https://mbstu-panel-server.onrender.com/users/role/${user.email}`)
             .then(res => res.json())
             .then(data => {
                 console.log("users role ", data?.isStudent, data?.isTeacher);
@@ -130,7 +130,7 @@ const useFirebase = () => {
 
     const saveUser = (email, displayName, method) => {
         const user = { email, displayName };
-        fetch('http://localhost:5000/users', {
+        fetch('https://mbstu-panel-server.onrender.com/users', {
             method: method,
             headers: {
                 'content-type': 'application/json'

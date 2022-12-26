@@ -35,7 +35,7 @@ const AddAcademicCommittee = () => {
         // console.log('email  ', email);
         if (email.trim() !== '') {
             setIsLoadingUserByEmail(true);
-            fetch(`http://localhost:5000/api/v1/user/email/${email.trim()}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/email/${email.trim()}`, {
                 method: 'get',
                 headers: {
                     'content-type': 'application/json',
@@ -57,7 +57,7 @@ const AddAcademicCommittee = () => {
 
     const makeAcademicCommittee = (userId) => {
         // console.log('userId ', userId);
-        fetch(`http://localhost:5000/api/v1/user/add-academic-committee/${userId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/add-academic-committee/${userId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -84,7 +84,7 @@ const AddAcademicCommittee = () => {
 
     const removeAcademicCommittee = (userId) => {
         // console.log('userId ', userId);
-        fetch(`http://localhost:5000/api/v1/user/remove-academic-committee/${userId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/remove-academic-committee/${userId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

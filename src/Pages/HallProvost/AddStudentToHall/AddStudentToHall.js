@@ -62,7 +62,7 @@ const AddStudentToHall = () => {
 
             console.log('marks to push file == ', supObj);
 
-            fetch(`http://localhost:5000/api/v1/hall/insert-file`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/hall/insert-file`, {
                 method: 'put',
                 headers: {
                     'content-type': 'application/json',
@@ -109,7 +109,7 @@ const AddStudentToHall = () => {
             return;
         }
         else {
-            fetch(`http://localhost:5000/api/v1/hall/insert/${studentId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/hall/insert/${studentId}`, {
                 method: 'put',
                 headers: {
                     'content-type': 'application/json',

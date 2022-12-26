@@ -10,7 +10,7 @@ const DeptChairmanCourseRegistration = () => {
     // const history = useHistory();
     // console.log('url ', url);
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/course-application/get-applications-department', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/course-application/get-applications-department', {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,

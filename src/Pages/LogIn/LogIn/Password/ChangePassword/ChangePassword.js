@@ -90,7 +90,7 @@ const ChangePassword = () => {
             return;
         }
 
-        fetch(`http://localhost:5000/api/v1/user/change-password`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/change-password`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',

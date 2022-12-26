@@ -33,7 +33,7 @@ const AddTeacher = () => {
 
     const addTeacher = (userId) => {
         console.log('userId ', userId);
-        fetch(`http://localhost:5000/api/v1/user/add-teacher/${userId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/add-teacher/${userId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -60,7 +60,7 @@ const AddTeacher = () => {
 
     const removeTeacher = (userId) => {
         console.log('userId ', userId);
-        fetch(`http://localhost:5000/api/v1/user/remove-teacher/${userId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/remove-teacher/${userId}`, {
             method: 'put',
             headers: {
                 'content-type': 'application/json',
@@ -90,7 +90,7 @@ const AddTeacher = () => {
         // console.log('email  ', email);
         if (email.trim() !== '') {
             setIsLoadingUserByEmail(true);
-            fetch(`http://localhost:5000/api/v1/user/email/${email.trim()}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/user/email/${email.trim()}`, {
                 method: 'get',
                 headers: {
                     'content-type': 'application/json',

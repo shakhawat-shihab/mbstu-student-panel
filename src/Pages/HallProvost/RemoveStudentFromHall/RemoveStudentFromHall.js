@@ -27,7 +27,7 @@ const RemoveStudentFromHall = () => {
             return;
         }
         else {
-            fetch(`http://localhost:5000/api/v1/hall/remove/${studentId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/hall/remove/${studentId}`, {
                 method: 'put',
                 headers: {
                     'content-type': 'application/json',

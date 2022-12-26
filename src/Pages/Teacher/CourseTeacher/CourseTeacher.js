@@ -77,7 +77,7 @@ const CourseTeacher = () => {
 
     useEffect(() => {
         setIsLoadingMarks(true);
-        fetch(`http://localhost:5000/api/v1/marks/get-marks/course-teacher/${courseId}`, {
+        fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/get-marks/course-teacher/${courseId}`, {
             headers: {
                 'Content-type': 'application/json',
                 'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -99,7 +99,7 @@ const CourseTeacher = () => {
         if (marks?.type === 'project') {
             setIsLoadingProposals(true)
             console.log('state ', state);
-            fetch(`http://localhost:5000/api/v1/project-application/proposal-for-teacher/${courseId}`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/project-application/proposal-for-teacher/${courseId}`, {
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${JSON.parse(localStorage.getItem('jwt'))}`,
@@ -187,7 +187,7 @@ const CourseTeacher = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 Swal.fire('Saved!', '', 'success')
-                fetch(`http://localhost:5000/api/v1/marks/turn-in/course-teacher/${courseId}`, {
+                fetch(`https://mbstu-panel-server.onrender.com/api/v1/marks/turn-in/course-teacher/${courseId}`, {
                     method: 'put',
                     headers: {
                         'Content-type': 'application/json',

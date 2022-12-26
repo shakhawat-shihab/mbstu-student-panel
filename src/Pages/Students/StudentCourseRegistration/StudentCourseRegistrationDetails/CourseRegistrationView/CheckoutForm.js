@@ -17,7 +17,7 @@ const CheckoutForm = (props) => {
     console.log(props.application);
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/v1/payment/create-payment-intent', {
+        fetch('https://mbstu-panel-server.onrender.com/api/v1/payment/create-payment-intent', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
@@ -98,7 +98,7 @@ const CheckoutForm = (props) => {
                 transaction: paymentIntent.client_secret.split('_')[1]
             }
             console.log('save to db ', payment)
-            fetch(`http://localhost:5000/api/v1/payment/create-payment`, {
+            fetch(`https://mbstu-panel-server.onrender.com/api/v1/payment/create-payment`, {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json',
