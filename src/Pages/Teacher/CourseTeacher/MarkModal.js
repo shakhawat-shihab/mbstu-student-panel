@@ -336,7 +336,7 @@ const MarkModal = (props) => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                             {
                                                                 theoryAttendance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Attendance <br />(10 marks)
+                                                                    Attendance <br />(10%)
                                                                 </th>
                                                             }
                                                             {
@@ -356,7 +356,7 @@ const MarkModal = (props) => {
                                                             }
                                                             {
                                                                 theoryFinal && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Final Exam Mark <br />(70 marks)
+                                                                    Final Exam Mark <br />(70%)
                                                                 </th>
                                                             }
                                                         </tr>
@@ -478,18 +478,18 @@ const MarkModal = (props) => {
 
                                                             {
                                                                 lbAttendance && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Attendance<br /> (10 marks)
+                                                                    Lab Attendance<br /> (10%)
 
                                                                 </th>
                                                             }
                                                             {
                                                                 lbReport && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Report Marks<br /> (20 marks)
+                                                                    Lab Report Marks<br /> (20%)
                                                                 </th>
                                                             }
                                                             {
                                                                 lbQuiz && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Quiz Marks<br /> (20 marks)
+                                                                    Lab Quiz Marks<br /> (20%)
                                                                 </th>
                                                             }
                                                         </tr>
@@ -584,20 +584,21 @@ const MarkModal = (props) => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
 
                                                             {
-                                                                projectClassPerformance
-                                                                &&
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Class Performance<br /> (20 marks)
-                                                                </th>
-                                                            }
-
-                                                            {
                                                                 projectInternal
                                                                 &&
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Class Performance<br /> (50 marks)
+                                                                    Internal Examiner Mark<br />(50%)
                                                                 </th>
                                                             }
+                                                            {
+                                                                projectClassPerformance
+                                                                &&
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                                    Project Performance<br />(20%)
+                                                                </th>
+                                                            }
+
+
 
                                                         </tr>
                                                     </thead>
@@ -618,15 +619,6 @@ const MarkModal = (props) => {
                                                                                 readOnly />
                                                                         </td>
                                                                         {
-                                                                            projectClassPerformance
-                                                                            &&
-                                                                            <td style={{ border: "1px solid black" }}>
-                                                                                <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
-                                                                                    x?.projectClassPerformance ? x.projectClassPerformance : projectPerformance
-                                                                                } onChange={(e) => setProjectPerformance(e.target.value)} {...register(`${x?.id}_project_performance`, { required: true })} min="0" max="20" />
-                                                                            </td>
-                                                                        }
-                                                                        {
                                                                             projectInternal
                                                                             &&
                                                                             <td style={{ border: "1px solid black" }}>
@@ -635,6 +627,16 @@ const MarkModal = (props) => {
                                                                                 } onChange={(e) => setProjectInt(e.target.value)} {...register(`${x?.id}_project_internal`, { required: true })} min="0" max="50" />
                                                                             </td>
                                                                         }
+                                                                        {
+                                                                            projectClassPerformance
+                                                                            &&
+                                                                            <td style={{ border: "1px solid black" }}>
+                                                                                <input className='w-25 text-center' style={{ backgroundColor: 'inherit', border: "1px solid grey" }} type="number" defaultValue={
+                                                                                    x?.projectClassPerformance ? x.projectClassPerformance : projectPerformance
+                                                                                } onChange={(e) => setProjectPerformance(e.target.value)} {...register(`${x?.id}_project_performance`, { required: true })} min="0" max="20" />
+                                                                            </td>
+                                                                        }
+
                                                                     </tr>
                                                                 )
                                                             })

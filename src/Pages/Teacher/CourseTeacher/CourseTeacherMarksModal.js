@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Modal, Table } from 'react-bootstrap';
 import Pagination from 'react-bootstrap/Pagination';
 import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
-import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
+// import checkSemesterName from '../../../Functions/SemesterCodeToSemesterName';
 import useAuth from '../../../Hooks/useAuth';
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
 import { FaDownload } from 'react-icons/fa';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -123,13 +123,30 @@ const CourseTeacherMarksModal = (props) => {
                                             <div className='d-flex flex-column'>
                                                 <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
                                                 <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
-                                                <span className='fw-bold'>Name of the Examiner: {marks?.teacher?.name}</span>
+                                                <span className='fw-bold'>Name of the Examiner: {user?.fulllName}</span>
                                             </div>
                                             <div className='d-flex flex-column align-items-end'>
                                                 <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
                                                 <span className='fw-bold'>Full Marks:
-                                                    {marks?.type === "theory" && <span>30</span>}
+                                                    {marks?.type === "theory" && <span>100</span>}
                                                     {marks?.type === "lab" && <span>50</span>}
+                                                    {
+                                                        marks?.type === "project"
+                                                        &&
+                                                        <span>
+                                                            {
+                                                                props.projectInternalMarks && props.projectPerformance
+                                                                    ?
+                                                                    <span>70</span>
+                                                                    :
+                                                                    props.projectInternalMarks ?
+                                                                        <span>50</span>
+                                                                        :
+                                                                        <span>20</span>
+                                                            }
+
+                                                        </span>
+                                                    }
                                                 </span>
                                             </div>
                                         </div>
@@ -362,13 +379,28 @@ const CourseTeacherMarksModal = (props) => {
                                 <col width="40%" />
                                 <col width="25%" /> */}
                                 <thead>
-                                    <tr style={{ border: "1px solid black" }}>
+                                    <tr style={{ border: "1px solid black", fontSize: "12px" }}>
                                         <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                         <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                        {
-                                            props?.classPerformanceProject &&
+                                        {/* {
+                                            props?.classPerformanceProject
+                                            &&
                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
                                                 Class Performance (70%)
+                                            </th>
+                                        } */}
+                                        {
+                                            props.projectInternalMarks
+                                            &&
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                Internal Examiner Mark<br />(50%)
+                                            </th>
+                                        }
+                                        {
+                                            props.projectPerformance
+                                            &&
+                                            <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
+                                                Project Performance<br />(20%)
                                             </th>
                                         }
 
@@ -377,21 +409,37 @@ const CourseTeacherMarksModal = (props) => {
                                 <tbody>
                                     {
                                         Object.keys(paginatedMarks).length !== 0 &&
-                                        paginatedMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black" }}>
+                                        paginatedMarks?.map(x => <tr key={x?.id} style={{ border: "1px solid black", fontSize: "12px" }}>
                                             <td style={{ border: "1px solid black" }} className='text-uppercase'>
-                                                <p>{x?.id}</p>
+                                                {x?.id}
                                             </td>
                                             <td style={{ border: "1px solid black" }}>
-                                                <p>{x?.name}</p>
+                                                {x?.name}
                                             </td>
-                                            {
+                                            {/* {
                                                 props?.classPerformanceProject &&
                                                 <td style={{ border: "1px solid black" }}>
                                                     {
                                                         <p>{x?.classPerformanceProject}</p>
                                                     }
                                                 </td>
+                                            } */}
+
+                                            {
+                                                props?.projectInternalMarks
+                                                &&
+                                                <td style={{ border: "1px solid black" }}>
+                                                    {x?.projectInternalMarks}
+                                                </td>
                                             }
+                                            {
+                                                props?.projectPerformance
+                                                &&
+                                                <td style={{ border: "1px solid black" }}>
+                                                    {x?.projectClassPerformance}
+                                                </td>
+                                            }
+
 
                                         </tr>)
                                     }

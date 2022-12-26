@@ -5,9 +5,12 @@ import { Button, Spinner } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import './DashboardHome.css';
 
-import studentImage from '../../../images/student.png';
-import teacherImage from '../../../images/teacher.png';
-import userImage from '../../../images/user.png';
+import academicCommitteePhoto from "../../../images/academicCommittee.png";
+import chairmanPhoto from "../../../images/chairman.png";
+import hallProvostPhoto from "../../../images/hallProvost.png";
+import teacherPhoto from "../../../images/teacher.png";
+import studentPhoto from "../../../images/student.png";
+import userPhoto from "../../../images/user.png";
 
 const DashboardHome = () => {
 
@@ -28,15 +31,15 @@ const DashboardHome = () => {
     // const designation = "Assistant Professor";
     // const field = ['Artificial Intelligence', 'Machine Learning', 'Image Processing', 'Natural Language Processing'];
 
-    console.log("useeer === ", user);
+    // console.log("useeer === ", user);
 
-    let userPhoto = userImage;
+    // let userPhoto = userImage;
 
-    if (user?.isStudent)
-        userPhoto = studentImage;
+    // if (user?.isStudent)
+    //     userPhoto = studentImage;
 
-    if (user?.isTeacher)
-        userPhoto = teacherImage;
+    // if (user?.isTeacher)
+    //     userPhoto = teacherImage;
 
 
     // const { first_name, last_name, email, phone, address, designation, field } = teacher;
@@ -104,7 +107,58 @@ const DashboardHome = () => {
                                 <div className='mb-3 text-center'>
 
                                     <>
-                                        <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "200px", height: "200px" }} className="border border-3 border-lg img-fluid mx-auto" />
+                                        {/* <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "200px", height: "200px" }} className="border border-3 border-lg img-fluid mx-auto" /> */}
+
+                                        {
+                                            profile?.imageURL
+                                                ?
+                                                <img src={profile?.imageURL} alt="user_profile" className='profile-image  bg-white' />
+                                                :
+                                                <>
+                                                    {
+                                                        user?.isAcademicCommittee
+                                                            ?
+                                                            <img src={academicCommitteePhoto} alt="academic-committee" className='profile-image  bg-white' />
+                                                            :
+                                                            <>
+                                                                {
+                                                                    user?.isDeptChairman
+                                                                        ?
+                                                                        <img src={chairmanPhoto} alt="dept-chairman" className='profile-image  bg-white ' />
+                                                                        :
+                                                                        <>
+                                                                            {
+                                                                                user?.isHallProvost
+                                                                                    ?
+                                                                                    <img src={hallProvostPhoto} alt="hall-provost" className='profile-image  bg-white ' />
+                                                                                    :
+                                                                                    <>
+                                                                                        {
+
+                                                                                            user?.isTeacher
+                                                                                                ?
+                                                                                                <img src={teacherPhoto} alt="teacher" className='profile-image  bg-white ' />
+                                                                                                :
+                                                                                                <>
+                                                                                                    {
+                                                                                                        user?.isStudent
+                                                                                                            ?
+                                                                                                            <img src={studentPhoto} alt="student" className='profile-image  bg-white ' />
+                                                                                                            :
+                                                                                                            <img src={userPhoto} alt="user" className='profile-image  bg-white ' />
+                                                                                                    }
+                                                                                                </>
+                                                                                        }
+                                                                                    </>
+                                                                            }
+                                                                        </>
+                                                                }
+                                                            </>
+
+                                                    }
+                                                </>
+
+                                        }
                                     </>
 
                                 </div>

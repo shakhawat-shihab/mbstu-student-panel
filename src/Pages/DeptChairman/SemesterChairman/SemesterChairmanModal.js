@@ -1,7 +1,9 @@
 import React from 'react';
 import checkDepartmentName from '../../../Functions/DeptCodeToDeptName';
 import useAuth from '../../../Hooks/useAuth';
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { FaDownload } from 'react-icons/fa';
 import { Button, Modal, Table } from 'react-bootstrap';
 
@@ -12,9 +14,27 @@ const SemesterChairmanModal = (props) => {
 
     const handleDownload = () => {
         const selected = document.getElementById('selectedPortion');
+
+        const divHeight = selected.clientHeight
+        const divWidth = selected.clientWidth
+        const ratio = divHeight / divWidth;
+
+        html2canvas(selected, { useCORS: true }, { scale: '5' }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg');
+
+            const pdfDOC = new jsPDF("l", "mm", "a4");
+
+            const width = pdfDOC.internal.pageSize.getWidth();
+            let height = pdfDOC.internal.pageSize.getHeight();
+
+            height = ratio * width;
+            pdfDOC.addImage(imgData, 'JPEG', 0, 0, width, height + 30, 'FAST');
+            pdfDOC.save(`${courseCode}_marks.pdf`);
+        });
+        // const selected = document.getElementById('selectedPortion');
         // window.open(invoice);
         // return false;
-        html2pdf().from(selected).save(`${courseCode}_marks.pdf`);
+        // html2pdf().from(selected).save(`${courseCode}_marks.pdf`);
 
     }
     return (

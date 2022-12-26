@@ -509,11 +509,14 @@ const MarksAssign = () => {
                                                 </div>
                                                 <Form>
                                                     <Table responsive stripped bordered hover className='text-center' style={{ border: '1px solid black' }}>
+                                                        <col width="20%" />
+                                                        <col width="40%" />
+                                                        <col width="30%" />
                                                         <thead>
                                                             <tr style={{ border: '1px solid black' }}>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
-                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva <br />(30 marks)
+                                                                <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Presentation and Viva <br />(30%)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowCommitteeModal(true); setExamCommitteeProject(true) }}>Edit</span>
                                                                 </th>
@@ -529,7 +532,8 @@ const MarksAssign = () => {
                                                                     <td style={{ border: '1px solid black' }}>{x?.name}</td>
 
                                                                     <td style={{ border: '1px solid black' }}>
-                                                                        <p className={editPresentationMarks ? 'd-none' : ''} title={`By ${x?.projectPresentationBy}`} >{x?.projectPresentation}</p>
+                                                                        {/* <p className={editPresentationMarks ? 'd-none' : ''} title={`By ${x?.projectPresentationBy}`} >{x?.projectPresentation}</p> */}
+                                                                        {x?.projectPresentation}
                                                                     </td>
                                                                 </tr>)
                                                             }

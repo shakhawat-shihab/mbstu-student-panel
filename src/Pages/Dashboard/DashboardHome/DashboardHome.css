@@ -1,3 +1,10 @@
 .edit-info:hover {
     color: red;
 }
+
+.profile-image {
+    width: 200px;
+    height: 200px;
+    border: 3px solid #5f6369;
+    border-radius: 50%;
+}

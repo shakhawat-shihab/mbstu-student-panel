@@ -53,7 +53,7 @@ const MarksAssignModal = (props) => {
         const divWidth = selected.clientWidth
         const ratio = divHeight / divWidth;
 
-        html2canvas(selected, { useCORS: true }, { scale: '5' }).then((canvas) => {
+        html2canvas(selected, { useCORS: true }, { scale: '10' }).then((canvas) => {
             const imgData = canvas.toDataURL('image/jpeg');
 
             const pdfDOC = new jsPDF("p", "mm", "a4");
@@ -144,6 +144,9 @@ const MarksAssignModal = (props) => {
                                                         }
                                                         {
                                                             marks?.type === 'lab' && <span> 50</span>
+                                                        }
+                                                        {
+                                                            marks?.type === 'project' && <span> 30</span>
                                                         }
                                                     </span>
                                                 </div>
@@ -280,6 +283,9 @@ const MarksAssignModal = (props) => {
                                         <div className='container-fluid rounded  my-5 ' >
                                             <div className='p-2 '>
                                                 <Table responsive bordered className='text-center' style={{ border: '1px solid black' }}>
+                                                    <col width="20%" />
+                                                    <col width="40%" />
+                                                    <col width="30%" />
                                                     <thead>
                                                         <tr style={{ border: '1px solid black' }}>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
@@ -313,13 +319,13 @@ const MarksAssignModal = (props) => {
 
                                     currentPageNumber === numberOfPages
                                     &&
-                                    <span className='fw-bold' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
+                                    <span className='fw-bold ms-4 ps-2' style={{ fontSize: "12px" }}>Note: All columns must be filed up and numbers must be rounded off. *Means "Failed Previously or Improvement."</span>
                                 }
 
                                 {
                                     currentPageNumber === numberOfPages
                                     &&
-                                    <div className="d-flex w-100 ms-4 ps-2" style={{ fontSize: "12px" }}>
+                                    <div className="d-flex w-100 ms-4 ps-2 mt-3" style={{ fontSize: "12px" }}>
                                         <div className=''>
                                             <p>Signature of </p>
                                         </div>

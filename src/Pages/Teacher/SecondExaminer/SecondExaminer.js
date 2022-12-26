@@ -201,11 +201,44 @@ const SecondExaminer = () => {
                             <div className='container'>
                                 <div className='container-fluid shadow-lg  rounded  my-5 ' >
                                     <div className='p-4 '>
-                                        <div className=' '>
+                                        {/* <div className=' '>
                                             <h3 className='text-center mb-3' >Assign Marks</h3>
                                             <p><span className='fw-bold'>Course Name: </span>{marks?.courseTitle}</p>
                                             <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode}</p>
                                             <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                        </div> */}
+                                        <div className=''>
+                                            <div className='mt-4'>
+                                                <h5 className='text-uppercase text-center fw-bold mb-1 mt-2'>Mawlana Bhashani Science and Technology university</h5>
+                                                <h6 className='text-center'>Santosh,Tangail-1902</h6>
+                                                <h6 className='text-center'>Marks-sheet</h6>
+                                                <h6 className='text-center'>Class Test/Home Work/Assignment/Quiz/Tutorial/Presentation</h6>
+                                            </div>
+
+                                            <div>
+                                                <h6 className='text-center'>{marks?.semesterId?.name} {marks?.semesterId?.degree} Final Examination</h6>
+
+                                            </div>
+
+                                            <div className='mt-1'>
+                                                {/* <p className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</p> */}
+                                            </div>
+
+                                            <div className='mb-2'>
+                                                <div className='mt-4 d-flex justify-content-between'>
+                                                    <div className='d-flex flex-column'>
+                                                        <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
+                                                        <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
+                                                        <span className='fw-bold'>Name of the Examiner: {marks?.secondExaminer?.name}</span>
+                                                    </div>
+                                                    <div className='d-flex flex-column align-items-end'>
+                                                        <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
+                                                        <span className='fw-bold'>Full Marks:70
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </div>
                                         <Form onSubmit={handleSubmit(onSubmit)}>
                                             <Form.Group className='mb-2'>
@@ -219,7 +252,7 @@ const SecondExaminer = () => {
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                Final Exam Mark <br />(70 marks)
+                                                                Final Exam Mark <br />(70%)
                                                                 <br />
                                                                 <span className='edit' onClick={() => { setShowMarkModal(true); setSecondExaminerFinal(true) }}>Edit</span>
                                                             </th>

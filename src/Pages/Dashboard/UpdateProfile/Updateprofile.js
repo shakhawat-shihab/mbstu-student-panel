@@ -5,11 +5,15 @@ import { useForm } from 'react-hook-form';
 import useAuth from '../../../Hooks/useAuth';
 import Compressor from 'compressorjs';
 
-import studentImage from '../../../images/student.png';
-import teacherImage from '../../../images/teacher.png';
-import userImage from '../../../images/user.png';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import Swal from 'sweetalert2';
+
+import academicCommitteePhoto from "../../../images/academicCommittee.png";
+import chairmanPhoto from "../../../images/chairman.png";
+import hallProvostPhoto from "../../../images/hallProvost.png";
+import teacherPhoto from "../../../images/teacher.png";
+import studentPhoto from "../../../images/student.png";
+import userPhoto from "../../../images/user.png";
 
 const UpdateProfile = () => {
 
@@ -39,16 +43,16 @@ const UpdateProfile = () => {
         }
     })
 
-    let userPhoto = userImage;
+    // let userPhoto = userImage;
 
 
-    if (user?.isStudent) {
-        userPhoto = studentImage;
+    // if (user?.isStudent) {
+    //     userPhoto = studentImage;
 
-    }
+    // }
 
-    if (user?.isTeacher)
-        userPhoto = teacherImage;
+    // if (user?.isTeacher)
+    //     userPhoto = teacherImage;
 
 
 
@@ -190,7 +194,62 @@ const UpdateProfile = () => {
                                     <div className='text-center mb-4'>
 
                                         <>
-                                            <img src={imageSrc ? imageSrc : profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "200px", height: "200px" }} className="border border-3 border-lg img-fluid mx-auto" />
+                                            {/* <img src={imageSrc ? imageSrc : profile?.imageURL ? profile?.imageURL : userPhoto} alt="img of user" style={{ borderRadius: "50%", width: "200px", height: "200px" }} className="border border-3 border-lg img-fluid mx-auto" /> */}
+
+                                            {
+                                                imageSrc
+                                                    ?
+                                                    <img src={imageSrc} alt={`${user?.fullName}`} className='profile-image  bg-white' />
+                                                    :
+                                                    profile?.imageURL
+                                                        ?
+                                                        <img src={profile?.imageURL} alt={`${user?.fullName}`} className='profile-image  bg-white' />
+                                                        :
+                                                        <>
+                                                            {
+                                                                user?.isAcademicCommittee
+                                                                    ?
+                                                                    <img src={academicCommitteePhoto} alt="academic-committee" className='profile-image  bg-white' />
+                                                                    :
+                                                                    <>
+                                                                        {
+                                                                            user?.isDeptChairman
+                                                                                ?
+                                                                                <img src={chairmanPhoto} alt="dept-chairman" className='profile-image  bg-white ' />
+                                                                                :
+                                                                                <>
+                                                                                    {
+                                                                                        user?.isHallProvost
+                                                                                            ?
+                                                                                            <img src={hallProvostPhoto} alt="hall-provost" className='profile-image  bg-white ' />
+                                                                                            :
+                                                                                            <>
+                                                                                                {
+
+                                                                                                    user?.isTeacher
+                                                                                                        ?
+                                                                                                        <img src={teacherPhoto} alt="teacher" className='profile-image  bg-white ' />
+                                                                                                        :
+                                                                                                        <>
+                                                                                                            {
+                                                                                                                user?.isStudent
+                                                                                                                    ?
+                                                                                                                    <img src={studentPhoto} alt="student" className='profile-image  bg-white ' />
+                                                                                                                    :
+                                                                                                                    <img src={userPhoto} alt="user" className='profile-image  bg-white ' />
+                                                                                                            }
+                                                                                                        </>
+                                                                                                }
+                                                                                            </>
+                                                                                    }
+                                                                                </>
+                                                                        }
+                                                                    </>
+
+                                                            }
+                                                        </>
+
+                                            }
                                         </>
 
                                     </div>

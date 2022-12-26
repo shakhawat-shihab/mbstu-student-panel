@@ -40,6 +40,9 @@ const CourseTeacher = () => {
     const [labQuiz, setLabQuiz] = useState(true);
     const [classPerformanceProject, setClassPerformanceProject] = useState(true);
 
+    const [projectInternalMarks, setProjectInternalMarks] = useState(true)
+    const [projectPerformance, setProjectPerformance] = useState(true);
+
 
     const [showMarkModal, setShowMarkModal] = useState(false);
     const [theoryAttendance, setTheoryAttendance] = useState(false);
@@ -150,7 +153,7 @@ const CourseTeacher = () => {
                 array.push(obj);
             }
             else if (marks.type === 'lab') {
-                const { labAttendance = 0, labReport = 0, labQuiz = 0 } = x;
+                const { labAttendance, labReport, labQuiz } = x;
                 obj.labAttendance = labAttendance
                 obj.labReport = labReport
                 obj.labQuiz = labQuiz
@@ -245,9 +248,11 @@ const CourseTeacher = () => {
     }
 
     // console.log("alllll inffooo ======= ", allInfo);
-    // console.log("maaaarks ============ ", marks);
+    console.log("maaaarks ============ ", marks);
     // console.log("Viewww== === ", marksToView)
     // console.log("my marks == ", marks);
+    // console.log("user ===> ", user);
+
     return (
         <>
             {
@@ -267,6 +272,7 @@ const CourseTeacher = () => {
                                 attendance={attendance} ct1={ct1} ct2={ct2} ct3={ct3} final={final} ctAvg={ctAvg} classThirty={classThirty}
                                 labAttendance={labAttendance} labQuiz={labQuiz} labReport={labReport} total={total}
                                 classPerformanceProject={classPerformanceProject} remarks={remarks}
+                                projectInternalMarks={projectInternalMarks} projectPerformance={projectPerformance}
                             />
                         </div>
                         <div>
@@ -573,23 +579,23 @@ const CourseTeacher = () => {
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Report Marks<br /> (20)
+                                                                    Lab Report Marks<br /> (20%)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbReport(true) }}>Edit</span>
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Attendance Marks<br />(10)
+                                                                    Lab Attendance Marks<br />(10%)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbAttendance(true) }}>Edit</span>
                                                                 </th>
 
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Lab Quiz Marks<br />(20)
+                                                                    Lab Quiz Marks<br />(20%)
                                                                     <br />
                                                                     <span className='edit' onClick={() => { setShowMarkModal(true); setLbQuiz(true) }}>Edit</span>
                                                                 </th>
                                                                 <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Total (50)<br />
+                                                                    Total (50%)<br />
 
                                                                 </th>
 
@@ -711,10 +717,34 @@ const CourseTeacher = () => {
                                                 <div className='container-fluid shadow-lg  rounded  my-5 mx-4'>
                                                     <div className='p-4'>
                                                         <div className=' '>
-                                                            <h3 className='text-center mb-3' >Assign Marks</h3>
-                                                            <p><span className='fw-bold'>Course Title: </span>{marks?.courseTitle}</p>
-                                                            <p><span className='fw-bold'>Course Code: </span>{marks?.courseCode?.toUpperCase()}</p>
-                                                            <p><span className='fw-bold'>Credit Hour: </span>{marks?.credit}</p>
+                                                            <div className='mt-4'>
+                                                                <h5 className='text-uppercase text-center fw-bold mb-1 mt-2'>Mawlana Bhashani Science and Technology university</h5>
+                                                                <h6 className='text-center'>Santosh,Tangail-1902</h6>
+                                                                <h6 className='text-center'>Marks-sheet</h6>
+                                                                <h6 className='text-center'>Class Test/Home Work/Assignment/Quiz/Tutorial/Presentation</h6>
+                                                            </div>
+
+                                                            <div>
+                                                                <h6 className='text-center'>{marks?.semesterId?.name} {marks?.semesterId?.degree} Final Examination</h6>
+                                                            </div>
+
+                                                            <div className='mt-1'>
+                                                                <p className='text-center mb-1'>Department of {checkDepartmentName(user?.department)}</p>
+                                                            </div>
+
+                                                            <div className='mb-2'>
+                                                                <div className='mt-4 d-flex justify-content-between'>
+                                                                    <div className='d-flex flex-column'>
+                                                                        <span className='fw-bold'>Course Code: {marks?.courseCode?.toUpperCase()}</span>
+                                                                        <span className='fw-bold'>Course Title: {marks?.courseTitle}</span>
+                                                                        <span className='fw-bold'>Name of the Examiner: {user?.fullName}</span>
+                                                                    </div>
+                                                                    <div className='d-flex flex-column align-items-end'>
+                                                                        <span className='fw-bold'>Credit Hour: {marks?.credit}</span>
+                                                                        <span className='fw-bold'>Full Marks: 70</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                         <Form onSubmit={handleSubmit(onSubmit)}>
                                                             <Form.Group className='mb-2'>
@@ -727,12 +757,12 @@ const CourseTeacher = () => {
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Student Id</th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>Name</th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                                Internal Marks<br />(50 marks)
+                                                                                Internal Examiner Mark<br />(50%)
                                                                                 <br />
                                                                                 <span className='edit' onClick={() => { setShowMarkModal(true); setProjectInternal(true) }}>Edit</span>
                                                                             </th>
                                                                             <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                                Class Performance<br />(20 marks)
+                                                                                Project Performance<br />(20%)
                                                                                 <br />
                                                                                 <span className='edit' onClick={() => { setShowMarkModal(true); setProjectClassPerformance(true) }}>Edit</span>
                                                                             </th>
@@ -767,13 +797,20 @@ const CourseTeacher = () => {
                                                             </Form.Group>
                                                             <Form.Check
                                                                 inline
-                                                                // disabled
                                                                 type='checkbox'
-                                                                label="Class Performance"
-                                                                id="labQuiz"
-                                                                // checked={classPerformanceProject}
-                                                                // onChange={() => setClassPerformanceProject(!classPerformanceProject)}
-                                                                checked
+                                                                label="Internal Examiner Mark"
+                                                                id="projectInternalMarks"
+                                                                checked={projectInternalMarks}
+                                                                onChange={() => setProjectInternalMarks(!projectInternalMarks)}
+                                                            />
+
+                                                            <Form.Check
+                                                                inline
+                                                                type='checkbox'
+                                                                label="Project Performance"
+                                                                id="projectPerformance"
+                                                                checked={projectPerformance}
+                                                                onChange={() => setProjectPerformance(!projectPerformance)}
                                                             />
                                                             <div className='text-center '>
                                                                 <div className='text-center mt-3'>

@@ -348,7 +348,7 @@ const MarksAssignCommitteeModal = (props) => {
 
                                                             {
                                                                 examCommitteeProject && <th style={{ border: "1px solid black", textAlign: "center", verticalAlign: "middle" }}>
-                                                                    Presentation and Viva <br />(30 marks)
+                                                                    Presentation and Viva <br />(30%)
 
                                                                 </th>
                                                             }

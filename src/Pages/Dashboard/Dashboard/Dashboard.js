@@ -42,8 +42,13 @@ import CreateHall from '../../SuperAdmin/CreateHall/CreateHall';
 import AddStudentToHall from '../../HallProvost/AddStudentToHall/AddStudentToHall';
 import RemoveStudentFromHall from '../../HallProvost/RemoveStudentFromHall/RemoveStudentFromHall';
 import ChangePassword from '../../LogIn/LogIn/Password/ChangePassword/ChangePassword';
-import userPhoto from "../../../images/user.png";
 import './Dashboard.css'
+import academicCommitteePhoto from "../../../images/academicCommittee.png";
+import chairmanPhoto from "../../../images/chairman.png";
+import hallProvostPhoto from "../../../images/hallProvost.png";
+import teacherPhoto from "../../../images/teacher.png";
+import studentPhoto from "../../../images/student.png";
+import userPhoto from "../../../images/user.png";
 
 const Dashboard = () => {
     const { user, isLoading, isLoadingRole } = useAuth();
@@ -90,7 +95,57 @@ const Dashboard = () => {
 
             <Offcanvas show={show} onHide={() => { setShow(false) }} variant='dark' >
                 <Offcanvas.Header closeButton className='bg-dark mb-0' >
-                    <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="user_profile" style={{ width: "100px", height: "100px", borderRadius: "50%" }} />
+                    {/* <img src={profile?.imageURL ? profile?.imageURL : userPhoto} alt="user_profile" style={{ width: "100px", height: "100px", borderRadius: "50%" }} /> */}
+                    {
+                        profile?.imageURL
+                            ?
+                            <img src={profile?.imageURL} alt="user_profile" style={{ width: "100px", height: "100px", borderRadius: "50%" }} />
+                            :
+                            <>
+                                {
+                                    user?.isAcademicCommittee
+                                        ?
+                                        <img src={academicCommitteePhoto} alt="academic-committee" className='dashboard-img-style bg-white' />
+                                        :
+                                        <>
+                                            {
+                                                user?.isDeptChairman
+                                                    ?
+                                                    <img src={chairmanPhoto} alt="dept-chairman" className='dashboard-img-style bg-white ' />
+                                                    :
+                                                    <>
+                                                        {
+                                                            user?.isHallProvost
+                                                                ?
+                                                                <img src={hallProvostPhoto} alt="hall-provost" className='dashboard-img-style bg-white ' />
+                                                                :
+                                                                <>
+                                                                    {
+
+                                                                        user?.isTeacher
+                                                                            ?
+                                                                            <img src={teacherPhoto} alt="teacher" className='dashboard-img-style bg-white ' />
+                                                                            :
+                                                                            <>
+                                                                                {
+                                                                                    user?.isStudent
+                                                                                        ?
+                                                                                        <img src={studentPhoto} alt="student" className='dashboard-img-style bg-white ' />
+                                                                                        :
+                                                                                        <img src={userPhoto} alt="user" className='dashboard-img-style bg-white ' />
+                                                                                }
+                                                                            </>
+                                                                    }
+                                                                </>
+                                                        }
+                                                    </>
+                                            }
+                                        </>
+
+                                }
+                            </>
+
+                    }
                     <Offcanvas.Title className='fs-4 text-white'>Dashboard of <br /> <span className='text-info'>{user?.fullName}</span> </Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className='p-0 bg-own'>
